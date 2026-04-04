@@ -1,0 +1,852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Project Tracker — Ishwa Consulting × PiP_AGI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Tokens ── */
+  :root {
+    --rust:      #B5451B;
+    --rust-lt:   #F0D5CB;
+    --rust-dk:   #8B3315;
+    --black:     #1A1A1A;
+    --g1:        #4A4A4A;
+    --g2:        #F5F3F1;
+    --g3:        #E8E4E0;
+    --g4:        #DDDDDD;
+    --white:     #FFFFFF;
+    --amber:     #FFF8EE;
+    --green:     #EBF5EC;
+    --green2:    #2D7D32;
+    --green3:    #A5D6A7;
+    --red:       #FDECEA;
+    --red2:      #C62828;
+    --blue:      #E3F2FD;
+    --blue2:     #1565C0;
+    --serif:     'Playfair Display', Georgia, serif;
+    --sans:      'DM Sans', system-ui, sans-serif;
+    --mono:      'DM Mono', 'Courier New', monospace;
+  }
+
+  /* ── Base ── */
+  html { font-size: 16px; }
+  body {
+    font-family: var(--sans);
+    color: var(--black);
+    background: #F2EFEB;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--black);
+    border-bottom: 3px solid var(--rust);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .brand-firm {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--white);
+    font-weight: 600;
+  }
+  .brand-rule {
+    width: 1px; height: 14px;
+    background: var(--rust);
+  }
+  .brand-pip {
+    font-size: 11px;
+    color: var(--rust);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .print-btn {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rust);
+    background: none;
+    border: 1px solid var(--rust);
+    padding: 5px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .print-btn:hover {
+    background: var(--rust);
+    color: var(--white);
+  }
+
+  /* ── Page ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* ── Title block ── */
+  .title-block {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--g4);
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 10px;
+  }
+  .page-title {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .page-sub {
+    font-size: 15px;
+    color: var(--g1);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--g1);
+  }
+  .meta-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--rust);
+    flex-shrink: 0;
+  }
+  .meta-updated {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #999;
+    margin-left: auto;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--g1);
+  }
+  .leg-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .leg-dot.done     { background: var(--green2); }
+  .leg-dot.active   { background: var(--rust); }
+  .leg-dot.blocked  { background: #999; border: 1.5px dashed #999; background: transparent; }
+  .leg-dot.upcoming { background: var(--g4); }
+
+  /* ── You are here banner ── */
+  .you-are-here {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--rust-dk);
+    background: var(--rust-lt);
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+    letter-spacing: 0.04em;
+  }
+  .yah-pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rust);
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  /* ── Phase grid ── */
+  .phases {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .phase-row {
+    display: grid;
+    grid-template-columns: 160px 24px 1fr;
+    gap: 0 16px;
+    align-items: stretch;
+  }
+
+  /* Left label */
+  .phase-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px 0;
+    text-align: right;
+  }
+  .phase-num {
+    font-family: var(--serif);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--rust);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .phase-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--black);
+    margin-top: 2px;
+  }
+  .phase-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #999;
+    margin-top: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Spine */
+  .spine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .spine-top {
+    width: 1.5px;
+    flex: 1;
+    min-height: 16px;
+    background: var(--g4);
+  }
+  .spine-top.hide    { background: transparent; }
+  .spine-top.done    { background: var(--green2); opacity: 0.4; }
+  .spine-top.active  { background: var(--rust); opacity: 0.3; }
+
+  .spine-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid var(--g4);
+    background: var(--white);
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s;
+  }
+  .spine-dot.done {
+    background: var(--green2);
+    border-color: var(--green2);
+  }
+  .spine-dot.done::after {
+    content: '';
+    display: block;
+    width: 5px; height: 3px;
+    border-left: 1.5px solid var(--white);
+    border-bottom: 1.5px solid var(--white);
+    transform: rotate(-45deg);
+    position: absolute;
+    top: 4px; left: 3px;
+  }
+  .spine-dot.active {
+    background: var(--rust);
+    border-color: var(--rust);
+    box-shadow: 0 0 0 3px var(--rust-lt);
+  }
+  .spine-dot.blocked {
+    background: var(--g2);
+    border-color: #999;
+    border-style: dashed;
+  }
+  .spine-dot.upcoming {
+    background: var(--g2);
+    border-color: var(--g4);
+  }
+
+  .spine-bottom {
+    width: 1.5px;
+    flex: 1;
+    min-height: 16px;
+    background: var(--g4);
+  }
+  .spine-bottom.hide    { background: transparent; }
+  .spine-bottom.done    { background: var(--green2); opacity: 0.4; }
+
+  /* Card */
+  .phase-card {
+    margin: 10px 0;
+    background: var(--white);
+    border: 1px solid var(--g4);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .phase-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .phase-card.done    { border-left: 3px solid var(--green2); }
+  .phase-card.active  { border-left: 3px solid var(--rust); }
+  .phase-card.blocked { border-left: 3px dashed #999; }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px 12px;
+  }
+  .card-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--black);
+    line-height: 1.3;
+  }
+  .status-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-done     { background: var(--green); color: var(--green2); }
+  .badge-active   { background: var(--rust-lt); color: var(--rust-dk); }
+  .badge-blocked  { background: var(--g2); color: #777; }
+  .badge-upcoming { background: var(--g2); color: #999; }
+
+  .card-body {
+    padding: 0 20px 16px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--g1);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* Deliverables */
+  .deliverables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .deliverable {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--g4);
+    color: var(--g1);
+    background: var(--g2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .deliverable::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--g4);
+    flex-shrink: 0;
+  }
+  .deliverable.done {
+    border-color: var(--green3);
+    color: var(--green2);
+    background: var(--green);
+  }
+  .deliverable.done::before { background: var(--green2); }
+  .deliverable.pending {
+    border-color: #FFCCBC;
+    color: var(--rust-dk);
+    background: #FFF3E0;
+  }
+  .deliverable.pending::before { background: var(--rust); }
+  .deliverable.blocked {
+    border-color: #CCC;
+    border-style: dashed;
+    color: #999;
+    background: var(--g2);
+  }
+  .deliverable.blocked::before { background: #CCC; }
+
+  /* Blocker note */
+  .blocker {
+    background: var(--g2);
+    border-left: 2px solid #999;
+    border-radius: 0 2px 2px 0;
+    padding: 9px 12px;
+    font-size: 12px;
+    color: var(--g1);
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .blocker strong { color: var(--black); font-weight: 600; }
+
+  /* Milestone */
+  .milestone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--g4);
+    font-size: 12px;
+    color: var(--g1);
+  }
+  .milestone-flag {
+    width: 10px; height: 10px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+  .milestone-flag.done    { background: var(--green2); }
+  .milestone-flag.pending { background: var(--rust); }
+  .milestone-flag.blocked { background: #999; }
+  .milestone strong { color: var(--black); font-weight: 500; }
+
+  /* ── Summary bar ── */
+  .summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .summary-card {
+    background: var(--white);
+    border: 1px solid var(--g4);
+    border-radius: 2px;
+    padding: 16px 18px;
+  }
+  .summary-val {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rust);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .summary-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--g1);
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #BBB;
+    border-top: 1px solid var(--g4);
+    padding-top: 24px;
+    margin-top: 0;
+  }
+
+  /* ── Print styles ── */
+  @media print {
+    @page { size: A4; margin: 18mm 16mm; }
+
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
+    body { background: #FFFFFF; font-size: 13px; }
+    .site-header { position: static; border-bottom: 2px solid #B5451B; background: #1A1A1A !important; }
+    .brand-firm { color: #FFFFFF !important; }
+    .brand-pip  { color: #B5451B !important; }
+    .brand-rule { background: #B5451B !important; }
+    .header-tag { color: #666 !important; }
+    .print-btn  { display: none; }
+    .yah-pulse  { animation: none; background: #B5451B !important; }
+    .you-are-here { background: #F0D5CB !important; color: #8B3315 !important; }
+    .page { padding: 24px 0 40px; }
+
+    .phase-card { break-inside: avoid; box-shadow: none; }
+    .phase-row  { break-inside: avoid; }
+    .phase-card:hover { box-shadow: none; }
+    .summary-bar { break-inside: avoid; }
+
+    .spine-dot.done     { background: #2D7D32 !important; border-color: #2D7D32 !important; }
+    .spine-dot.active   { background: #B5451B !important; border-color: #B5451B !important; box-shadow: none !important; }
+    .spine-dot.blocked  { background: #F5F3F1 !important; border-color: #999999 !important; }
+    .spine-dot.upcoming { background: #F5F3F1 !important; border-color: #DDDDDD !important; }
+    .spine-top.done     { background: #2D7D32 !important; opacity: 0.4; }
+    .spine-top.active   { background: #B5451B !important; opacity: 0.3; }
+    .spine-bottom.done  { background: #2D7D32 !important; opacity: 0.4; }
+
+    .leg-dot.done     { background: #2D7D32 !important; }
+    .leg-dot.active   { background: #B5451B !important; }
+    .leg-dot.upcoming { background: #DDDDDD !important; }
+
+    .badge-done     { background: #EBF5EC !important; color: #2D7D32 !important; }
+    .badge-active   { background: #F0D5CB !important; color: #8B3315 !important; }
+    .badge-blocked  { background: #F5F3F1 !important; color: #777777 !important; }
+    .badge-upcoming { background: #F5F3F1 !important; color: #999999 !important; }
+
+    .deliverable.done    { background: #EBF5EC !important; color: #2D7D32 !important; border-color: #A5D6A7 !important; }
+    .deliverable.pending { background: #FFF3E0 !important; color: #8B3315 !important; border-color: #FFCCBC !important; }
+    .deliverable.blocked { background: #F5F3F1 !important; color: #999999 !important; }
+    .deliverable.done::before    { background: #2D7D32 !important; }
+    .deliverable.pending::before { background: #B5451B !important; }
+    .deliverable.blocked::before { background: #CCCCCC !important; }
+
+    .milestone-flag.done    { background: #2D7D32 !important; }
+    .milestone-flag.pending { background: #B5451B !important; }
+    .milestone-flag.blocked { background: #999999 !important; }
+
+    .phase-card.done    { border-left: 3px solid #2D7D32 !important; }
+    .phase-card.active  { border-left: 3px solid #B5451B !important; }
+    .phase-card.blocked { border-left: 3px dashed #999999 !important; }
+
+    .site-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      padding: 8px 16mm;
+      border-top: 1px solid #DDDDDD;
+      background: #FFFFFF;
+      max-width: none;
+      margin: 0;
+    }
+  }
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .header-inner { padding: 14px 20px; }
+    .page { padding: 28px 20px 60px; }
+    .phase-row { grid-template-columns: 120px 20px 1fr; gap: 0 10px; }
+    .summary-bar { grid-template-columns: 1fr 1fr; }
+    .meta-updated { display: none; }
+    .page-title { font-size: 28px; }
+  }
+
+</style>
+</head>
+<body>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-firm">Ishwa Consulting</span>
+      <div class="brand-rule"></div>
+      <span class="brand-pip">PiP_AGI</span>
+    </div>
+    <div class="header-right">
+      <span class="header-tag">Project Tracker</span>
+      <button class="print-btn" onclick="window.print()">Print / PDF</button>
+    </div>
+  </div>
+</header>
+
+<!-- ── Page ── -->
+<main class="page">
+
+  <!-- Title -->
+  <div class="title-block">
+    <div class="eyebrow">Engagement Overview</div>
+    <h1 class="page-title">AI-Powered Executive Search Engine</h1>
+    <p class="page-sub">A phase-by-phase view of the engagement — what has been completed, what is in progress, and what is pending before the build can proceed.</p>
+    <div class="meta-row">
+      <div class="meta-item"><div class="meta-dot"></div> 7 phases total</div>
+      <div class="meta-item"><div class="meta-dot"></div> 2 phases complete</div>
+      <div class="meta-item"><div class="meta-dot"></div> Phase 3 active — awaiting client inputs</div>
+      <div class="meta-updated" id="updated-date"></div>
+    </div>
+  </div>
+
+  <!-- Summary bar -->
+  <div class="summary-bar">
+    <div class="summary-card">
+      <div class="summary-val">2 / 7</div>
+      <div class="summary-label">Phases complete</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val">5</div>
+      <div class="summary-label">Deliverables built</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val">3</div>
+      <div class="summary-label">Client inputs pending</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val">2–3 wk</div>
+      <div class="summary-label">Build time once unlocked</div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="leg"><div class="leg-dot done"></div>Complete</div>
+    <div class="leg"><div class="leg-dot active"></div>Active — in progress</div>
+    <div class="leg"><div class="leg-dot blocked"></div>Blocked — awaiting input</div>
+    <div class="leg"><div class="leg-dot upcoming"></div>Upcoming</div>
+  </div>
+
+  <!-- You are here -->
+  <div class="you-are-here">
+    <div class="yah-pulse"></div>
+    Currently in Phase 3 — Awaiting client inputs to unlock the build
+  </div>
+
+  <!-- Phases -->
+  <div class="phases" id="phases"></div>
+
+</main>
+
+<!-- Footer -->
+<footer class="site-footer">
+  <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
+  <span>Project Tracker v1 · April 2026</span>
+</footer>
+
+<script>
+
+  // ── Set updated date ──
+  document.getElementById('updated-date').textContent =
+    'Last updated: ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
+
+  // ── Phase data ──
+  const phases = [
+    {
+      num: 'Phase 1',
+      name: 'Scoping & Diagnosis',
+      tag: 'COMPLETE',
+      status: 'done',
+      title: 'Engagement scoping & problem diagnosis',
+      desc: 'Structured strategy session with Shalini Gupta. Problem diagnosed: Ishwa\'s quality edge lives entirely in consultant judgement — no documented framework, no structured AI input. Solution architecture defined across three layers.',
+      deliverables: [
+        { label: 'Problem framing & solution architecture', status: 'done' },
+        { label: 'Engagement folder delivered to client', status: 'done' },
+      ],
+      milestone: { label: 'Engagement folder delivered to Ishwa', status: 'done' },
+    },
+    {
+      num: 'Phase 2',
+      name: 'Data Audit',
+      tag: 'COMPLETE',
+      status: 'done',
+      title: 'Data receipt, audit & documentation',
+      desc: 'Five data files received from Ishwa (Zoho Recruit + CRM, covering Sep 2022 — Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, and interactive forms built and delivered.',
+      deliverables: [
+        { label: '01 — Leadership data audit', status: 'done' },
+        { label: '02 — Consultant data audit', status: 'done' },
+        { label: '03 — Data gap one-pager', status: 'done' },
+        { label: '04 — Mandate intake form', status: 'done' },
+        { label: '05 — Search closure form', status: 'done' },
+      ],
+      milestone: { label: 'Audit documents + templates delivered', status: 'done' },
+    },
+    {
+      num: 'Phase 3',
+      name: 'Client Inputs',
+      tag: 'ACTIVE',
+      status: 'active',
+      title: 'Pending inputs from Ishwa — the build blockers',
+      desc: 'Three specific inputs are required before the matching engine prototype can be built. Items 1 and 2 can be covered in a single 60–90 minute session with a senior consultant.',
+      deliverables: [
+        { label: 'End-to-end search walkthrough (recorded)', status: 'pending' },
+        { label: '3 profiles evaluated against 1 live mandate', status: 'pending' },
+        { label: 'Data capture method selected (A / B / C)', status: 'pending' },
+      ],
+      blocker: 'All three items are pending from Ishwa. None of the subsequent phases can begin until these are received.',
+      milestone: { label: 'Client inputs received — build unlocked', status: 'pending' },
+    },
+    {
+      num: 'Phase 4',
+      name: 'Rubric Build',
+      tag: 'BLOCKED',
+      status: 'blocked',
+      title: 'Evaluation rubric — externalise consultant judgement',
+      desc: 'The walkthrough session is converted by Claude into a weighted JSON scoring rubric. Criteria names, weights, positive and negative signals, and dealbreaker flags are documented per mandate type. Reviewed and signed off by a senior consultant.',
+      deliverables: [
+        { label: 'Weighted JSON rubric drafted', status: 'blocked' },
+        { label: 'Dealbreaker flags defined', status: 'blocked' },
+        { label: 'Rubric signed off by Ishwa', status: 'blocked' },
+      ],
+      blocker: 'Requires: walkthrough session and profile evaluation from Phase 3.',
+      milestone: { label: 'Evaluation rubric signed off', status: 'blocked' },
+    },
+    {
+      num: 'Phase 5',
+      name: 'Engine Build',
+      tag: 'BLOCKED',
+      status: 'blocked',
+      title: 'Matching engine prototype — build & validation',
+      desc: 'Claude API deployment. Takes a structured mandate JSON and a long-list of candidate profiles (50–150), returns a ranked shortlist with per-criterion scores and plain-language rationale per candidate. Tested against recent closed mandates to validate output quality before handover.',
+      deliverables: [
+        { label: 'System prompt architecture', status: 'done' },
+        { label: 'API prototype built', status: 'blocked' },
+        { label: 'Tested against closed mandates', status: 'blocked' },
+        { label: 'Ishwa review and sign-off', status: 'blocked' },
+      ],
+      blocker: 'Requires: evaluation rubric from Phase 4. Estimated build time: 2–3 weeks from rubric receipt.',
+      milestone: { label: 'Prototype validated against live mandates', status: 'blocked' },
+    },
+    {
+      num: 'Phase 6',
+      name: 'Data Capture',
+      tag: 'UPCOMING',
+      status: 'upcoming',
+      title: 'Data capture tool — selected, built & deployed',
+      desc: 'Whichever method Ishwa selects — ChatGPT persona prompt, WhatsApp bot, or lightweight web app — the data capture layer is built and deployed. Consultants begin logging the four key data points per mandate that make the engine self-improving over time.',
+      deliverables: [
+        { label: 'Capture method selected by Ishwa', status: 'blocked' },
+        { label: 'Tool built and deployed', status: 'blocked' },
+        { label: 'Consultant onboarding session', status: 'blocked' },
+      ],
+      milestone: { label: 'First mandate logged through new system', status: 'blocked' },
+    },
+    {
+      num: 'Phase 7',
+      name: 'BD Analytics',
+      tag: 'UPCOMING',
+      status: 'upcoming',
+      title: 'BD pattern analysis — strategic intelligence layer',
+      desc: 'Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership — the layer that tells Ishwa which mandates to pursue and which to push back on.',
+      deliverables: [
+        { label: 'Industry label standardisation', status: 'blocked' },
+        { label: 'BD pattern report', status: 'blocked' },
+        { label: 'Mandate risk scoring model', status: 'blocked' },
+      ],
+      milestone: { label: 'BD analytics report delivered to Ishwa leadership', status: 'blocked' },
+    },
+  ];
+
+  // ── Render ──
+  const container = document.getElementById('phases');
+  const statusMap = {
+    done:     { badge: 'Complete', badgeClass: 'badge-done',     dot: 'done',     card: 'done' },
+    active:   { badge: 'Active',   badgeClass: 'badge-active',   dot: 'active',   card: 'active' },
+    blocked:  { badge: 'Blocked',  badgeClass: 'badge-blocked',  dot: 'blocked',  card: 'blocked' },
+    upcoming: { badge: 'Upcoming', badgeClass: 'badge-upcoming', dot: 'upcoming', card: '' },
+  };
+
+  phases.forEach((p, i) => {
+    const s = statusMap[p.status];
+    const isFirst = i === 0;
+    const isLast  = i === phases.length - 1;
+
+    const topLineClass = isFirst ? 'hide' :
+      (phases[i-1].status === 'done' ? 'done' : phases[i-1].status === 'active' ? 'active' : '');
+    const botLineClass = isLast ? 'hide' :
+      (p.status === 'done' ? 'done' : p.status === 'active' ? 'active' : '');
+
+    const delivHTML = p.deliverables.map(d =>
+      `<span class="deliverable ${d.status}">${d.label}</span>`
+    ).join('');
+
+    const blockerHTML = p.blocker
+      ? `<div class="blocker"><strong>Waiting on:</strong> ${p.blocker}</div>`
+      : '';
+
+    const mFlagClass = p.milestone?.status === 'done' ? 'done'
+      : p.milestone?.status === 'pending' ? 'pending' : 'blocked';
+
+    const milestoneHTML = p.milestone
+      ? `<div class="milestone">
+           <div class="milestone-flag ${mFlagClass}"></div>
+           <span><strong>Milestone:</strong> ${p.milestone.label}</span>
+         </div>`
+      : '';
+
+    const row = document.createElement('div');
+    row.className = 'phase-row';
+    row.innerHTML = `
+      <div class="phase-label">
+        <div class="phase-num">${p.num}</div>
+        <div class="phase-name">${p.name}</div>
+        <div class="phase-tag">${p.tag}</div>
+      </div>
+      <div class="spine">
+        <div class="spine-top ${topLineClass}"></div>
+        <div class="spine-dot ${s.dot}"></div>
+        <div class="spine-bottom ${botLineClass}"></div>
+      </div>
+      <div class="phase-card ${s.card}">
+        <div class="card-header">
+          <div class="card-title">${p.title}</div>
+          <span class="status-badge ${s.badgeClass}">${s.badge}</span>
+        </div>
+        <div class="card-body">
+          <div class="card-desc">${p.desc}</div>
+          <div class="deliverables">${delivHTML}</div>
+          ${blockerHTML}
+          ${milestoneHTML}
+        </div>
+      </div>
+    `;
+    container.appendChild(row);
+  });
+
+</script>
+</body>
+</html>
