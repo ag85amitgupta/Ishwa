@@ -1,0 +1,632 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Search Closure — Ishwa Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rust:    #B5451B;
+    --rust-lt: #F0D5CB;
+    --rust-dk: #8B3315;
+    --black:   #1A1A1A;
+    --g1:      #4A4A4A;
+    --g2:      #F5F3F1;
+    --g3:      #E8E4E0;
+    --g4:      #DDDDDD;
+    --white:   #FFFFFF;
+    --amber:   #FFF8EE;
+    --green:   #EBF5EC;
+    --green2:  #2D7D32;
+    --red:     #FDECEA;
+    --red2:    #C62828;
+    --blue:    #E3F2FD;
+    --blue2:   #1565C0;
+    --serif:   'Playfair Display', Georgia, serif;
+    --sans:    'DM Sans', system-ui, sans-serif;
+    --mono:    'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F2EFEB; font-family: var(--sans); color: var(--black); min-height: 100vh; }
+
+  .page-header {
+    background: var(--black);
+    border-bottom: 3px solid var(--rust);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    max-width: 900px; margin: 0 auto; padding: 18px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-brand { display: flex; align-items: baseline; gap: 16px; }
+  .brand-firm { font-family: var(--serif); font-size: 18px; color: var(--white); font-weight: 600; }
+  .brand-div { width: 1px; height: 14px; background: var(--rust); }
+  .brand-pip { font-family: var(--sans); font-size: 11px; color: var(--rust); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+  .header-tag { font-family: var(--mono); font-size: 11px; color: #666; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .page-body { max-width: 900px; margin: 0 auto; padding: 48px 40px 80px; }
+
+  .form-title-block { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--g4); }
+  .form-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rust); margin-bottom: 10px; }
+  .form-title { font-family: var(--serif); font-size: 38px; font-weight: 700; color: var(--black); line-height: 1.1; margin-bottom: 12px; }
+  .form-subtitle { font-size: 15px; color: var(--g1); line-height: 1.6; max-width: 620px; }
+  .form-meta-row { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .form-meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--g1); }
+  .meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rust); flex-shrink: 0; }
+
+  /* Outcome toggle */
+  .outcome-toggle {
+    display: flex; gap: 0; margin-bottom: 28px; border: 1.5px solid var(--g4); border-radius: 2px; overflow: hidden;
+  }
+  .outcome-btn {
+    flex: 1; padding: 16px 20px; border: none; background: var(--white);
+    font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--g1);
+    cursor: pointer; transition: all 0.15s; text-align: center;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+  }
+  .outcome-btn + .outcome-btn { border-left: 1px solid var(--g4); }
+  .outcome-btn .outcome-icon { font-size: 22px; }
+  .outcome-btn .outcome-label { font-size: 13px; font-weight: 600; }
+  .outcome-btn .outcome-sub { font-size: 11px; font-weight: 400; color: #AAA; }
+  .outcome-btn.selected-won { background: var(--green); color: var(--green2); border-color: var(--green2); }
+  .outcome-btn.selected-won .outcome-sub { color: var(--green2); opacity: 0.7; }
+  .outcome-btn.selected-dead { background: var(--red); color: var(--red2); border-color: var(--red2); }
+  .outcome-btn.selected-dead .outcome-sub { color: var(--red2); opacity: 0.7; }
+  .outcome-btn.selected-hold { background: var(--amber); color: #E65100; border-color: #E65100; }
+
+  .form-section {
+    margin-bottom: 32px; background: var(--white); border-radius: 2px;
+    border: 1px solid var(--g4); overflow: hidden;
+    animation: fadeUp 0.35s ease both;
+  }
+  @keyframes fadeUp { from { opacity:0; transform:translateY(10px); } to { opacity:1; transform:translateY(0); } }
+  .form-section:nth-child(1) { animation-delay:0.05s; }
+  .form-section:nth-child(2) { animation-delay:0.10s; }
+  .form-section:nth-child(3) { animation-delay:0.15s; }
+  .form-section:nth-child(4) { animation-delay:0.20s; }
+  .form-section:nth-child(5) { animation-delay:0.25s; }
+
+  .section-header {
+    display: flex; align-items: center; gap: 14px;
+    padding: 18px 24px; background: var(--g2); border-bottom: 1px solid var(--g4);
+  }
+  .section-num {
+    width: 28px; height: 28px; background: var(--rust); color: var(--white);
+    border-radius: 2px; display: flex; align-items: center; justify-content: center;
+    font-family: var(--serif); font-size: 14px; font-weight: 600; flex-shrink: 0;
+  }
+  .section-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--black); }
+  .section-hint { margin-left: auto; font-size: 11px; color: #999; font-style: italic; }
+  .section-body { padding: 24px; }
+
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px 28px; }
+  .field-grid.single { grid-template-columns: 1fr; }
+  .field-grid.thirds { grid-template-columns: 1fr 1fr 1fr; }
+  .field-group { display: flex; flex-direction: column; gap: 6px; }
+  .field-group.full { grid-column: 1/-1; }
+
+  label { font-size: 11px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--g1); }
+  label .req { color: var(--rust); margin-left: 2px; }
+  label .opt { color: #AAA; font-weight: 400; letter-spacing: 0; text-transform: none; font-size: 10px; margin-left: 4px; }
+  .field-hint { font-size: 11px; color: #AAA; line-height: 1.4; margin-top: 2px; }
+
+  input[type="text"], input[type="date"], input[type="number"], select, textarea {
+    font-family: var(--sans); font-size: 14px; color: var(--black);
+    background: var(--white); border: 1.5px solid var(--g4); border-radius: 2px;
+    padding: 10px 13px; outline: none; transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%; appearance: none; -webkit-appearance: none;
+  }
+  input:focus, select:focus, textarea:focus {
+    border-color: var(--rust); box-shadow: 0 0 0 3px rgba(181,69,27,0.08);
+  }
+  input::placeholder, textarea::placeholder { color: #C0BAB4; }
+  textarea { resize: vertical; line-height: 1.55; }
+  select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A4A4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat: no-repeat; background-position: right 12px center;
+    padding-right: 36px; cursor: pointer;
+  }
+
+  /* Shortlist metric block */
+  .metric-block {
+    display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-bottom: 24px;
+  }
+  .metric-card {
+    border: 1.5px solid var(--g4); border-radius: 2px; padding: 16px 18px;
+    background: var(--g2); position: relative; transition: border-color 0.15s;
+  }
+  .metric-card:focus-within { border-color: var(--rust); background: var(--white); }
+  .metric-card-label {
+    font-size: 10px; font-weight: 600; letter-spacing: 0.12em;
+    text-transform: uppercase; color: var(--g1); margin-bottom: 8px;
+  }
+  .metric-card-label .req { color: var(--rust); }
+  .metric-input {
+    font-family: var(--serif); font-size: 32px; font-weight: 700;
+    color: var(--rust); width: 100%; border: none; background: transparent;
+    outline: none; padding: 0;
+  }
+  .metric-input::placeholder { color: var(--g4); font-size: 28px; }
+  .metric-card-sub { font-size: 11px; color: #AAA; margin-top: 4px; }
+
+  .rate-display {
+    border: 1.5px solid var(--g4); border-radius: 2px; padding: 16px 18px;
+    background: var(--white); text-align: center;
+  }
+  .rate-val {
+    font-family: var(--serif); font-size: 32px; font-weight: 700;
+    color: var(--black); transition: color 0.3s;
+  }
+  .rate-val.good { color: var(--green2); }
+  .rate-val.warn { color: #E65100; }
+  .rate-val.bad  { color: var(--rust); }
+  .rate-label { font-size: 10px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--g1); margin-bottom: 8px; }
+  .rate-sub { font-size: 11px; color: #AAA; margin-top: 4px; }
+
+  /* Candidate rows */
+  .candidate-list { display: flex; flex-direction: column; gap: 12px; }
+  .candidate-row {
+    border: 1.5px solid var(--g4); border-radius: 2px; overflow: hidden;
+    animation: tagIn 0.2s ease;
+  }
+  @keyframes tagIn { from { opacity:0; transform:translateY(-6px); } to { opacity:1; transform:translateY(0); } }
+  .candidate-header {
+    display: flex; align-items: center; gap: 12px;
+    padding: 10px 16px; background: var(--g2);
+    border-bottom: 1px solid var(--g4);
+  }
+  .candidate-num {
+    width: 22px; height: 22px; border-radius: 50%;
+    background: var(--rust); color: var(--white);
+    font-size: 11px; font-weight: 600;
+    display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+  }
+  .candidate-name-input {
+    flex: 1; border: none; background: transparent;
+    font-family: var(--sans); font-size: 14px; font-weight: 500; color: var(--black);
+    outline: none; padding: 0;
+  }
+  .candidate-name-input::placeholder { color: #C0BAB4; font-weight: 400; }
+  .remove-candidate {
+    background: none; border: none; cursor: pointer; color: #CCC;
+    font-size: 18px; line-height: 1; padding: 0; transition: color 0.15s;
+  }
+  .remove-candidate:hover { color: var(--rust); }
+  .candidate-body { padding: 14px 16px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px 20px; }
+  .candidate-field { display: flex; flex-direction: column; gap: 5px; }
+  .candidate-field label { font-size: 10px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: #AAA; }
+
+  .outcome-pills { display: flex; gap: 6px; flex-wrap: wrap; }
+  .outcome-pill {
+    padding: 5px 12px; border-radius: 20px; border: 1.5px solid var(--g4);
+    font-size: 12px; font-weight: 500; cursor: pointer; color: var(--g1);
+    transition: all 0.12s; background: var(--white); white-space: nowrap;
+  }
+  .outcome-pill:hover { border-color: var(--g1); color: var(--black); }
+  .outcome-pill.active-shortlisted { background: var(--blue); color: var(--blue2); border-color: var(--blue2); }
+  .outcome-pill.active-offered     { background: var(--amber); color: #E65100; border-color: #E65100; }
+  .outcome-pill.active-placed      { background: var(--green); color: var(--green2); border-color: var(--green2); }
+  .outcome-pill.active-rejected    { background: var(--red); color: var(--red2); border-color: var(--red2); }
+  .outcome-pill.active-withdrew    { background: var(--g2); color: var(--g1); border-color: var(--g1); }
+
+  .add-candidate-btn {
+    display: flex; align-items: center; gap: 8px;
+    padding: 12px 16px; border: 1.5px dashed var(--g4); border-radius: 2px;
+    background: none; cursor: pointer; font-family: var(--sans);
+    font-size: 13px; color: var(--g1); width: 100%; transition: all 0.15s;
+    margin-top: 4px;
+  }
+  .add-candidate-btn:hover { border-color: var(--rust); color: var(--rust); background: var(--rust-lt); }
+  .add-icon { font-size: 18px; line-height: 1; }
+
+  /* Dead reason section — conditionally shown */
+  .dead-section { display: none; }
+  .dead-section.visible { display: block; }
+
+  .reason-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px;
+  }
+  .reason-option {
+    padding: 12px 16px; border: 1.5px solid var(--g4); border-radius: 2px;
+    cursor: pointer; transition: all 0.12s; background: var(--white);
+  }
+  .reason-option:hover { border-color: var(--rust); background: var(--rust-lt); }
+  .reason-option.selected { border-color: var(--rust); background: var(--rust-lt); }
+  .reason-label { font-size: 13px; font-weight: 500; color: var(--black); margin-bottom: 2px; }
+  .reason-sub { font-size: 11px; color: #AAA; }
+  .reason-option.selected .reason-label { color: var(--rust-dk); }
+  .reason-option.selected .reason-sub { color: var(--rust); opacity: 0.7; }
+
+  .callout {
+    background: var(--amber); border-left: 3px solid var(--rust);
+    border-radius: 0 2px 2px 0; padding: 12px 16px;
+    font-size: 13px; color: var(--g1); line-height: 1.55; margin-bottom: 20px;
+  }
+  .callout strong { color: var(--black); font-weight: 600; }
+
+  .submit-row {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 16px; margin-top: 8px; padding-top: 32px; border-top: 2px solid var(--g4);
+  }
+  .submit-note { font-size: 12px; color: #AAA; font-style: italic; }
+  .btn-group { display: flex; gap: 12px; }
+  .btn {
+    font-family: var(--sans); font-size: 13px; font-weight: 600;
+    letter-spacing: 0.04em; padding: 11px 24px; border-radius: 2px;
+    border: none; cursor: pointer; transition: all 0.15s;
+  }
+  .btn-secondary { background: var(--white); color: var(--g1); border: 1.5px solid var(--g4); }
+  .btn-secondary:hover { border-color: var(--g1); color: var(--black); }
+  .btn-primary { background: var(--rust); color: var(--white); }
+  .btn-primary:hover { background: var(--rust-dk); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(181,69,27,0.25); }
+
+  .page-footer {
+    max-width: 900px; margin: 0 auto; padding: 0 40px 40px;
+    font-size: 11px; color: #BBB; display: flex; align-items: center; justify-content: space-between;
+  }
+
+  @media (max-width: 640px) {
+    .page-body { padding: 24px 20px 60px; }
+    .field-grid, .field-grid.thirds, .metric-block, .reason-grid { grid-template-columns: 1fr; }
+    .candidate-body { grid-template-columns: 1fr; }
+    .header-inner { padding: 14px 20px; }
+    .outcome-toggle { flex-direction: column; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-firm">Ishwa Consulting</span>
+      <div class="brand-div"></div>
+      <span class="brand-pip">PiP_AGI</span>
+    </div>
+    <span class="header-tag">Search Closure — Template v1</span>
+  </div>
+</header>
+
+<div class="page-body">
+
+  <div class="form-title-block">
+    <div class="form-eyebrow">Search Closure</div>
+    <h1 class="form-title">Mandate Closure Record</h1>
+    <p class="form-subtitle">Complete this form when a search reaches its conclusion — whether placed, dead, or on hold. The data captured here is what makes the matching engine progressively smarter with every completed search.</p>
+    <div class="form-meta-row">
+      <div class="form-meta-item"><div class="meta-dot"></div> Takes approx. 5–8 minutes to complete</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> Complete for every closed mandate, including dead searches</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> The more detail, the more the AI learns</div>
+    </div>
+  </div>
+
+  <!-- Section 1: Mandate Reference -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Mandate Reference</div>
+      <span class="section-hint">Link this closure to the original intake</span>
+    </div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Mandate ID <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. ISH-202604-047" id="mandate-ref">
+          <div class="field-hint">Must match the ID used in the intake form and Zoho Recruit</div>
+        </div>
+        <div class="field-group">
+          <label>Date Closed <span class="req">*</span></label>
+          <input type="date" id="date-closed">
+        </div>
+        <div class="field-group">
+          <label>Role Title <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Chief Financial Officer" id="role-ref">
+        </div>
+        <div class="field-group">
+          <label>Client Name <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Bajaj Finance Limited" id="client-ref">
+        </div>
+        <div class="field-group">
+          <label>Execution Owner <span class="req">*</span></label>
+          <select id="exec-owner-ref">
+            <option value="" disabled selected>Select consultant</option>
+            <option>Varsha Karthik</option><option>Preeti Sharma</option>
+            <option>Namrata Singh</option><option>Aparna Janakiraman</option>
+            <option>Chhaya Arora</option><option>Nitika Tarway</option>
+            <option>Devika Sen</option><option>Rashmi Lamba</option>
+            <option>Sapna Khatri</option><option>Mohit Sethi</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Search Duration (days)</label>
+          <input type="number" placeholder="Auto-calculated if dates available" id="duration" readonly style="background:var(--g2);color:var(--g1);">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 2: Outcome -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Search Outcome</div>
+      <span class="section-hint">What happened</span>
+    </div>
+    <div class="section-body">
+      <label style="display:block;margin-bottom:12px;">Outcome <span class="req">*</span></label>
+      <div class="outcome-toggle">
+        <button class="outcome-btn" onclick="selectOutcome('won', this)">
+          <span class="outcome-icon">✓</span>
+          <span class="outcome-label">Closed Won</span>
+          <span class="outcome-sub">Candidate placed & joining confirmed</span>
+        </button>
+        <button class="outcome-btn" onclick="selectOutcome('dead', this)">
+          <span class="outcome-icon">✕</span>
+          <span class="outcome-label">Dead</span>
+          <span class="outcome-sub">Search abandoned or client withdrew</span>
+        </button>
+        <button class="outcome-btn" onclick="selectOutcome('hold', this)">
+          <span class="outcome-icon">⏸</span>
+          <span class="outcome-label">On Hold</span>
+          <span class="outcome-sub">Paused — may resume</span>
+        </button>
+      </div>
+
+      <!-- Dead reason — shown only when Dead is selected -->
+      <div class="dead-section" id="dead-section">
+        <div class="callout">
+          <strong>This is the most under-captured data point in Ishwa's system.</strong> 161 of 236 dead searches have no explanation on record. One selection here closes that gap — and over time, allows the AI to flag high-risk mandates before resources are committed.
+        </div>
+        <label style="display:block;margin-bottom:12px;">Primary Reason for Dead <span class="req">*</span></label>
+        <div class="reason-grid" id="reason-grid">
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">Client Withdrew</div>
+            <div class="reason-sub">Client cancelled or deprioritised the mandate</div>
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">Hired Internally</div>
+            <div class="reason-sub">Role was filled from within the organisation</div>
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">Budget Constraint</div>
+            <div class="reason-sub">Fee or compensation terms could not be agreed</div>
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">No Suitable Candidates</div>
+            <div class="reason-sub">Long-list exhausted without a qualifying profile</div>
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">Client Unresponsive</div>
+            <div class="reason-sub">Client went silent — no feedback or engagement</div>
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">Brief Changed</div>
+            <div class="reason-sub">Role evolved significantly mid-search</div>
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">Candidate Declined</div>
+            <div class="reason-sub">Offer made but candidate withdrew</div>
+          </div>
+          <div class="reason-option" onclick="selectReason(this)">
+            <div class="reason-label">Other</div>
+            <div class="reason-sub">See additional notes below</div>
+          </div>
+        </div>
+        <div class="field-group" style="margin-top:16px;">
+          <label>Additional Context <span class="opt">optional but valuable</span></label>
+          <textarea placeholder="Any additional context that would help identify a pattern — e.g. 'Client had no real urgency', 'Brief was unrealistic for the fee level', 'Competing mandate from same client took priority'" rows="3" id="dead-notes"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 3: Shortlist Metrics -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Shortlist Metrics</div>
+      <span class="section-hint">The numbers behind the 75% claim</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>These two fields make the 75% shortlist metric trackable for the first time.</strong> Currently, this number exists nowhere in Ishwa's data — not in Zoho Recruit, not in the CRM. Filling this in for every mandate is what gives the AI a quality baseline to calibrate against.
+      </div>
+      <div class="metric-block">
+        <div class="metric-card">
+          <div class="metric-card-label">CVs Shared <span class="req">*</span></div>
+          <input class="metric-input" type="number" placeholder="—" id="cvs-shared" min="0" oninput="calcRate()">
+          <div class="metric-card-sub">Total profiles sent to client</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-label">Shortlisted for Interview <span class="req">*</span></div>
+          <input class="metric-input" type="number" placeholder="—" id="cvs-shortlisted" min="0" oninput="calcRate()">
+          <div class="metric-card-sub">Client agreed to interview</div>
+        </div>
+        <div class="rate-display">
+          <div class="rate-label">Shortlist Rate</div>
+          <div class="rate-val" id="rate-val">—</div>
+          <div class="rate-sub">Target: 75% or above</div>
+        </div>
+      </div>
+      <div class="field-grid thirds">
+        <div class="field-group">
+          <label>Offers Made</label>
+          <input type="number" placeholder="0" id="offers-made" min="0">
+        </div>
+        <div class="field-group">
+          <label>Offer Accepted Date <span class="opt">if applicable</span></label>
+          <input type="date" id="offer-date">
+        </div>
+        <div class="field-group">
+          <label>Candidate Joining Date <span class="opt">if applicable</span></label>
+          <input type="date" id="joining-date">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Section 4: Candidate Outcomes -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Candidate Outcomes</div>
+      <span class="section-hint">What happened to each shortlisted candidate — the AI learns from this</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>Each outcome logged here trains the scoring engine.</strong> A candidate who was shortlisted and placed tells the AI what a strong match looks like for this mandate type. A candidate who was rejected — and why — tells it what to avoid next time.
+      </div>
+      <div class="candidate-list" id="candidate-list"></div>
+      <button class="add-candidate-btn" onclick="addCandidate()">
+        <span class="add-icon">+</span> Add shortlisted candidate
+      </button>
+    </div>
+  </div>
+
+  <!-- Section 5: Final CTC & Learning Notes -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Commercials & Learnings</div>
+      <span class="section-hint">Final numbers and what to carry forward</span>
+    </div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Final CTC Accepted (₹) <span class="opt">if placed</span></label>
+          <input type="number" placeholder="e.g. 15000000" id="final-ctc">
+        </div>
+        <div class="field-group">
+          <label>Total Revenue (₹) <span class="opt">if placed</span></label>
+          <input type="number" placeholder="Fees + retainer" id="total-revenue">
+        </div>
+        <div class="field-group full">
+          <label>What Worked Well <span class="opt">optional</span></label>
+          <textarea placeholder="What about the search approach, the brief, or the candidate pool worked particularly well? What would you replicate?" id="worked-well" rows="3"></textarea>
+        </div>
+        <div class="field-group full">
+          <label>What To Do Differently <span class="opt">optional</span></label>
+          <textarea placeholder="What would you change about how this search was run? What slowed it down? What would have made the shortlist sharper?" id="do-differently" rows="3"></textarea>
+        </div>
+        <div class="field-group full">
+          <label>Notes for the AI <span class="opt">optional but high value</span></label>
+          <textarea placeholder="Anything about this mandate that the AI should factor into future scoring for similar searches — unusual client requirements, sector-specific signals that worked, profile types that consistently underperformed" id="ai-notes" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-row">
+    <span class="submit-note">This record will be appended to the shared mandate log and fed into the AI training pipeline.</span>
+    <div class="btn-group">
+      <button class="btn btn-secondary">Save Draft</button>
+      <button class="btn btn-primary">Submit Closure Record →</button>
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
+  <span>Search Closure Template v1  ·  April 2026</span>
+</div>
+
+<script>
+  // ── Date auto-fill ──
+  document.getElementById('date-closed').value = new Date().toISOString().split('T')[0];
+
+  // ── Duration calc ──
+  function calcDuration() {
+    const opened = document.getElementById('date-opened-ref')?.value;
+    const closed = document.getElementById('date-closed').value;
+    if (opened && closed) {
+      const diff = Math.round((new Date(closed) - new Date(opened)) / 86400000);
+      document.getElementById('duration').value = diff > 0 ? diff : '';
+    }
+  }
+
+  // ── Outcome toggle ──
+  function selectOutcome(type, btn) {
+    document.querySelectorAll('.outcome-btn').forEach(b => {
+      b.className = 'outcome-btn';
+    });
+    if (type === 'won')  btn.classList.add('selected-won');
+    if (type === 'dead') btn.classList.add('selected-dead');
+    if (type === 'hold') btn.classList.add('selected-hold');
+
+    const deadSec = document.getElementById('dead-section');
+    if (type === 'dead') {
+      deadSec.classList.add('visible');
+    } else {
+      deadSec.classList.remove('visible');
+    }
+  }
+
+  // ── Reason selection ──
+  function selectReason(el) {
+    document.querySelectorAll('.reason-option').forEach(r => r.classList.remove('selected'));
+    el.classList.add('selected');
+  }
+
+  // ── Shortlist rate ──
+  function calcRate() {
+    const shared = parseInt(document.getElementById('cvs-shared').value) || 0;
+    const listed = parseInt(document.getElementById('cvs-shortlisted').value) || 0;
+    const rateEl = document.getElementById('rate-val');
+    if (!shared || !listed) { rateEl.textContent = '—'; rateEl.className = 'rate-val'; return; }
+    const pct = Math.round((listed / shared) * 100);
+    rateEl.textContent = pct + '%';
+    rateEl.className = 'rate-val ' + (pct >= 75 ? 'good' : pct >= 50 ? 'warn' : 'bad');
+  }
+
+  // ── Candidate rows ──
+  let candidateCount = 0;
+  function addCandidate() {
+    candidateCount++;
+    const n = candidateCount;
+    const list = document.getElementById('candidate-list');
+    const row = document.createElement('div');
+    row.className = 'candidate-row';
+    row.id = `candidate-${n}`;
+    row.innerHTML = `
+      <div class="candidate-header">
+        <div class="candidate-num">${n}</div>
+        <input class="candidate-name-input" type="text" placeholder="Candidate name">
+        <button class="remove-candidate" onclick="document.getElementById('candidate-${n}').remove()">×</button>
+      </div>
+      <div class="candidate-body">
+        <div class="candidate-field">
+          <label>Outcome</label>
+          <div class="outcome-pills">
+            <span class="outcome-pill" onclick="setPill(this, 'active-shortlisted')">Shortlisted</span>
+            <span class="outcome-pill" onclick="setPill(this, 'active-offered')">Offered</span>
+            <span class="outcome-pill" onclick="setPill(this, 'active-placed')">Placed ✓</span>
+            <span class="outcome-pill" onclick="setPill(this, 'active-rejected')">Rejected</span>
+            <span class="outcome-pill" onclick="setPill(this, 'active-withdrew')">Withdrew</span>
+          </div>
+        </div>
+        <div class="candidate-field">
+          <label>Rejection / Withdrawal Reason <span style="font-size:10px;color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;">(if applicable)</span></label>
+          <input type="text" placeholder="e.g. Overqualified / comp gap / client preferred different profile" style="font-size:13px;padding:7px 10px;">
+        </div>
+        <div class="candidate-field" style="grid-column:1/-1;">
+          <label>Evaluator Note <span style="font-size:10px;color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;">optional — what the AI should learn from this candidate's outcome</span></label>
+          <input type="text" placeholder="e.g. 'Strong on sector fit but tenure pattern flagged correctly by the brief — should have been deprioritised earlier'" style="font-size:13px;padding:7px 10px;">
+        </div>
+      </div>
+    `;
+    list.appendChild(row);
+  }
+
+  function setPill(el, activeClass) {
+    const pills = el.closest('.outcome-pills').querySelectorAll('.outcome-pill');
+    pills.forEach(p => p.className = 'outcome-pill');
+    el.classList.add(activeClass);
+  }
+
+  // Add one candidate row by default
+  addCandidate();
+</script>
+</body>
+</html>
