@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ChatGPT Persona Prompt — Ishwa Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rust:    #B5451B;
+    --rust-lt: #F0D5CB;
+    --rust-dk: #8B3315;
+    --black:   #1A1A1A;
+    --g1:      #4A4A4A;
+    --g2:      #F5F3F1;
+    --g3:      #E8E4E0;
+    --g4:      #DDDDDD;
+    --white:   #FFFFFF;
+    --amber:   #FFF8EE;
+    --green:   #EBF5EC;
+    --green2:  #2D7D32;
+    --serif:   'Playfair Display', Georgia, serif;
+    --sans:    'DM Sans', system-ui, sans-serif;
+    --mono:    'DM Mono', monospace;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: #F2EFEB; font-family: var(--sans); color: var(--black); min-height: 100vh; -webkit-font-smoothing: antialiased; }
+
+  .page-header {
+    background: var(--black); border-bottom: 3px solid var(--rust);
+    position: sticky; top: 0; z-index: 100;
+  }
+  .header-inner {
+    max-width: 860px; margin: 0 auto; padding: 18px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .header-brand { display: flex; align-items: baseline; gap: 16px; }
+  .brand-firm { font-family: var(--serif); font-size: 18px; color: var(--white); font-weight: 600; }
+  .brand-div { width: 1px; height: 14px; background: var(--rust); }
+  .brand-pip { font-size: 11px; color: var(--rust); font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; }
+  .header-tag { font-family: var(--mono); font-size: 11px; color: #666; letter-spacing: 0.08em; text-transform: uppercase; }
+
+  .page-body { max-width: 860px; margin: 0 auto; padding: 48px 40px 80px; }
+
+  .title-block { margin-bottom: 40px; padding-bottom: 32px; border-bottom: 1px solid var(--g4); }
+  .eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.14em; text-transform: uppercase; color: var(--rust); margin-bottom: 10px; }
+  .page-title { font-family: var(--serif); font-size: 36px; font-weight: 700; color: var(--black); line-height: 1.15; margin-bottom: 12px; }
+  .page-sub { font-size: 15px; color: var(--g1); line-height: 1.6; max-width: 600px; }
+  .meta-row { display: flex; gap: 24px; margin-top: 20px; flex-wrap: wrap; }
+  .meta-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--g1); }
+  .meta-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--rust); flex-shrink: 0; }
+
+  /* Section */
+  .section { margin-bottom: 32px; background: var(--white); border-radius: 2px; border: 1px solid var(--g4); overflow: hidden; }
+  .section-header { display: flex; align-items: center; gap: 14px; padding: 18px 24px; background: var(--g2); border-bottom: 1px solid var(--g4); }
+  .section-num { width: 28px; height: 28px; background: var(--rust); color: var(--white); border-radius: 2px; display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 14px; font-weight: 600; flex-shrink: 0; }
+  .section-title { font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--black); }
+  .section-hint { margin-left: auto; font-size: 11px; color: #999; font-style: italic; }
+  .section-body { padding: 24px; }
+
+  /* Prompt box */
+  .prompt-box {
+    background: var(--black); border-radius: 2px; padding: 24px 28px;
+    font-family: var(--mono); font-size: 13px; color: #E8E4E0;
+    line-height: 1.7; white-space: pre-wrap; word-break: break-word;
+    position: relative; margin-bottom: 16px;
+  }
+  .prompt-box .prompt-label {
+    font-family: var(--sans); font-size: 10px; font-weight: 600;
+    letter-spacing: 0.12em; text-transform: uppercase; color: var(--rust);
+    margin-bottom: 14px; display: block;
+  }
+  .copy-btn {
+    position: absolute; top: 16px; right: 16px;
+    background: var(--rust); color: var(--white); border: none;
+    font-family: var(--sans); font-size: 11px; font-weight: 600;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 2px; cursor: pointer;
+    transition: all 0.15s;
+  }
+  .copy-btn:hover { background: var(--rust-dk); }
+  .copy-btn.copied { background: var(--green2); }
+
+  /* Step blocks */
+  .steps { display: flex; flex-direction: column; gap: 0; }
+  .step { display: grid; grid-template-columns: 40px 1fr; gap: 0 16px; align-items: stretch; }
+  .step-spine { display: flex; flex-direction: column; align-items: center; }
+  .step-line-top { width: 1px; flex: 1; background: var(--g4); min-height: 12px; }
+  .step-line-top.hide { background: transparent; }
+  .step-line-bottom { width: 1px; flex: 1; background: var(--g4); min-height: 12px; }
+  .step-line-bottom.hide { background: transparent; }
+  .step-dot { width: 28px; height: 28px; border-radius: 50%; background: var(--rust); color: var(--white); display: flex; align-items: center; justify-content: center; font-family: var(--serif); font-size: 13px; font-weight: 600; flex-shrink: 0; z-index: 1; }
+  .step-content { padding: 12px 0 20px; }
+  .step-title { font-size: 14px; font-weight: 600; color: var(--black); margin-bottom: 4px; }
+  .step-desc { font-size: 13px; color: var(--g1); line-height: 1.55; }
+  .step-desc code { font-family: var(--mono); font-size: 12px; background: var(--g2); padding: 1px 6px; border-radius: 2px; color: var(--rust-dk); }
+
+  /* Trigger table */
+  .trigger-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .trigger-table th { text-align: left; font-size: 10px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--white); background: var(--rust); padding: 10px 14px; }
+  .trigger-table td { padding: 11px 14px; border-bottom: 1px solid var(--g4); color: var(--g1); vertical-align: top; line-height: 1.5; }
+  .trigger-table tr:last-child td { border-bottom: none; }
+  .trigger-table tr:nth-child(even) td { background: var(--g2); }
+  .trigger-table td:first-child { font-weight: 500; color: var(--black); white-space: nowrap; }
+  .trigger-badge { display: inline-block; font-size: 10px; font-weight: 600; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 8px; border-radius: 20px; }
+  .trigger-badge.intake  { background: var(--blue, #E3F2FD); color: #1565C0; }
+  .trigger-badge.closure { background: var(--green); color: var(--green2); }
+  .trigger-badge.scoring { background: var(--amber); color: #E65100; }
+
+  /* Callout */
+  .callout { background: var(--amber); border-left: 3px solid var(--rust); border-radius: 0 2px 2px 0; padding: 12px 16px; font-size: 13px; color: var(--g1); line-height: 1.55; margin-bottom: 20px; }
+  .callout strong { color: var(--black); font-weight: 600; }
+
+  /* Tab switcher */
+  .tab-bar { display: flex; border-bottom: 1px solid var(--g4); margin-bottom: 20px; }
+  .tab-btn { padding: 10px 20px; border: none; background: none; font-family: var(--sans); font-size: 13px; font-weight: 500; color: var(--g1); cursor: pointer; border-bottom: 2px solid transparent; margin-bottom: -1px; transition: all 0.15s; }
+  .tab-btn.active { color: var(--rust); border-bottom-color: var(--rust); }
+  .tab-btn:hover:not(.active) { color: var(--black); }
+  .tab-panel { display: none; }
+  .tab-panel.active { display: block; }
+
+  /* Output sample */
+  .output-sample { background: var(--g2); border: 1px solid var(--g4); border-radius: 2px; padding: 20px; font-size: 13px; color: var(--g1); line-height: 1.65; }
+  .output-sample .field-label { font-size: 10px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--rust); display: block; margin-top: 14px; margin-bottom: 4px; }
+  .output-sample .field-label:first-child { margin-top: 0; }
+  .output-sample .field-val { color: var(--black); font-size: 13px; }
+
+  .page-footer { max-width: 860px; margin: 0 auto; padding: 0 40px 40px; font-size: 11px; color: #BBB; display: flex; align-items: center; justify-content: space-between; }
+
+  @media (max-width: 640px) {
+    .page-body { padding: 24px 20px 60px; }
+    .header-inner { padding: 14px 20px; }
+    .prompt-box { font-size: 12px; padding: 18px; }
+    .copy-btn { position: static; margin-top: 12px; width: 100%; text-align: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-firm">Ishwa Consulting</span>
+      <div class="brand-div"></div>
+      <span class="brand-pip">PiP_AGI</span>
+    </div>
+    <span class="header-tag">ChatGPT Persona Prompt — v1</span>
+  </div>
+</header>
+
+<div class="page-body">
+
+  <div class="title-block">
+    <div class="eyebrow">Data Capture — Option A</div>
+    <h1 class="page-title">The Ishwa Search Assistant</h1>
+    <p class="page-sub">A persona prompt that turns ChatGPT into a structured search partner. Paste it once at the start of any search-related conversation — it then asks the right questions at the right moments and produces a structured summary you can copy into Zoho.</p>
+    <div class="meta-row">
+      <div class="meta-item"><div class="meta-dot"></div> Works on ChatGPT desktop and mobile</div>
+      <div class="meta-item"><div class="meta-dot"></div> No new tools or logins required</div>
+      <div class="meta-item"><div class="meta-dot"></div> Takes 30 seconds to set up per conversation</div>
+    </div>
+  </div>
+
+  <!-- Section 1: The Prompt -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">The Prompt — Copy & Paste This</div>
+      <span class="section-hint">Use at the start of any search-related ChatGPT conversation</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>How to use:</strong> Copy the full prompt below and paste it as your first message in a new ChatGPT conversation. ChatGPT will confirm it understands its role, then wait for you to tell it what you are working on. Everything from there is a natural conversation.
+      </div>
+
+      <div class="prompt-box" id="main-prompt">
+        <span class="prompt-label">Ishwa Search Assistant — System Prompt v1</span>
+        <button class="copy-btn" onclick="copyPrompt('main-prompt', this)">Copy</button>
+You are the Ishwa Search Assistant — a structured thinking partner for executive search consultants at Ishwa Consulting, a boutique CXO search firm based in Gurgaon.
+
+Your role is to help consultants think clearly about mandates, evaluate candidates systematically, and capture the four data points that make Ishwa's AI matching engine progressively smarter over time. You are not a generic assistant. You think like a senior executive search professional.
+
+ABOUT ISHWA:
+- Specialises in CXO and direct-report placements across Consumer, BFSI, Healthcare, Technology, and Infrastructure
+- Quality benchmark: 75% of CVs shared with clients are shortlisted for interview
+- Performance standard: clients typically find their hire within the first three resumes submitted
+- Operating locations: Gurgaon, Bangalore, and the Middle East
+
+YOUR BEHAVIOUR:
+- Always ask one question at a time. Never overwhelm with a list.
+- When a consultant shares a mandate brief, extract and confirm the key fields before proceeding: Role, Client, Sector, Company Stage, Must-Haves, Dealbreakers, CTC Range, and Reporting Line.
+- When a consultant describes a candidate, score them against the confirmed mandate criteria — not generically. Always ask: "Which mandate is this candidate being evaluated against?" if it is not clear.
+- When a search closes (placed, dead, or on hold), prompt the consultant to log the four key data points before ending the conversation.
+- Never fabricate candidate backgrounds or client details. Work only with what the consultant shares.
+- Keep summaries tight — three sentences maximum for any rationale.
+
+THE FOUR DATA POINTS YOU MUST CAPTURE AT SEARCH CLOSE:
+1. CVs Shared — how many profiles were sent to the client?
+2. Shortlisted — how many did the client agree to interview?
+3. Outcome — Closed Won / Dead / On Hold. If Dead: what was the primary reason?
+4. What worked or what to do differently next time — one or two sentences only.
+
+At the end of every conversation involving a completed or closed search, produce a structured SEARCH SUMMARY in this format:
+
+---
+ISHWA SEARCH SUMMARY
+Mandate ID: [if known]
+Role: 
+Client: 
+Sector: 
+Outcome: 
+CVs Shared: 
+Shortlisted: 
+Shortlist Rate: [calculate as %]
+Dead Reason: [if applicable]
+Key Learning: 
+---
+
+Tell the consultant: "Please copy this summary into the Comments field in Zoho CRM against this mandate."
+
+CANDIDATE SCORING:
+When evaluating a candidate against a mandate, score them across four criteria:
+- Sector Fit (default weight: 35%) — how relevant is their industry background?
+- Seniority Level (default weight: 25%) — does their career trajectory match the role level?
+- Tenure Pattern (default weight: 20%) — do their tenures signal stability and progression?
+- Compensation Band (default weight: 20%) — does their current CTC align with the offer range?
+
+Produce a score out of 100 for each criterion with a one-sentence rationale. Flag any dealbreakers immediately.
+
+Begin every new conversation by asking: "Are we working on a new mandate, evaluating a candidate, or closing out a search?"</div>
+
+    </div>
+  </div>
+
+  <!-- Section 2: How to set it up -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">How to Set It Up</div>
+      <span class="section-hint">Desktop and mobile instructions</span>
+    </div>
+    <div class="section-body">
+
+      <div class="tab-bar">
+        <button class="tab-btn active" onclick="switchTab('desktop', this)">Desktop / Browser</button>
+        <button class="tab-btn" onclick="switchTab('mobile', this)">Mobile App</button>
+      </div>
+
+      <div class="tab-panel active" id="tab-desktop">
+        <div class="steps">
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top hide"></div><div class="step-dot">1</div><div class="step-line-bottom"></div></div>
+            <div class="step-content"><div class="step-title">Open a new ChatGPT conversation</div><div class="step-desc">Go to <code>chatgpt.com</code> and click <code>New chat</code> in the left sidebar. Do not use an existing conversation — start fresh.</div></div>
+          </div>
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top"></div><div class="step-dot">2</div><div class="step-line-bottom"></div></div>
+            <div class="step-content"><div class="step-title">Copy the full prompt from Section 1</div><div class="step-desc">Click the <code>Copy</code> button in the prompt box above. The entire prompt is now on your clipboard.</div></div>
+          </div>
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top"></div><div class="step-dot">3</div><div class="step-line-bottom"></div></div>
+            <div class="step-content"><div class="step-title">Paste it as your first message and send</div><div class="step-desc">Click into the message box, paste with <code>Ctrl+V</code> (Windows) or <code>Cmd+V</code> (Mac), and press Enter. ChatGPT will respond confirming it understands its role.</div></div>
+          </div>
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top"></div><div class="step-dot">4</div><div class="step-line-bottom hide"></div></div>
+            <div class="step-content"><div class="step-title">Tell it what you're working on</div><div class="step-desc">Say something like: <code>"New mandate — CFO for a listed infrastructure company in Pune"</code> or <code>"I want to evaluate a candidate against the Bajaj Finance mandate."</code> The assistant takes it from there.</div></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tab-panel" id="tab-mobile">
+        <div class="steps">
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top hide"></div><div class="step-dot">1</div><div class="step-line-bottom"></div></div>
+            <div class="step-content"><div class="step-title">Open the ChatGPT app and start a new chat</div><div class="step-desc">Tap the pencil / compose icon at the top right to start a new conversation. Do not continue from an existing chat.</div></div>
+          </div>
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top"></div><div class="step-dot">2</div><div class="step-line-bottom"></div></div>
+            <div class="step-content"><div class="step-title">Open this page on your phone and copy the prompt</div><div class="step-desc">Tap the <code>Copy</code> button in Section 1. The full prompt is copied to your clipboard. You can bookmark this page for quick access next time.</div></div>
+          </div>
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top"></div><div class="step-dot">3</div><div class="step-line-bottom"></div></div>
+            <div class="step-content"><div class="step-title">Paste into the ChatGPT message box and send</div><div class="step-desc">Tap the message field, then tap and hold to get the paste option. Paste the prompt and tap the send arrow. ChatGPT will confirm it is ready.</div></div>
+          </div>
+          <div class="step">
+            <div class="step-spine"><div class="step-line-top"></div><div class="step-dot">4</div><div class="step-line-bottom hide"></div></div>
+            <div class="step-content"><div class="step-title">Tell it what you're working on</div><div class="step-desc">Type naturally — <code>"Evaluating a candidate for the Zetwerk COO mandate"</code> or <code>"New search — CHRO for a PE-backed healthcare company."</code> The assistant will guide the rest.</div></div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- Section 3: When to use it -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">When to Use It</div>
+      <span class="section-hint">Three moments in every search where the prompt adds the most value</span>
+    </div>
+    <div class="section-body">
+      <table class="trigger-table">
+        <thead>
+          <tr>
+            <th style="width:180px">Moment</th>
+            <th>What to Tell the Assistant</th>
+            <th style="width:200px">What It Produces</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><span class="trigger-badge intake">Mandate Intake</span><br><br>When a new search begins</td>
+            <td>"New mandate — [Role] for [Client]. Here are the details..." Then describe the brief in your own words. The assistant will extract and confirm the structured fields.</td>
+            <td>A confirmed mandate brief with role, sector, must-haves, dealbreakers, CTC range, and criteria weights. Ready to copy into Zoho.</td>
+          </tr>
+          <tr>
+            <td><span class="trigger-badge scoring">Candidate Scoring</span><br><br>When evaluating profiles</td>
+            <td>"I want to evaluate [Candidate Name]. They are currently [current role] at [company], with [X] years of experience in [sector]." Paste their LinkedIn summary or CV highlights if available.</td>
+            <td>A score out of 100 across four criteria — Sector Fit, Seniority, Tenure Pattern, Compensation — with a one-sentence rationale per criterion. Dealbreaker flags raised immediately.</td>
+          </tr>
+          <tr>
+            <td><span class="trigger-badge closure">Search Closure</span><br><br>When a search ends — placed, dead, or on hold</td>
+            <td>"This search is closing. We placed [Name] / The mandate went dead / We're putting this on hold." The assistant will ask the four closure questions one by one.</td>
+            <td>A structured Search Summary — CVs shared, shortlist rate, outcome, dead reason if applicable, and one key learning. Copy into Zoho CRM Comments field.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Section 4: Sample output -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">What the Output Looks Like</div>
+      <span class="section-hint">A representative search closure summary</span>
+    </div>
+    <div class="section-body">
+      <div class="output-sample">
+        <span class="field-label">Ishwa Search Summary</span>
+        <span class="field-label">Mandate ID</span>
+        <span class="field-val">ISH-202604-031</span>
+        <span class="field-label">Role</span>
+        <span class="field-val">Chief Financial Officer</span>
+        <span class="field-label">Client</span>
+        <span class="field-val">Jakson Infra Limited</span>
+        <span class="field-label">Sector</span>
+        <span class="field-val">Infrastructure / EPC</span>
+        <span class="field-label">Outcome</span>
+        <span class="field-val">Closed Won — candidate placed and joining confirmed</span>
+        <span class="field-label">CVs Shared</span>
+        <span class="field-val">4</span>
+        <span class="field-label">Shortlisted for Interview</span>
+        <span class="field-val">3</span>
+        <span class="field-label">Shortlist Rate</span>
+        <span class="field-val">75% — on target</span>
+        <span class="field-label">Dead Reason</span>
+        <span class="field-val">N/A</span>
+        <span class="field-label">Key Learning</span>
+        <span class="field-val">Client strongly preferred candidates with listed-entity P&L experience above ₹800Cr. Filtering for this earlier would have reduced the long-list by approximately 40%. Apply this as a must-have on future Jakson mandates.</span>
+      </div>
+      <p style="font-size:12px;color:#AAA;margin-top:12px;font-style:italic;">Copy this summary into the Comments field in Zoho CRM against the relevant mandate record.</p>
+    </div>
+  </div>
+
+  <!-- Section 5: Important notes -->
+  <div class="section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">A Few Things to Know</div>
+      <span class="section-hint">Keep these in mind as you use it</span>
+    </div>
+    <div class="section-body" style="display:flex;flex-direction:column;gap:14px;">
+
+      <div style="display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;">
+        <div style="width:28px;height:28px;background:var(--g2);border:1px solid var(--g4);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--rust);font-family:var(--serif);flex-shrink:0;">!</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:3px;">Start a fresh conversation for each search</div><div style="font-size:13px;color:var(--g1);line-height:1.55;">ChatGPT does not carry context between separate chats. Paste the prompt at the start of each new conversation. You can continue the same conversation across multiple sessions within a single search.</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;">
+        <div style="width:28px;height:28px;background:var(--g2);border:1px solid var(--g4);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--rust);font-family:var(--serif);flex-shrink:0;">!</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:3px;">The scoring is only as good as the input</div><div style="font-size:13px;color:var(--g1);line-height:1.55;">The more detail you give about a candidate — current role, tenure, sector, CTC — the more precise the scoring. A sparse description produces a generic score. Share LinkedIn highlights or CV extracts where possible.</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;">
+        <div style="width:28px;height:28px;background:var(--g2);border:1px solid var(--g4);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--rust);font-family:var(--serif);flex-shrink:0;">!</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:3px;">Always copy the Search Summary into Zoho</div><div style="font-size:13px;color:var(--g1);line-height:1.55;">The summary is only valuable if it lands in the system. Paste it into the Comments field in Zoho CRM against the relevant mandate record. This is what the AI matching engine reads and learns from over time.</div></div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:28px 1fr;gap:12px;align-items:start;">
+        <div style="width:28px;height:28px;background:var(--g2);border:1px solid var(--g4);border-radius:2px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:600;color:var(--rust);font-family:var(--serif);flex-shrink:0;">!</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--black);margin-bottom:3px;">Do not share confidential client or candidate data</div><div style="font-size:13px;color:var(--g1);line-height:1.55;">Use first names and role titles only when describing candidates. Do not paste full CVs, contact details, or compensation specifics into ChatGPT. Describe the profile in your own words instead.</div></div>
+      </div>
+
+    </div>
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
+  <span>ChatGPT Persona Prompt v1 · April 2026</span>
+</div>
+
+<script>
+  function copyPrompt(id, btn) {
+    const box = document.getElementById(id);
+    const label = box.querySelector('.prompt-label');
+    const copyBtnEl = box.querySelector('.copy-btn');
+    // Get text excluding the label and button text
+    let text = box.innerText
+      .replace(label.innerText, '')
+      .replace('Copy', '')
+      .replace('Copied!', '')
+      .trim();
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = 'Copied!';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = 'Copy'; btn.classList.remove('copied'); }, 2000);
+    });
+  }
+
+  function switchTab(tab, btn) {
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+    btn.classList.add('active');
+    document.getElementById('tab-' + tab).classList.add('active');
+  }
+</script>
+</body>
+</html>
