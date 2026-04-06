@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ishwa Consulting × PiP_AGI</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rust:#B5451B;--rust-lt:#F0D5CB;--rust-dk:#8B3315;
+    --black:#1A1A1A;--g1:#4A4A4A;--g2:#F5F3F1;--g3:#E8E4E0;--g4:#DDDDDD;--white:#FFFFFF;
+    --amber:#FFF8EE;--green:#EBF5EC;--green2:#2D7D32;
+    --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#F2EFEB;font-family:var(--sans);color:var(--black);min-height:100vh;-webkit-font-smoothing:antialiased;}
+  .site-header{background:var(--black);border-bottom:3px solid var(--rust);}
+  .header-inner{max-width:860px;margin:0 auto;padding:22px 40px;display:flex;align-items:center;justify-content:space-between;}
+  .brand{display:flex;align-items:baseline;gap:16px;}
+  .brand-firm{font-family:var(--serif);font-size:20px;color:var(--white);font-weight:600;}
+  .brand-rule{width:1px;height:16px;background:var(--rust);}
+  .brand-pip{font-size:11px;color:var(--rust);font-weight:600;letter-spacing:0.12em;text-transform:uppercase;}
+  .header-tag{font-family:var(--mono);font-size:11px;color:#555;letter-spacing:0.08em;text-transform:uppercase;}
+  .hero{max-width:860px;margin:0 auto;padding:64px 40px 48px;border-bottom:1px solid var(--g4);}
+  .hero-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:14px;}
+  .hero-title{font-family:var(--serif);font-size:44px;font-weight:700;color:var(--black);line-height:1.1;margin-bottom:16px;max-width:560px;}
+  .hero-sub{font-size:16px;color:var(--g1);line-height:1.65;max-width:540px;margin-bottom:28px;}
+  .hero-meta{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:#999;}
+  .hero-meta-dot{width:4px;height:4px;border-radius:50%;background:var(--rust);}
+  .status-bar{max-width:860px;margin:0 auto;padding:20px 40px;background:var(--white);border-bottom:1px solid var(--g4);display:flex;align-items:center;gap:0;}
+  .phase-pip{flex:1;height:6px;background:var(--g4);}
+  .phase-pip:first-child{border-radius:3px 0 0 3px;}
+  .phase-pip:last-child{border-radius:0 3px 3px 0;}
+  .phase-pip+.phase-pip{border-left:1px solid var(--white);}
+  .phase-pip.done{background:var(--green2);}
+  .phase-pip.active{background:var(--rust);}
+  .phase-pip.blocked{background:#CCC;}
+  .status-label{font-size:12px;color:var(--g1);margin-left:16px;white-space:nowrap;}
+  .status-label strong{color:var(--rust);font-weight:600;}
+  .page-body{max-width:860px;margin:0 auto;padding:48px 40px 80px;}
+  .section-label{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:20px;margin-top:40px;}
+  .section-label:first-child{margin-top:0;}
+  .cards-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:8px;}
+  .cards-grid.single{grid-template-columns:1fr;}
+  .card{background:var(--white);border:1px solid var(--g4);border-radius:2px;padding:24px 26px 20px;text-decoration:none;color:inherit;display:flex;flex-direction:column;gap:10px;transition:all 0.15s;position:relative;overflow:hidden;}
+  .card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:var(--g4);transition:background 0.15s;}
+  .card:hover{box-shadow:0 4px 16px rgba(0,0,0,0.07);transform:translateY(-2px);border-color:var(--g3);}
+  .card:hover::before{background:var(--rust);}
+  .card-tag{font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--rust);}
+  .card-title{font-family:var(--serif);font-size:19px;font-weight:600;color:var(--black);line-height:1.25;}
+  .card-desc{font-size:13px;color:var(--g1);line-height:1.6;flex:1;}
+  .card-footer{display:flex;align-items:center;justify-content:space-between;padding-top:12px;border-top:1px solid var(--g4);margin-top:4px;}
+  .card-time{font-family:var(--mono);font-size:11px;color:#AAA;}
+  .card-arrow{font-size:16px;color:var(--rust);transition:transform 0.15s;}
+  .card:hover .card-arrow{transform:translateX(4px);}
+  .badge{display:inline-block;font-size:10px;font-weight:600;letter-spacing:0.06em;text-transform:uppercase;padding:2px 9px;border-radius:20px;}
+  .badge-live{background:var(--green);color:var(--green2);}
+  .badge-form{background:#E3F2FD;color:#1565C0;}
+  .badge-tool{background:var(--amber);color:#E65100;}
+  .site-footer{max-width:860px;margin:0 auto;padding:24px 40px 40px;font-size:11px;color:#BBB;display:flex;align-items:center;justify-content:space-between;border-top:1px solid var(--g4);}
+  @media(max-width:640px){
+    .hero{padding:40px 20px 32px;}.hero-title{font-size:32px;}
+    .page-body{padding:32px 20px 60px;}.cards-grid{grid-template-columns:1fr;}
+    .header-inner{padding:16px 20px;}.status-bar{padding:16px 20px;}
+    .site-footer{padding:20px 20px 32px;flex-direction:column;gap:8px;}
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div class="brand">
+      <span class="brand-firm">Ishwa Consulting</span>
+      <div class="brand-rule"></div>
+      <span class="brand-pip">PiP_AGI</span>
+    </div>
+    <span class="header-tag">AI Search Engine — Engagement Hub</span>
+  </div>
+</header>
+
+<div class="hero">
+  <div class="hero-eyebrow">Engagement in Progress</div>
+  <h1 class="hero-title">AI-Powered Executive Search Engine</h1>
+  <p class="hero-sub">Everything built for this engagement lives here — the project tracker, operational templates, and the AI assistant prompt for the delivery team.</p>
+  <div class="hero-meta">
+    <span>PiP_AGI × Ishwa Consulting</span>
+    <div class="hero-meta-dot"></div>
+    <span>Started March 2026</span>
+    <div class="hero-meta-dot"></div>
+    <span id="last-updated">Loading...</span>
+  </div>
+</div>
+
+<div class="status-bar" id="status-bar">
+  <span style="font-size:12px;color:#999;">Loading status...</span>
+</div>
+
+<div class="page-body">
+
+  <div class="section-label">Project Overview</div>
+  <div class="cards-grid single">
+    <a class="card" href="06_Ishwa_Project_Tracker.html">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="card-tag">Live Tracker</div>
+        <span class="badge badge-live">Live</span>
+      </div>
+      <div class="card-title">Project Tracker — 7-Phase Engagement View</div>
+      <div class="card-desc">A phase-by-phase view of the full engagement — what has been completed, what is in progress, what is blocked, and what comes next. Updated as the project moves forward.</div>
+      <div class="card-footer">
+        <span class="card-time" id="tracker-summary">Loading...</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-label">Operational Templates</div>
+  <div class="cards-grid">
+    <a class="card" href="04_Ishwa_Mandate_Intake_Form.html">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="card-tag">Intake Form</div>
+        <span class="badge badge-form">Template</span>
+      </div>
+      <div class="card-title">New Mandate Brief</div>
+      <div class="card-desc">Complete at the start of every new search. Captures the structured data the AI matching engine needs — role, sector, must-haves, dealbreakers, and criteria weights.</div>
+      <div class="card-footer">
+        <span class="card-time">~8–12 min to complete</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+    <a class="card" href="05_Ishwa_Search_Closure_Form.html">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="card-tag">Closure Form</div>
+        <span class="badge badge-form">Template</span>
+      </div>
+      <div class="card-title">Mandate Closure Record</div>
+      <div class="card-desc">Complete when a search concludes — placed, dead, or on hold. Captures shortlist metrics, candidate outcomes, and the learnings that make the AI smarter over time.</div>
+      <div class="card-footer">
+        <span class="card-time">~5–8 min to complete</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+  </div>
+
+  <div class="section-label">AI Tools</div>
+  <div class="cards-grid single">
+    <a class="card" href="07_Ishwa_ChatGPT_Persona_Prompt.html">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="card-tag">ChatGPT Prompt</div>
+        <span class="badge badge-tool">Ready to use</span>
+      </div>
+      <div class="card-title">The Ishwa Search Assistant</div>
+      <div class="card-desc">A persona prompt that turns ChatGPT into a structured search partner. Paste it at the start of any search conversation — it structures mandate briefs, scores candidates against live criteria, and captures the four data points at search close. Works on desktop and mobile.</div>
+      <div class="card-footer">
+        <span class="card-time">30 seconds to set up</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+  </div>
+
+</div>
+
+<footer class="site-footer">
+  <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
+  <span>Ishwa Consulting Engagement Hub</span>
+</footer>
+
+<script>
+fetch('status.json?v=' + Date.now())
+  .then(r => r.json())
+  .then(data => {
+    document.getElementById('last-updated').textContent = 'Last updated ' + data.last_updated;
+    const s = data.summary;
+    document.getElementById('tracker-summary').textContent =
+      s.phases_complete + ' phases complete \u00B7 ' + s.client_inputs_pending + ' client inputs pending';
+    const bar = document.getElementById('status-bar');
+    bar.innerHTML = '';
+    data.phases.forEach(p => {
+      const pip = document.createElement('div');
+      pip.className = 'phase-pip ' + p.status;
+      pip.title = p.num + ' \u2014 ' + p.name;
+      bar.appendChild(pip);
+    });
+    const label = document.createElement('span');
+    label.className = 'status-label';
+    const parts = data.you_are_here.split('\u2014');
+    label.innerHTML = '<strong>' + parts[0].trim() + '</strong> \u2014 ' + (parts[1] ? parts[1].trim() : '');
+    bar.appendChild(label);
+  })
+  .catch(() => {
+    document.getElementById('last-updated').textContent = 'April 2026';
+    document.getElementById('tracker-summary').textContent = '2 of 7 phases complete';
+    document.getElementById('status-bar').innerHTML = '<span style="font-size:12px;color:#999;padding:0 4px;">Status unavailable \u2014 refresh to retry</span>';
+  });
+</script>
+</body>
+</html>

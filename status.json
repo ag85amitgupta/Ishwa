@@ -1,0 +1,120 @@
+{
+  "last_updated": "8 April 2026",
+  "current_phase": 3,
+  "you_are_here": "Phase 3 of 7 — Awaiting client inputs to unlock the build",
+  "summary": {
+    "phases_complete": "2 / 7",
+    "deliverables_built": "9",
+    "client_inputs_pending": "3",
+    "build_time": "2–3 wk"
+  },
+  "phases": [
+    {
+      "num": "Phase 1",
+      "name": "Scoping & Diagnosis",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Engagement scoping & problem diagnosis",
+      "desc": "Structured strategy session with Shalini Gupta. Problem diagnosed: Ishwa's quality edge lives entirely in consultant judgement — no documented framework, no structured AI input. Solution architecture defined across three layers.",
+      "deliverables": [
+        { "label": "Problem framing & solution architecture", "status": "done" },
+        { "label": "Engagement folder delivered to client", "status": "done" }
+      ],
+      "milestone": { "label": "Engagement folder delivered to Ishwa", "status": "done" }
+    },
+    {
+      "num": "Phase 2",
+      "name": "Data Audit",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Data receipt, audit & documentation",
+      "desc": "Five data files received from Ishwa (Zoho Recruit + CRM, covering Sep 2022 — Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, interactive forms, and the ChatGPT Search Assistant built and delivered.",
+      "deliverables": [
+        { "label": "01 — Leadership data audit", "status": "done" },
+        { "label": "02 — Consultant data audit", "status": "done" },
+        { "label": "03 — Data gap one-pager", "status": "done" },
+        { "label": "04 — Mandate intake form", "status": "done" },
+        { "label": "05 — Search closure form", "status": "done" },
+        { "label": "06 — Project tracker (live)", "status": "done" },
+        { "label": "07 — ChatGPT Search Assistant", "status": "done" },
+        { "label": "08 — Meeting one-pager", "status": "done" },
+        { "label": "09 — Meeting agenda", "status": "done" }
+      ],
+      "milestone": { "label": "All audit documents, templates and meeting prep delivered", "status": "done" }
+    },
+    {
+      "num": "Phase 3",
+      "name": "Client Inputs",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Pending inputs from Ishwa — the build blockers",
+      "desc": "Three specific inputs are required before the matching engine prototype can be built. Items 1 and 2 can be covered in a single 60–90 minute session with a senior consultant.",
+      "deliverables": [
+        { "label": "End-to-end search walkthrough (recorded)", "status": "pending" },
+        { "label": "3 profiles evaluated against 1 live mandate", "status": "pending" },
+        { "label": "Data capture method selected (A / B / C)", "status": "pending" }
+      ],
+      "blocker": "All three items are pending from Ishwa. Wednesday 9 April meeting is the unlock session.",
+      "milestone": { "label": "Client inputs received — build unlocked", "status": "pending" }
+    },
+    {
+      "num": "Phase 4",
+      "name": "Rubric Build",
+      "tag": "BLOCKED",
+      "status": "blocked",
+      "title": "Evaluation rubric — externalise consultant judgement",
+      "desc": "The walkthrough session is converted by Claude into a weighted JSON scoring rubric. Criteria names, weights, positive and negative signals, and dealbreaker flags are documented per mandate type. Reviewed and signed off by a senior consultant.",
+      "deliverables": [
+        { "label": "Weighted JSON rubric drafted", "status": "blocked" },
+        { "label": "Dealbreaker flags defined", "status": "blocked" },
+        { "label": "Rubric signed off by Ishwa", "status": "blocked" }
+      ],
+      "blocker": "Requires: walkthrough session and profile evaluation from Phase 3.",
+      "milestone": { "label": "Evaluation rubric signed off", "status": "blocked" }
+    },
+    {
+      "num": "Phase 5",
+      "name": "Engine Build",
+      "tag": "BLOCKED",
+      "status": "blocked",
+      "title": "Matching engine prototype — build & validation",
+      "desc": "Claude API deployment. Takes a structured mandate JSON and a long-list of candidate profiles (50–150), returns a ranked shortlist with per-criterion scores and plain-language rationale per candidate. Tested against recent closed mandates to validate output quality before handover.",
+      "deliverables": [
+        { "label": "System prompt architecture", "status": "done" },
+        { "label": "API prototype built", "status": "blocked" },
+        { "label": "Tested against closed mandates", "status": "blocked" },
+        { "label": "Ishwa review and sign-off", "status": "blocked" }
+      ],
+      "blocker": "Requires: evaluation rubric from Phase 4. Estimated build time: 2–3 weeks from rubric receipt.",
+      "milestone": { "label": "Prototype validated against live mandates", "status": "blocked" }
+    },
+    {
+      "num": "Phase 6",
+      "name": "Data Capture",
+      "tag": "UPCOMING",
+      "status": "upcoming",
+      "title": "Data capture tool — selected, built & deployed",
+      "desc": "Whichever method Ishwa selects — ChatGPT persona prompt, WhatsApp bot, or lightweight web app — the data capture layer is built and deployed. Consultants begin logging the four key data points per mandate that make the engine self-improving over time.",
+      "deliverables": [
+        { "label": "Capture method selected by Ishwa", "status": "blocked" },
+        { "label": "Tool built and deployed", "status": "blocked" },
+        { "label": "Consultant onboarding session", "status": "blocked" }
+      ],
+      "milestone": { "label": "First mandate logged through new system", "status": "blocked" }
+    },
+    {
+      "num": "Phase 7",
+      "name": "BD Analytics",
+      "tag": "UPCOMING",
+      "status": "upcoming",
+      "title": "BD pattern analysis — strategic intelligence layer",
+      "desc": "Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership — the layer that tells Ishwa which mandates to pursue and which to push back on.",
+      "deliverables": [
+        { "label": "Industry label standardisation", "status": "blocked" },
+        { "label": "BD pattern report", "status": "blocked" },
+        { "label": "Mandate risk scoring model", "status": "blocked" }
+      ],
+      "milestone": { "label": "BD analytics report delivered to Ishwa leadership", "status": "blocked" }
+    }
+  ]
+}
