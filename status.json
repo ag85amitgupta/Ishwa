@@ -1,0 +1,253 @@
+{
+  "last_updated": "24 April 2026",
+  "current_phase": 4,
+  "you_are_here": "Phase 4 of 7 \u2014 Rubric Build & Data Capture",
+  "summary": {
+    "phases_complete": "3 / 7",
+    "deliverables_built": "16",
+    "client_inputs_pending": "2",
+    "build_time": "2\u20133 wk from rubric sign-off"
+  },
+  "phases": [
+    {
+      "num": "Phase 1",
+      "name": "Scoping & Diagnosis",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Engagement scoping & problem diagnosis",
+      "desc": "Structured strategy session with Shalini Gupta. Problem diagnosed: Ishwa's quality edge lives entirely in consultant judgement \u2014 no documented framework, no structured AI input. Solution architecture defined across three layers.",
+      "deliverables": [
+        {
+          "label": "Problem framing & solution architecture",
+          "status": "done"
+        },
+        {
+          "label": "Engagement folder delivered to client",
+          "status": "done"
+        }
+      ],
+      "milestone": {
+        "label": "Engagement folder delivered to Ishwa",
+        "status": "done"
+      }
+    },
+    {
+      "num": "Phase 2",
+      "name": "Data Audit",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Data receipt, audit & documentation",
+      "desc": "Five data files received from Ishwa (Zoho Recruit + CRM, covering Sep 2022 \u2014 Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, interactive forms, and the ChatGPT Search Assistant built and delivered.",
+      "deliverables": [
+        {
+          "label": "01 \u2014 Leadership data audit",
+          "status": "done"
+        },
+        {
+          "label": "02 \u2014 Consultant data audit",
+          "status": "done"
+        },
+        {
+          "label": "03 \u2014 Data gap one-pager",
+          "status": "done"
+        },
+        {
+          "label": "04 \u2014 Mandate intake form",
+          "status": "done"
+        },
+        {
+          "label": "05 \u2014 Search closure form",
+          "status": "done"
+        },
+        {
+          "label": "06 \u2014 Project tracker (live)",
+          "status": "done"
+        },
+        {
+          "label": "07 \u2014 ChatGPT Search Assistant",
+          "status": "done"
+        },
+        {
+          "label": "08 \u2014 Meeting one-pager",
+          "status": "done"
+        },
+        {
+          "label": "09 \u2014 Meeting agenda",
+          "status": "done"
+        }
+      ],
+      "milestone": {
+        "label": "All audit documents, templates and meeting prep delivered",
+        "status": "done"
+      }
+    },
+    {
+      "num": "Phase 3",
+      "name": "Client Inputs",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "8 April session \u2014 decisions locked, build unblocked",
+      "desc": "Three-step workflow agreed. Data capture path confirmed (Option C \u2014 web forms). Order book received from Somanshu and analysed. Meeting minutes, order book analysis, and rubric scaffold sent to Ishwa on 22 April. Both forms live with Ishwa as of 24 April.",
+      "deliverables": [
+        {
+          "label": "11 \u2014 Meeting minutes (8 Apr)",
+          "status": "done"
+        },
+        {
+          "label": "12A \u2014 Order book client summary",
+          "status": "done"
+        },
+        {
+          "label": "12B \u2014 Order book internal analysis",
+          "status": "done"
+        },
+        {
+          "label": "13A \u2014 Rubric scaffold \u2014 sent to Ishwa",
+          "status": "done"
+        },
+        {
+          "label": "13B \u2014 Walkthrough guide \u2014 sent to overseer",
+          "status": "done"
+        },
+        {
+          "label": "14 \u2014 Apps Script (Google Sheets integration)",
+          "status": "done"
+        },
+        {
+          "label": "04 \u2014 Mandate intake form \u2014 live with Ishwa",
+          "status": "done"
+        },
+        {
+          "label": "05 \u2014 Search closure form \u2014 live with Ishwa",
+          "status": "done"
+        }
+      ],
+      "milestone": {
+        "label": "Forms live with Ishwa. Data flowing to Google Sheets.",
+        "status": "done"
+      }
+    },
+    {
+      "num": "Phase 4",
+      "name": "Rubric Build",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Rubric calibration & data capture activation",
+      "desc": "Rubric scaffold (13A) sent to Ishwa for review. Walkthrough session to follow once Ishwa responds. Screen recording received (silent, 1hr) \u2014 useful for sourcing layer design. Both forms active and collecting data.",
+      "deliverables": [
+        {
+          "label": "Ishwa review of 13A \u2014 additions / removals",
+          "status": "pending"
+        },
+        {
+          "label": "Rubric walkthrough session (Varsha as participant)",
+          "status": "pending"
+        },
+        {
+          "label": "Rubric v1 signed off",
+          "status": "pending"
+        },
+        {
+          "label": "Screen recording reviewed \u2014 timestamped notes",
+          "status": "pending"
+        },
+        {
+          "label": "Somanshu screenshare \u2014 data repositories",
+          "status": "pending"
+        }
+      ],
+      "blocker": "Awaiting Ishwa's response to 13A before walkthrough session can be scheduled.",
+      "milestone": {
+        "label": "Evaluation rubric v1 signed off by Ishwa",
+        "status": "pending"
+      }
+    },
+    {
+      "num": "Phase 5",
+      "name": "Engine Build",
+      "tag": "BLOCKED",
+      "status": "blocked",
+      "title": "Matching engine prototype \u2014 build & validation",
+      "desc": "Claude API deployment. Takes a structured mandate JSON and a long-list of candidate profiles (50\u2013150), returns a ranked shortlist with per-criterion scores and plain-language rationale per candidate. Tested against recent closed mandates to validate output quality before handover.",
+      "deliverables": [
+        {
+          "label": "System prompt architecture",
+          "status": "done"
+        },
+        {
+          "label": "API prototype built",
+          "status": "blocked"
+        },
+        {
+          "label": "Tested against closed mandates",
+          "status": "blocked"
+        },
+        {
+          "label": "Ishwa review and sign-off",
+          "status": "blocked"
+        }
+      ],
+      "blocker": "Requires: evaluation rubric from Phase 4. Estimated build time: 2\u20133 weeks from rubric sign-off.",
+      "milestone": {
+        "label": "Prototype validated against live mandates",
+        "status": "blocked"
+      }
+    },
+    {
+      "num": "Phase 6",
+      "name": "Data Capture",
+      "tag": "PARTIAL",
+      "status": "active",
+      "title": "Data capture \u2014 forms live, Zoho integration pending",
+      "desc": "Both forms (04, 05) live with Ishwa and routing to Google Sheets (Amit's Drive). Data capture is active and working. WhatsApp bot deferred to future phase.",
+      "deliverables": [
+        {
+          "label": "Closure form (05) \u2014 live with Ishwa",
+          "status": "done"
+        },
+        {
+          "label": "Intake form (04) \u2014 live with Ishwa",
+          "status": "done"
+        },
+        {
+          "label": "Google Sheets data routing \u2014 active",
+          "status": "done"
+        },
+        {
+          "label": "Consultant onboarding session",
+          "status": "pending"
+        }
+      ],
+      "milestone": {
+        "label": "First mandate logged through new system",
+        "status": "pending"
+      }
+    },
+    {
+      "num": "Phase 7",
+      "name": "BD Analytics",
+      "tag": "UPCOMING",
+      "status": "upcoming",
+      "title": "BD pattern analysis \u2014 strategic intelligence layer",
+      "desc": "Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership.",
+      "deliverables": [
+        {
+          "label": "Industry label standardisation",
+          "status": "blocked"
+        },
+        {
+          "label": "BD pattern report",
+          "status": "blocked"
+        },
+        {
+          "label": "Mandate risk scoring model",
+          "status": "blocked"
+        }
+      ],
+      "milestone": {
+        "label": "BD analytics report delivered to Ishwa leadership",
+        "status": "blocked"
+      }
+    }
+  ]
+}
