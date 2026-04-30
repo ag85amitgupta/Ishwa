@@ -1,0 +1,155 @@
+{
+  "last_updated": "30 April 2026",
+  "current_phase": 7,
+  "you_are_here": "Phases 4, 5, 7 active in parallel — Rubric · Sourcing Layer · Data Capture",
+  "summary": {
+    "phases_complete": "3 / 8",
+    "deliverables_built": "22",
+    "client_inputs_pending": "3",
+    "build_time": "Queue form live. Reference sheet with Somanshu. Retrospective entry underway.",
+    "new_mandate_id_from": "ISH-202603-0411"
+  },
+  "naming_note": {
+    "17_Ishwa_Queue_Form.html": "Live on GitHub Pages — ag85amitgupta.github.io/Ishwa/17_Ishwa_Queue_Form.html",
+    "17_Ishwa_Apps_Script.js": "Bound to Google Sheet — deployed, same URL",
+    "18_Ishwa_Mandate_Reference.xlsx": "Shared with Somanshu — internally tracked as 17 on Drive/Sheets"
+  },
+  "phases": [
+    {
+      "num": "Phase 1",
+      "name": "Scoping & Diagnosis",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Engagement scoping & problem diagnosis",
+      "desc": "Structured strategy session with Shalini Gupta. Problem diagnosed: Ishwa's quality edge lives entirely in consultant judgement — no documented framework, no structured AI input. Solution architecture defined across three layers.",
+      "deliverables": [
+        { "label": "Problem framing & solution architecture", "status": "done" },
+        { "label": "Engagement folder delivered to client", "status": "done" }
+      ],
+      "milestone": { "label": "Engagement folder delivered to Ishwa", "status": "done" }
+    },
+    {
+      "num": "Phase 2",
+      "name": "Data Audit",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Data receipt, audit & documentation",
+      "desc": "Five data files received from Ishwa (Zoho Recruit + CRM, covering Sep 2022 — Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, interactive forms, and the ChatGPT Search Assistant built and delivered.",
+      "deliverables": [
+        { "label": "01 — Leadership data audit", "status": "done" },
+        { "label": "02 — Consultant data audit", "status": "done" },
+        { "label": "03 — Data gap one-pager", "status": "done" },
+        { "label": "04/05 — Intake & closure forms (superseded by 15)", "status": "done" },
+        { "label": "06 — Project tracker (live)", "status": "done" },
+        { "label": "07 — ChatGPT Search Assistant", "status": "done" },
+        { "label": "08/09 — Meeting one-pager & agenda", "status": "done" }
+      ],
+      "milestone": { "label": "All audit documents, templates and meeting prep delivered", "status": "done" }
+    },
+    {
+      "num": "Phase 3",
+      "name": "Client Inputs",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "8 April session — decisions locked, build unblocked",
+      "desc": "Three-step workflow agreed. Data capture path confirmed (Option C — web forms). Order book received from Somanshu and analysed. Meeting minutes, order book analysis, and rubric scaffold sent to Ishwa on 22 April. Both forms live with Ishwa as of 24 April.",
+      "deliverables": [
+        { "label": "11 — Meeting minutes (8 Apr)", "status": "done" },
+        { "label": "12A/12B — Order book analysis (client + internal)", "status": "done" },
+        { "label": "13A — Rubric scaffold — sent to Ishwa", "status": "done" },
+        { "label": "13B — Walkthrough guide — sent to overseer", "status": "done" },
+        { "label": "15 — Combined mandate data entry form — supersedes 04 and 05", "status": "done" },
+        { "label": "Apps Script (Google Sheets integration) — v3 active", "status": "done" }
+      ],
+      "milestone": { "label": "Forms live with Ishwa. Data flowing to Google Sheets.", "status": "done" }
+    },
+    {
+      "num": "Phase 4",
+      "name": "Rubric Build",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Rubric calibration — externalise consultant judgement",
+      "desc": "Rubric scaffold (13A) sent to Ishwa for review. Walkthrough session to follow once Ishwa responds. Rubric feeds the matching engine in Phase 6 and the profile scoring logic in Phase 5.",
+      "deliverables": [
+        { "label": "Ishwa review of 13A — additions / removals", "status": "pending" },
+        { "label": "Rubric walkthrough session (Varsha as participant)", "status": "pending" },
+        { "label": "Rubric v1 signed off", "status": "pending" },
+        { "label": "Somanshu screenshare — data repositories", "status": "pending" }
+      ],
+      "blocker": "Awaiting Ishwa response to 13A before walkthrough session can be scheduled.",
+      "milestone": { "label": "Evaluation rubric v1 signed off by Ishwa", "status": "pending" }
+    },
+    {
+      "num": "Phase 5",
+      "name": "Sourcing Layer",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Sourcing compression — primary problem being addressed",
+      "desc": "Core objective: compress mandate receipt to shortlist of 10. Sub-step A done: AI Sourcing Assistant (16) live — generates target company list and Resdex boolean string in under 30 seconds, replacing ~30 min manual ChatGPT work. Sub-step B (200→10 profile review) requires vocal Resdex screen recording before design can proceed.",
+      "deliverables": [
+        { "label": "14 — Sourcing workflow analysis — ready to send to Shalini", "status": "pending" },
+        { "label": "16 — AI Sourcing Assistant — live on GitHub Pages", "status": "done" },
+        { "label": "Vercel proxy deployed — API routed through PiP_AGI", "status": "done" },
+        { "label": "Second screen recording — vocal, Resdex profile review", "status": "pending" },
+        { "label": "LinkedIn Recruiter status confirmed with Shalini", "status": "pending" },
+        { "label": "200 → 10 scoring design — post-recording", "status": "blocked" }
+      ],
+      "blocker": "200→10 design blocked until vocal Resdex recording received.",
+      "milestone": { "label": "Sourcing assistant live. 200→10 design pending recording.", "status": "partial" }
+    },
+    {
+      "num": "Phase 6",
+      "name": "Matching Engine",
+      "tag": "BLOCKED",
+      "status": "blocked",
+      "title": "Matching engine prototype — build & validation",
+      "desc": "AI evaluation layer. Takes a structured mandate JSON and a longlist of candidate profiles, returns a ranked shortlist with per-criterion scores and plain-language rationale. Tested against recent closed mandates to validate output quality before handover.",
+      "deliverables": [
+        { "label": "System prompt architecture", "status": "done" },
+        { "label": "API prototype built", "status": "blocked" },
+        { "label": "Tested against closed mandates", "status": "blocked" },
+        { "label": "Ishwa review and sign-off", "status": "blocked" }
+      ],
+      "blocker": "Requires: rubric v1 (Phase 4) and 200→10 recording (Phase 5). Estimated build: 2–3 weeks from rubric sign-off.",
+      "milestone": { "label": "Prototype validated against live mandates", "status": "blocked" }
+    },
+    {
+      "num": "Phase 7",
+      "name": "Data Capture",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Data capture — queue form live, retrospective entry underway",
+      "desc": "Major rebuild completed 30 April. Mandate Reference Sheet (18) constructed from Zoho Recruit (primary), Order Books 2022–2026, and CRM — 409 mandates, 60-column schema, globally sequenced IDs ISH-202209-0001 to ISH-202603-0409. BD Account Manager backfilled from Hiring Manager email map (409/409 coverage). Queue form (17) live on GitHub Pages: auto-populates pre-filled data, flashing pink on delta fields, serves mandates newest-first, concurrency-safe row-level locking. Combined intake+closure write on single closure submit via doCombined. Somanshu notified — retrospective entry underway. New mandates begin from ISH-202603-0411.",
+      "deliverables": [
+        { "label": "17 — Queue form — live on GitHub Pages", "status": "done" },
+        { "label": "17 — Apps Script v3 — bound to Google Sheet, deployed", "status": "done" },
+        { "label": "18 — Mandate Reference Sheet — 409 mandates, 60 columns, sent to Somanshu", "status": "done" },
+        { "label": "Intake_Log + Closure_Log tabs — auto-created on first submission", "status": "done" },
+        { "label": "Retrospective data entry — underway", "status": "pending" },
+        { "label": "210-mandate milestone — eyeball check", "status": "pending" }
+      ],
+      "milestone": { "label": "Queue form live. Reference sheet with Somanshu. Entry underway.", "status": "partial" }
+    },
+    {
+      "num": "Phase 8",
+      "name": "BD Analytics",
+      "tag": "UPCOMING",
+      "status": "upcoming",
+      "title": "BD pattern analysis — strategic intelligence layer",
+      "desc": "Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership.",
+      "deliverables": [
+        { "label": "Industry label standardisation", "status": "blocked" },
+        { "label": "BD pattern report", "status": "blocked" },
+        { "label": "Mandate risk scoring model", "status": "blocked" }
+      ],
+      "milestone": { "label": "BD analytics report delivered to Ishwa leadership", "status": "blocked" }
+    }
+  ],
+  "open_actions": [
+    { "action": "Send 14 — Sourcing workflow analysis to Shalini", "note": "Confirm LinkedIn Recruiter access status first" },
+    { "action": "Chase Ishwa response to Rubric scaffold 13A", "note": "Walkthrough session cannot be scheduled until received" },
+    { "action": "Vocal Resdex screen recording — follow up with Somanshu", "note": "200→10 design blocked without this" },
+    { "action": "Monitor retrospective data entry progress", "note": "Eyeball Queue_Status column — flag at 210 DONE" },
+    { "action": "Verify closure write end-to-end with Somanshu team", "note": "Console logs COMBINED SEND / COMBINED RESP confirm payload reaching script" }
+  ]
+}
