@@ -171,7 +171,7 @@
     <div class="hero-meta-dot"></div>
     <span>Started March 2026</span>
     <div class="hero-meta-dot"></div>
-    <span id="last-updated"></span>
+    <span id="last-updated">Last updated 13 July 2026</span>
   </div>
 </div>
 
@@ -181,9 +181,10 @@
   <div class="phase-pip done"    title="Phase 3 — Client Inputs"></div>
   <div class="phase-pip active"  title="Phase 4 — Rubric Build"></div>
   <div class="phase-pip active"  title="Phase 5 — Sourcing Layer"></div>
-  <div class="phase-pip active"  title="Phase 6 — Data Capture"></div>
-  <div class="phase-pip blocked" title="Phase 7 — BD Analytics"></div>
-  <span class="status-label"><strong>Phases 4–6 active</strong> — Rubric · Sourcing · Data Capture</span>
+  <div class="phase-pip blocked" title="Phase 6 — Matching Engine (held pending form data)"></div>
+  <div class="phase-pip active"  title="Phase 7 — Data Capture"></div>
+  <div class="phase-pip blocked" title="Phase 8 — BD Analytics"></div>
+  <span class="status-label"><strong>Phases 4 · 5 · 7 active</strong> — Rubric · Sourcing · Data Capture</span>
 </div>
 
 <div class="page-body">
@@ -195,17 +196,17 @@
         <div class="card-tag">Live Tracker</div>
         <span class="badge badge-live">Live</span>
       </div>
-      <div class="card-title">Project Tracker — 7-Phase Engagement View</div>
+      <div class="card-title">Project Tracker — 8-Phase Engagement View</div>
       <div class="card-desc">A phase-by-phase view of the full engagement — what has been completed, what is in progress, what is blocked, and what comes next. Updated as the project moves forward.</div>
       <div class="card-footer">
-        <span class="card-time">3 of 7 phases complete</span>
+        <span class="card-time">3 of 8 phases complete</span>
         <span class="card-arrow">→</span>
       </div>
     </a>
   </div>
 
   <div class="section-label">Data Entry</div>
-  <div class="cards-grid single">
+  <div class="cards-grid">
     <a class="card accent-data" href="15_Ishwa_Combined_Data_Entry_Form.html">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="card-tag">Mandate Data Entry</div>
@@ -215,6 +216,18 @@
       <div class="card-desc">Single form for retrospective data entry. Complete the intake brief at the top — the closure record unlocks automatically below. Mandate ID carries over. Both records write to the data sheets in one session.</div>
       <div class="card-footer">
         <span class="card-time">~12–18 min per mandate</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
+    <a class="card accent-data" href="17_Ishwa_Queue_Form.html">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="card-tag">Mandate Queue</div>
+        <span class="badge badge-form">Retrospective</span>
+      </div>
+      <div class="card-title">Queue Form — Historical Mandate Entry</div>
+      <div class="card-desc">Work through the assigned queue of past mandates from the reference sheet. Completing Section 5 — named candidates, accept/reject reasoning, CVs — is the priority: it is the training input for the AI matching layer.</div>
+      <div class="card-footer">
+        <span class="card-time">Queue-driven · per assigned mandate</span>
         <span class="card-arrow">→</span>
       </div>
     </a>
@@ -255,10 +268,7 @@
   <span>Ishwa Consulting Engagement Hub · April 2026</span>
 </footer>
 
-<script>
-  document.getElementById('last-updated').textContent =
-    'Last updated ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
-</script>
+
 
 </body>
 </html>
