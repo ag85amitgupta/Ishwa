@@ -6,141 +6,593 @@
 <title>Project Tracker — Ishwa Consulting × PiP_AGI</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --rust:#B5451B;--rust-lt:#F0D5CB;--rust-dk:#8B3315;
-    --black:#1A1A1A;--g1:#4A4A4A;--g2:#F5F3F1;--g3:#E8E4E0;--g4:#DDDDDD;--white:#FFFFFF;
-    --amber:#FFF8EE;--green:#EBF5EC;--green2:#2D7D32;--green3:#A5D6A7;
-    --red:#FFEBEE;--blue:#E3F2FD;--orange:#E65100;
-    --serif:'Playfair Display',Georgia,serif;--sans:'DM Sans',system-ui,sans-serif;--mono:'DM Mono','Courier New',monospace;
-  }
-  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-  html{font-size:16px;}
-  body{font-family:var(--sans);color:var(--black);background:#F2EFEB;min-height:100vh;-webkit-font-smoothing:antialiased;}
-  .site-header{background:var(--black);border-bottom:3px solid var(--rust);position:sticky;top:0;z-index:100;}
-  .header-inner{max-width:960px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;}
-  .brand{display:flex;align-items:baseline;gap:16px;}
-  .brand-firm{font-family:var(--serif);font-size:18px;color:var(--white);font-weight:600;}
-  .brand-rule{width:1px;height:14px;background:var(--rust);}
-  .brand-pip{font-size:11px;color:var(--rust);font-weight:600;letter-spacing:0.12em;text-transform:uppercase;}
-  .header-right{display:flex;align-items:center;gap:16px;}
-  .header-tag{font-family:var(--mono);font-size:11px;color:#666;letter-spacing:0.08em;text-transform:uppercase;}
-  .print-btn{font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--rust);background:none;border:1px solid var(--rust);padding:5px 14px;border-radius:2px;cursor:pointer;transition:all 0.15s;}
-  .print-btn:hover{background:var(--rust);color:var(--white);}
-  .back-btn{font-family:var(--sans);font-size:11px;font-weight:500;color:#666;text-decoration:none;letter-spacing:0.04em;transition:color 0.15s;}
-  .back-btn:hover{color:var(--white);}
-  .page{max-width:960px;margin:0 auto;padding:48px 40px 80px;}
-  .title-block{margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--g4);}
-  .eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:10px;}
-  .page-title{font-family:var(--serif);font-size:40px;font-weight:700;color:var(--black);line-height:1.1;margin-bottom:10px;}
-  .page-sub{font-size:15px;color:var(--g1);line-height:1.6;max-width:600px;}
-  .meta-row{display:flex;align-items:center;gap:24px;margin-top:20px;flex-wrap:wrap;}
-  .meta-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g1);}
-  .meta-dot{width:6px;height:6px;border-radius:50%;background:var(--rust);flex-shrink:0;}
-  .meta-updated{font-family:var(--mono);font-size:11px;color:#999;margin-left:auto;}
-  .legend{display:flex;gap:20px;margin-bottom:32px;flex-wrap:wrap;}
-  .leg{display:flex;align-items:center;gap:7px;font-size:12px;color:var(--g1);}
-  .leg-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;}
-  .leg-dot.done{background:var(--green2);}
-  .leg-dot.active{background:var(--rust);}
-  .leg-dot.blocked{border:1.5px dashed #999;background:transparent;}
-  .leg-dot.upcoming{background:var(--g4);}
-  .you-are-here{display:inline-flex;align-items:center;gap:8px;font-size:12px;font-weight:600;color:var(--rust-dk);background:var(--rust-lt);padding:6px 14px;border-radius:2px;margin-bottom:32px;letter-spacing:0.04em;}
-  .yah-pulse{width:8px;height:8px;border-radius:50%;background:var(--rust);flex-shrink:0;animation:pulse 2s ease-in-out infinite;}
-  @keyframes pulse{0%,100%{opacity:1;transform:scale(1);}50%{opacity:0.5;transform:scale(0.85);}}
-  .summary-bar{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:36px;}
-  .summary-card{background:var(--white);border:1px solid var(--g4);border-radius:2px;padding:16px 18px;}
-  .summary-val{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--rust);line-height:1;margin-bottom:6px;}
-  .summary-label{font-size:11px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;color:var(--g1);}
-  .phases{display:flex;flex-direction:column;}
-  .phase-row{display:grid;grid-template-columns:160px 24px 1fr;gap:0 16px;align-items:stretch;}
-  .phase-label{display:flex;flex-direction:column;justify-content:center;padding:16px 0;text-align:right;}
-  .phase-num{font-family:var(--serif);font-size:11px;font-weight:600;color:var(--rust);letter-spacing:0.08em;text-transform:uppercase;}
-  .phase-name{font-size:12px;font-weight:500;color:var(--black);margin-top:2px;}
-  .phase-tag{font-family:var(--mono);font-size:10px;color:#999;margin-top:3px;letter-spacing:0.04em;}
-  .spine{display:flex;flex-direction:column;align-items:center;}
-  .spine-top{width:1.5px;flex:1;min-height:16px;background:var(--g4);}
-  .spine-top.hide{background:transparent;}
-  .spine-top.done{background:var(--green2);opacity:0.4;}
-  .spine-top.active{background:var(--rust);opacity:0.3;}
-  .spine-dot{width:16px;height:16px;border-radius:50%;flex-shrink:0;border:2px solid var(--g4);background:var(--white);position:relative;z-index:1;transition:all 0.2s;}
-  .spine-dot.done{background:var(--green2);border-color:var(--green2);}
-  .spine-dot.done::after{content:'';display:block;width:5px;height:3px;border-left:1.5px solid var(--white);border-bottom:1.5px solid var(--white);transform:rotate(-45deg);position:absolute;top:4px;left:3px;}
-  .spine-dot.active{background:var(--rust);border-color:var(--rust);box-shadow:0 0 0 3px var(--rust-lt);}
-  .spine-dot.blocked{background:var(--g2);border-color:#999;border-style:dashed;}
-  .spine-dot.upcoming{background:var(--g2);border-color:var(--g4);}
-  .spine-bottom{width:1.5px;flex:1;min-height:16px;background:var(--g4);}
-  .spine-bottom.hide{background:transparent;}
-  .spine-bottom.done{background:var(--green2);opacity:0.4;}
-  .phase-card{margin:10px 0;background:var(--white);border:1px solid var(--g4);border-radius:2px;overflow:hidden;transition:box-shadow 0.15s;}
-  .phase-card:hover{box-shadow:0 2px 12px rgba(0,0,0,0.06);}
-  .phase-card.done{border-left:3px solid var(--green2);}
-  .phase-card.active{border-left:3px solid var(--rust);}
-  .phase-card.blocked{border-left:3px dashed #999;}
-  .card-header{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;padding:16px 20px 12px;}
-  .card-title{font-family:var(--serif);font-size:16px;font-weight:600;color:var(--black);line-height:1.3;}
-  .status-badge{font-size:10px;font-weight:600;letter-spacing:0.08em;text-transform:uppercase;padding:3px 10px;border-radius:20px;white-space:nowrap;flex-shrink:0;}
-  .badge-done{background:var(--green);color:var(--green2);}
-  .badge-active{background:var(--rust-lt);color:var(--rust-dk);}
-  .badge-blocked{background:var(--g2);color:#777;}
-  .badge-upcoming{background:var(--g2);color:#999;}
-  .card-body{padding:0 20px 16px;}
-  .card-desc{font-size:13px;color:var(--g1);line-height:1.6;margin-bottom:14px;}
-  .deliverables{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px;}
-  .deliverable{font-size:11px;padding:3px 10px;border-radius:20px;border:1px solid var(--g4);color:var(--g1);background:var(--g2);display:flex;align-items:center;gap:5px;}
-  .deliverable::before{content:'';width:5px;height:5px;border-radius:50%;background:var(--g4);flex-shrink:0;}
-  .deliverable.done{border-color:var(--green3);color:var(--green2);background:var(--green);}
-  .deliverable.done::before{background:var(--green2);}
-  .deliverable.pending{border-color:#FFCCBC;color:var(--rust-dk);background:#FFF3E0;}
-  .deliverable.pending::before{background:var(--rust);}
-  .deliverable.blocked{border-color:#CCC;border-style:dashed;color:#999;background:var(--g2);}
-  .deliverable.blocked::before{background:#CCC;}
-  .blocker{background:var(--g2);border-left:2px solid #999;border-radius:0 2px 2px 0;padding:9px 12px;font-size:12px;color:var(--g1);line-height:1.55;margin-bottom:12px;}
-  .blocker strong{color:var(--black);font-weight:600;}
-  .milestone{display:flex;align-items:center;gap:8px;padding-top:12px;border-top:1px solid var(--g4);font-size:12px;color:var(--g1);}
-  .milestone-flag{width:10px;height:10px;border-radius:1px;flex-shrink:0;}
-  .milestone-flag.done{background:var(--green2);}
-  .milestone-flag.pending{background:var(--rust);}
-  .milestone-flag.blocked{background:#999;}
-  .milestone strong{color:var(--black);font-weight:500;}
-  .site-footer{max-width:960px;margin:0 auto;padding:0 40px 40px;display:flex;align-items:center;justify-content:space-between;font-size:11px;color:#BBB;border-top:1px solid var(--g4);padding-top:24px;margin-top:0;}
 
+  /* ── Reset ── */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  /* ── Tokens ── */
+  :root {
+    --rust:      #B5451B;
+    --rust-lt:   #F0D5CB;
+    --rust-dk:   #8B3315;
+    --black:     #1A1A1A;
+    --g1:        #4A4A4A;
+    --g2:        #F5F3F1;
+    --g3:        #E8E4E0;
+    --g4:        #DDDDDD;
+    --white:     #FFFFFF;
+    --amber:     #FFF8EE;
+    --green:     #EBF5EC;
+    --green2:    #2D7D32;
+    --green3:    #A5D6A7;
+    --red:       #FDECEA;
+    --red2:      #C62828;
+    --blue:      #E3F2FD;
+    --blue2:     #1565C0;
+    --serif:     'Playfair Display', Georgia, serif;
+    --sans:      'DM Sans', system-ui, sans-serif;
+    --mono:      'DM Mono', 'Courier New', monospace;
+  }
+
+  /* ── Base ── */
+  html { font-size: 16px; }
+  body {
+    font-family: var(--sans);
+    color: var(--black);
+    background: #F2EFEB;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    background: var(--black);
+    border-bottom: 3px solid var(--rust);
+    position: sticky;
+    top: 0;
+    z-index: 100;
+  }
+  .header-inner {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 18px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  .brand {
+    display: flex;
+    align-items: baseline;
+    gap: 16px;
+  }
+  .brand-firm {
+    font-family: var(--serif);
+    font-size: 18px;
+    color: var(--white);
+    font-weight: 600;
+  }
+  .brand-rule {
+    width: 1px; height: 14px;
+    background: var(--rust);
+  }
+  .brand-pip {
+    font-size: 11px;
+    color: var(--rust);
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+  .header-right {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .header-tag {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #666;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .print-btn {
+    font-family: var(--sans);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--rust);
+    background: none;
+    border: 1px solid var(--rust);
+    padding: 5px 14px;
+    border-radius: 2px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .print-btn:hover {
+    background: var(--rust);
+    color: var(--white);
+  }
+
+  /* ── Page ── */
+  .page {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 48px 40px 80px;
+  }
+
+  /* ── Title block ── */
+  .title-block {
+    margin-bottom: 40px;
+    padding-bottom: 32px;
+    border-bottom: 1px solid var(--g4);
+  }
+  .eyebrow {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--rust);
+    margin-bottom: 10px;
+  }
+  .page-title {
+    font-family: var(--serif);
+    font-size: 40px;
+    font-weight: 700;
+    color: var(--black);
+    line-height: 1.1;
+    margin-bottom: 10px;
+  }
+  .page-sub {
+    font-size: 15px;
+    color: var(--g1);
+    line-height: 1.6;
+    max-width: 600px;
+  }
+  .meta-row {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12px;
+    color: var(--g1);
+  }
+  .meta-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: var(--rust);
+    flex-shrink: 0;
+  }
+  .meta-updated {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: #999;
+    margin-left: auto;
+  }
+
+  /* ── Legend ── */
+  .legend {
+    display: flex;
+    gap: 20px;
+    margin-bottom: 32px;
+    flex-wrap: wrap;
+  }
+  .leg {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    font-size: 12px;
+    color: var(--g1);
+  }
+  .leg-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .leg-dot.done     { background: var(--green2); }
+  .leg-dot.active   { background: var(--rust); }
+  .leg-dot.blocked  { background: #999; border: 1.5px dashed #999; background: transparent; }
+  .leg-dot.upcoming { background: var(--g4); }
+
+  /* ── You are here banner ── */
+  .you-are-here {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--rust-dk);
+    background: var(--rust-lt);
+    padding: 6px 14px;
+    border-radius: 2px;
+    margin-bottom: 32px;
+    letter-spacing: 0.04em;
+  }
+  .yah-pulse {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--rust);
+    flex-shrink: 0;
+    animation: pulse 2s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50%       { opacity: 0.5; transform: scale(0.85); }
+  }
+
+  /* ── Phase grid ── */
+  .phases {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .phase-row {
+    display: grid;
+    grid-template-columns: 160px 24px 1fr;
+    gap: 0 16px;
+    align-items: stretch;
+  }
+
+  /* Left label */
+  .phase-label {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 16px 0;
+    text-align: right;
+  }
+  .phase-num {
+    font-family: var(--serif);
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--rust);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+  .phase-name {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--black);
+    margin-top: 2px;
+  }
+  .phase-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    color: #999;
+    margin-top: 3px;
+    letter-spacing: 0.04em;
+  }
+
+  /* Spine */
+  .spine {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .spine-top {
+    width: 1.5px;
+    flex: 1;
+    min-height: 16px;
+    background: var(--g4);
+  }
+  .spine-top.hide    { background: transparent; }
+  .spine-top.done    { background: var(--green2); opacity: 0.4; }
+  .spine-top.active  { background: var(--rust); opacity: 0.3; }
+
+  .spine-dot {
+    width: 16px; height: 16px;
+    border-radius: 50%;
+    flex-shrink: 0;
+    border: 2px solid var(--g4);
+    background: var(--white);
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s;
+  }
+  .spine-dot.done {
+    background: var(--green2);
+    border-color: var(--green2);
+  }
+  .spine-dot.done::after {
+    content: '';
+    display: block;
+    width: 5px; height: 3px;
+    border-left: 1.5px solid var(--white);
+    border-bottom: 1.5px solid var(--white);
+    transform: rotate(-45deg);
+    position: absolute;
+    top: 4px; left: 3px;
+  }
+  .spine-dot.active {
+    background: var(--rust);
+    border-color: var(--rust);
+    box-shadow: 0 0 0 3px var(--rust-lt);
+  }
+  .spine-dot.blocked {
+    background: var(--g2);
+    border-color: #999;
+    border-style: dashed;
+  }
+  .spine-dot.upcoming {
+    background: var(--g2);
+    border-color: var(--g4);
+  }
+
+  .spine-bottom {
+    width: 1.5px;
+    flex: 1;
+    min-height: 16px;
+    background: var(--g4);
+  }
+  .spine-bottom.hide    { background: transparent; }
+  .spine-bottom.done    { background: var(--green2); opacity: 0.4; }
+
+  /* Card */
+  .phase-card {
+    margin: 10px 0;
+    background: var(--white);
+    border: 1px solid var(--g4);
+    border-radius: 2px;
+    overflow: hidden;
+    transition: box-shadow 0.15s;
+  }
+  .phase-card:hover {
+    box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  }
+  .phase-card.done    { border-left: 3px solid var(--green2); }
+  .phase-card.active  { border-left: 3px solid var(--rust); }
+  .phase-card.blocked { border-left: 3px dashed #999; }
+
+  .card-header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px 20px 12px;
+  }
+  .card-title {
+    font-family: var(--serif);
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--black);
+    line-height: 1.3;
+  }
+  .status-badge {
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 3px 10px;
+    border-radius: 20px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+  .badge-done     { background: var(--green); color: var(--green2); }
+  .badge-active   { background: var(--rust-lt); color: var(--rust-dk); }
+  .badge-blocked  { background: var(--g2); color: #777; }
+  .badge-upcoming { background: var(--g2); color: #999; }
+
+  .card-body {
+    padding: 0 20px 16px;
+  }
+  .card-desc {
+    font-size: 13px;
+    color: var(--g1);
+    line-height: 1.6;
+    margin-bottom: 14px;
+  }
+
+  /* Deliverables */
+  .deliverables {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-bottom: 12px;
+  }
+  .deliverable {
+    font-size: 11px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--g4);
+    color: var(--g1);
+    background: var(--g2);
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .deliverable::before {
+    content: '';
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--g4);
+    flex-shrink: 0;
+  }
+  .deliverable.done {
+    border-color: var(--green3);
+    color: var(--green2);
+    background: var(--green);
+  }
+  .deliverable.done::before { background: var(--green2); }
+  .deliverable.pending {
+    border-color: #FFCCBC;
+    color: var(--rust-dk);
+    background: #FFF3E0;
+  }
+  .deliverable.pending::before { background: var(--rust); }
+  .deliverable.blocked {
+    border-color: #CCC;
+    border-style: dashed;
+    color: #999;
+    background: var(--g2);
+  }
+  .deliverable.blocked::before { background: #CCC; }
+
+  /* Blocker note */
+  .blocker {
+    background: var(--g2);
+    border-left: 2px solid #999;
+    border-radius: 0 2px 2px 0;
+    padding: 9px 12px;
+    font-size: 12px;
+    color: var(--g1);
+    line-height: 1.55;
+    margin-bottom: 12px;
+  }
+  .blocker strong { color: var(--black); font-weight: 600; }
+
+  /* Milestone */
+  .milestone {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--g4);
+    font-size: 12px;
+    color: var(--g1);
+  }
+  .milestone-flag {
+    width: 10px; height: 10px;
+    border-radius: 1px;
+    flex-shrink: 0;
+  }
+  .milestone-flag.done    { background: var(--green2); }
+  .milestone-flag.pending { background: var(--rust); }
+  .milestone-flag.blocked { background: #999; }
+  .milestone strong { color: var(--black); font-weight: 500; }
+
+  /* ── Summary bar ── */
+  .summary-bar {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    margin-bottom: 36px;
+  }
+  .summary-card {
+    background: var(--white);
+    border: 1px solid var(--g4);
+    border-radius: 2px;
+    padding: 16px 18px;
+  }
+  .summary-val {
+    font-family: var(--serif);
+    font-size: 28px;
+    font-weight: 700;
+    color: var(--rust);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .summary-label {
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--g1);
+  }
+
+  /* ── Footer ── */
+  .site-footer {
+    max-width: 960px;
+    margin: 0 auto;
+    padding: 0 40px 40px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 11px;
+    color: #BBB;
+    border-top: 1px solid var(--g4);
+    padding-top: 24px;
+    margin-top: 0;
+  }
+
+  /* ── Print styles ── */
   @media print {
-    @page{size:A4;margin:18mm 16mm;}
-    *,*::before,*::after{-webkit-print-color-adjust:exact!important;print-color-adjust:exact!important;color-adjust:exact!important;}
-    body{background:#FFFFFF;font-size:13px;}
-    .site-header{position:static;border-bottom:2px solid #B5451B;background:#1A1A1A!important;}
-    .brand-firm{color:#FFFFFF!important;}.brand-pip{color:#B5451B!important;}.brand-rule{background:#B5451B!important;}.header-tag{color:#666!important;}
-    .print-btn,.back-btn{display:none;}
-    .yah-pulse{animation:none;background:#B5451B!important;}
-    .you-are-here{background:#F0D5CB!important;color:#8B3315!important;}
-    .page{padding:24px 0 40px;}
-    .phase-card{break-inside:avoid;box-shadow:none!important;}
-    .phase-row{break-inside:avoid;}
-    .summary-bar{break-inside:avoid;}
-    .spine-dot.done{background:#2D7D32!important;border-color:#2D7D32!important;}
-    .spine-dot.active{background:#B5451B!important;border-color:#B5451B!important;box-shadow:none!important;}
-    .spine-dot.blocked{background:#F5F3F1!important;border-color:#999999!important;}
-    .spine-dot.upcoming{background:#F5F3F1!important;border-color:#DDDDDD!important;}
-    .spine-top.done,.spine-bottom.done{background:#2D7D32!important;}
-    .spine-top.active{background:#B5451B!important;}
-    .leg-dot.done{background:#2D7D32!important;}.leg-dot.active{background:#B5451B!important;}.leg-dot.upcoming{background:#DDDDDD!important;}
-    .badge-done{background:#EBF5EC!important;color:#2D7D32!important;}.badge-active{background:#F0D5CB!important;color:#8B3315!important;}.badge-blocked{background:#F5F3F1!important;color:#777777!important;}.badge-upcoming{background:#F5F3F1!important;color:#999999!important;}
-    .deliverable.done{background:#EBF5EC!important;color:#2D7D32!important;border-color:#A5D6A7!important;}
-    .deliverable.pending{background:#FFF3E0!important;color:#8B3315!important;border-color:#FFCCBC!important;}
-    .deliverable.done::before{background:#2D7D32!important;}.deliverable.pending::before{background:#B5451B!important;}.deliverable.blocked::before{background:#CCCCCC!important;}
-    .milestone-flag.done{background:#2D7D32!important;}.milestone-flag.pending{background:#B5451B!important;}.milestone-flag.blocked{background:#999999!important;}
-    .phase-card.done{border-left:3px solid #2D7D32!important;}.phase-card.active{border-left:3px solid #B5451B!important;}.phase-card.blocked{border-left:3px dashed #999999!important;}
-    .site-footer{position:fixed;bottom:0;left:0;right:0;padding:8px 16mm;border-top:1px solid #DDDDDD;background:#FFFFFF;max-width:none;margin:0;}
+    @page { size: A4; margin: 18mm 16mm; }
+
+    *, *::before, *::after {
+      -webkit-print-color-adjust: exact !important;
+      print-color-adjust: exact !important;
+      color-adjust: exact !important;
+    }
+
+    body { background: #FFFFFF; font-size: 13px; }
+    .site-header { position: static; border-bottom: 2px solid #B5451B; background: #1A1A1A !important; }
+    .brand-firm { color: #FFFFFF !important; }
+    .brand-pip  { color: #B5451B !important; }
+    .brand-rule { background: #B5451B !important; }
+    .header-tag { color: #666 !important; }
+    .print-btn  { display: none; }
+    .yah-pulse  { animation: none; background: #B5451B !important; }
+    .you-are-here { background: #F0D5CB !important; color: #8B3315 !important; }
+    .page { padding: 24px 0 40px; }
+
+    .phase-card { break-inside: avoid; box-shadow: none; }
+    .phase-row  { break-inside: avoid; }
+    .phase-card:hover { box-shadow: none; }
+    .summary-bar { break-inside: avoid; }
+
+    .spine-dot.done     { background: #2D7D32 !important; border-color: #2D7D32 !important; }
+    .spine-dot.active   { background: #B5451B !important; border-color: #B5451B !important; box-shadow: none !important; }
+    .spine-dot.blocked  { background: #F5F3F1 !important; border-color: #999999 !important; }
+    .spine-dot.upcoming { background: #F5F3F1 !important; border-color: #DDDDDD !important; }
+    .spine-top.done     { background: #2D7D32 !important; opacity: 0.4; }
+    .spine-top.active   { background: #B5451B !important; opacity: 0.3; }
+    .spine-bottom.done  { background: #2D7D32 !important; opacity: 0.4; }
+
+    .leg-dot.done     { background: #2D7D32 !important; }
+    .leg-dot.active   { background: #B5451B !important; }
+    .leg-dot.upcoming { background: #DDDDDD !important; }
+
+    .badge-done     { background: #EBF5EC !important; color: #2D7D32 !important; }
+    .badge-active   { background: #F0D5CB !important; color: #8B3315 !important; }
+    .badge-blocked  { background: #F5F3F1 !important; color: #777777 !important; }
+    .badge-upcoming { background: #F5F3F1 !important; color: #999999 !important; }
+
+    .deliverable.done    { background: #EBF5EC !important; color: #2D7D32 !important; border-color: #A5D6A7 !important; }
+    .deliverable.pending { background: #FFF3E0 !important; color: #8B3315 !important; border-color: #FFCCBC !important; }
+    .deliverable.blocked { background: #F5F3F1 !important; color: #999999 !important; }
+    .deliverable.done::before    { background: #2D7D32 !important; }
+    .deliverable.pending::before { background: #B5451B !important; }
+    .deliverable.blocked::before { background: #CCCCCC !important; }
+
+    .milestone-flag.done    { background: #2D7D32 !important; }
+    .milestone-flag.pending { background: #B5451B !important; }
+    .milestone-flag.blocked { background: #999999 !important; }
+
+    .phase-card.done    { border-left: 3px solid #2D7D32 !important; }
+    .phase-card.active  { border-left: 3px solid #B5451B !important; }
+    .phase-card.blocked { border-left: 3px dashed #999999 !important; }
+
+    .site-footer {
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      padding: 8px 16mm;
+      border-top: 1px solid #DDDDDD;
+      background: #FFFFFF;
+      max-width: none;
+      margin: 0;
+    }
   }
-  @media(max-width:640px){
-    .header-inner{padding:14px 20px;}.page{padding:28px 20px 60px;}
-    .phase-row{grid-template-columns:120px 20px 1fr;gap:0 10px;}
-    .summary-bar{grid-template-columns:1fr 1fr;}.meta-updated{display:none;}.page-title{font-size:28px;}
+
+  /* ── Responsive ── */
+  @media (max-width: 640px) {
+    .header-inner { padding: 14px 20px; }
+    .page { padding: 28px 20px 60px; }
+    .phase-row { grid-template-columns: 120px 20px 1fr; gap: 0 10px; }
+    .summary-bar { grid-template-columns: 1fr 1fr; }
+    .meta-updated { display: none; }
+    .page-title { font-size: 28px; }
   }
+
 </style>
 </head>
 <body>
 
+<!-- ── Header ── -->
 <header class="site-header">
   <div class="header-inner">
     <div class="brand">
@@ -149,80 +601,508 @@
       <span class="brand-pip">PiP_AGI</span>
     </div>
     <div class="header-right">
-      <a class="back-btn" href="index.html">← Hub</a>
       <span class="header-tag">Project Tracker</span>
       <button class="print-btn" onclick="window.print()">Print / PDF</button>
     </div>
   </div>
 </header>
 
-<main class="page" id="main-content">
-  <div style="text-align:center;padding:80px 40px;font-size:14px;color:#999;font-style:italic;">Loading project status...</div>
+<!-- ── Page ── -->
+<main class="page">
+
+  <!-- Title -->
+  <div class="title-block">
+    <div class="eyebrow">Engagement Overview</div>
+    <h1 class="page-title">AI-Powered Executive Search Engine</h1>
+    <p class="page-sub">A phase-by-phase view of the engagement — what has been completed, what is in progress, and what is pending before the build can proceed.</p>
+    <div class="meta-row">
+      <div class="meta-item"><div class="meta-dot"></div> 8 phases total</div>
+      <div class="meta-item"><div class="meta-dot"></div> 3 phases complete</div>
+      <div class="meta-item"><div class="meta-dot"></div> Phases 4 · 5 · 7 active</div>
+      <div class="meta-updated" id="updated-date"></div>
+    </div>
+  </div>
+
+  <!-- Summary bar -->
+  <div class="summary-bar">
+    <div class="summary-card">
+      <div class="summary-val" id="sum-phases">3 / 8</div>
+      <div class="summary-label">Phases complete</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val" id="sum-deliv">24</div>
+      <div class="summary-label">Deliverables built</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val" id="sum-inputs">2</div>
+      <div class="summary-label">Client inputs pending</div>
+    </div>
+    <div class="summary-card">
+      <div class="summary-val">Live</div>
+      <div class="summary-label">Sourcing Assistant v2</div>
+    </div>
+  </div>
+
+  <!-- Legend -->
+  <div class="legend">
+    <div class="leg"><div class="leg-dot done"></div>Complete</div>
+    <div class="leg"><div class="leg-dot active"></div>Active — in progress</div>
+    <div class="leg"><div class="leg-dot blocked"></div>Blocked — awaiting input</div>
+    <div class="leg"><div class="leg-dot upcoming"></div>Upcoming</div>
+  </div>
+
+  <!-- You are here -->
+  <div class="you-are-here">
+    <div class="yah-pulse"></div>
+    <span id="yah-text">Phases 4, 5, 7 active — 50-search PoC agreed 9 July and underway. Matching engine (Phase 6) held pending PoC data.</span>
+  </div>
+
+  <!-- Phases -->
+  <div class="phases" id="phases"></div>
+
 </main>
 
+<!-- Footer -->
 <footer class="site-footer">
   <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
-  <span id="footer-date">Project Tracker · April 2026</span>
+  <span>Project Tracker v2 · July 2026</span>
 </footer>
 
 <script>
-const statusMap = {
-  done:     { badge:'Complete',  badgeClass:'badge-done',     dot:'done',     card:'done' },
-  active:   { badge:'Active',    badgeClass:'badge-active',   dot:'active',   card:'active' },
-  blocked:  { badge:'Blocked',   badgeClass:'badge-blocked',  dot:'blocked',  card:'blocked' },
-  upcoming: { badge:'Upcoming',  badgeClass:'badge-upcoming', dot:'upcoming', card:'' },
+
+  // ── Single source of truth: status.json (same repo). Embedded snapshot is the fallback. ──
+  const FALLBACK = {
+  "last_updated": "13 July 2026",
+  "current_phase": 7,
+  "you_are_here": "Phases 4, 5, 7 active — Rubric · Sourcing Layer · Data Capture. Engagement re-engaged: 9 July working session held, 50-search PoC agreed and underway. Matching engine (Phase 6) held pending PoC data.",
+  "summary": {
+    "phases_complete": "3 / 8",
+    "deliverables_built": "23",
+    "client_inputs_pending": "2",
+    "build_time": "Sourcing Assistant v2 live and restored. 50-search PoC is the unlock path for the matching engine.",
+    "new_mandate_id_from": "ISH-202603-0411"
+  },
+  "naming_note": {
+    "17_Ishwa_Queue_Form.html": "Live on GitHub Pages — ag85amitgupta.github.io/Ishwa/17_Ishwa_Queue_Form.html",
+    "17_Ishwa_Apps_Script.js": "Bound to Google Sheet — deployed, same URL",
+    "18_Ishwa_Mandate_Reference.xlsx": "Shared with Somanshu — internally tracked as 17 on Drive/Sheets"
+  },
+  "phases": [
+    {
+      "num": "Phase 1",
+      "name": "Scoping & Diagnosis",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Engagement scoping & problem diagnosis",
+      "desc": "Structured strategy session with Shalini Gupta. Problem diagnosed: Ishwa's quality edge lives entirely in consultant judgement — no documented framework, no structured AI input. Solution architecture defined across three layers.",
+      "deliverables": [
+        {
+          "label": "Problem framing & solution architecture",
+          "status": "done"
+        },
+        {
+          "label": "Engagement folder delivered to client",
+          "status": "done"
+        }
+      ],
+      "milestone": {
+        "label": "Engagement folder delivered to Ishwa",
+        "status": "done"
+      }
+    },
+    {
+      "num": "Phase 2",
+      "name": "Data Audit",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "Data receipt, audit & documentation",
+      "desc": "Five data files received from Ishwa (Zoho Recruit + CRM, covering Sep 2022 — Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, interactive forms, and the ChatGPT Search Assistant built and delivered.",
+      "deliverables": [
+        {
+          "label": "01 — Leadership data audit",
+          "status": "done"
+        },
+        {
+          "label": "02 — Consultant data audit",
+          "status": "done"
+        },
+        {
+          "label": "03 — Data gap one-pager",
+          "status": "done"
+        },
+        {
+          "label": "04/05 — Intake & closure forms (superseded by 15)",
+          "status": "done"
+        },
+        {
+          "label": "06 — Project tracker (live)",
+          "status": "done"
+        },
+        {
+          "label": "07 — ChatGPT Search Assistant",
+          "status": "done"
+        },
+        {
+          "label": "08/09 — Meeting one-pager & agenda",
+          "status": "done"
+        }
+      ],
+      "milestone": {
+        "label": "All audit documents, templates and meeting prep delivered",
+        "status": "done"
+      }
+    },
+    {
+      "num": "Phase 3",
+      "name": "Client Inputs",
+      "tag": "COMPLETE",
+      "status": "done",
+      "title": "8 April session — decisions locked, build unblocked",
+      "desc": "Three-step workflow agreed. Data capture path confirmed (Option C — web forms). Order book received from Somanshu and analysed. Meeting minutes, order book analysis, and rubric scaffold sent to Ishwa on 22 April. Both forms live with Ishwa as of 24 April.",
+      "deliverables": [
+        {
+          "label": "11 — Meeting minutes (8 Apr)",
+          "status": "done"
+        },
+        {
+          "label": "12A/12B — Order book analysis (client + internal)",
+          "status": "done"
+        },
+        {
+          "label": "13A — Rubric scaffold — sent to Ishwa",
+          "status": "done"
+        },
+        {
+          "label": "13B — Walkthrough guide — sent to overseer",
+          "status": "done"
+        },
+        {
+          "label": "15 — Combined mandate data entry form — supersedes 04 and 05",
+          "status": "done"
+        },
+        {
+          "label": "Apps Script (Google Sheets integration) — v3 active",
+          "status": "done"
+        }
+      ],
+      "milestone": {
+        "label": "Forms live with Ishwa. Data flowing to Google Sheets.",
+        "status": "done"
+      }
+    },
+    {
+      "num": "Phase 4",
+      "name": "Rubric Build",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Rubric calibration — now advancing through the master sheet",
+      "desc": "Rubric substance (weightages, must-haves, dealbreakers, compensation philosophy) advancing through master-sheet validation — agreed path from the 9 July session. 13A document review superseded by this path (13 Jul decision): same data points captured, validated by client-side team. Rubric feeds the matching engine in Phase 6 and the profile scoring logic in Phase 5.",
+      "deliverables": [
+        {
+          "label": "13A rubric scaffold — superseded by master-sheet validation path",
+          "status": "done"
+        },
+        {
+          "label": "Weightages + dealbreakers validated via master sheet",
+          "status": "pending"
+        },
+        {
+          "label": "Rubric walkthrough session (Varsha as participant)",
+          "status": "pending"
+        },
+        {
+          "label": "Somanshu screenshare — data repositories",
+          "status": "pending"
+        }
+      ],
+      "milestone": {
+        "label": "Weightages and dealbreakers validated in master sheet — rubric v1 equivalent",
+        "status": "pending"
+      }
+    },
+    {
+      "num": "Phase 5",
+      "name": "Sourcing Layer",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Sourcing compression — primary problem being addressed",
+      "desc": "AI Sourcing Assistant v2 live as of 14 May 2026; tool maintenance 13 July (updated to current AI model, output layout hardened for long generated labels). Major upgrade from v1: multi-title role input, multi-select seniority, Company Stage optional, Key Skills field, expanded sectors, Education field, up to 50 companies per output (mid-tier weighted), Resdex strings appear first, primary + secondary string, company count badge per segment, Copy All and Download XLSX export. 9 July: no organic adoption of the tool to date — verified the link has not been accessed. This is a distribution question, not a tool-quality verdict. Comparison session (Sourcing Assistant vs ChatGPT) to be scheduled for week of 13 July — effectively the tool's first structured exposure to the team. Sourcing tool does not touch Naukri — it replaces the pre-Naukri ChatGPT step only.",
+      "deliverables": [
+        {
+          "label": "14 — Sourcing workflow analysis — shared with Ishwa (live screenshare with Somanshu)",
+          "status": "done"
+        },
+        {
+          "label": "16 — AI Sourcing Assistant v2 — live on GitHub Pages",
+          "status": "done"
+        },
+        {
+          "label": "Vercel proxy deployed — API routed through PiP_AGI",
+          "status": "done"
+        },
+        {
+          "label": "Screen recordings received and analysed (Aparna)",
+          "status": "done"
+        },
+        {
+          "label": "Feedback from consultants incorporated in v2",
+          "status": "done"
+        },
+        {
+          "label": "Tool maintenance — current AI model + output layout hardening (13 Jul)",
+          "status": "done"
+        },
+        {
+          "label": "Comparison session — Sourcing Assistant vs ChatGPT (Amit to set up with Shalini + Somanshu, week of 13 Jul)",
+          "status": "pending"
+        },
+        {
+          "label": "Model selection moved to Vercel proxy — maintenance hardening",
+          "status": "pending"
+        },
+        {
+          "label": "LinkedIn Recruiter status confirmed with Shalini",
+          "status": "pending"
+        },
+        {
+          "label": "200 → 10 scoring design — soft ask, not a blocker",
+          "status": "pending"
+        }
+      ],
+      "milestone": {
+        "label": "Sourcing assistant v2 live. Comparison session is the adoption gateway.",
+        "status": "partial"
+      }
+    },
+    {
+      "num": "Phase 6",
+      "name": "Matching Engine",
+      "tag": "BLOCKED",
+      "status": "blocked",
+      "title": "Matching engine prototype — deliberately held pending form data",
+      "desc": "AI evaluation layer. Takes structured mandate JSON + candidate profiles, returns ranked shortlist with per-criterion scores and plain-language rationale. Architecture designed. Build deliberately held — will be calibrated against mandate form data (Section 5 notes: named candidates, accept/reject reasoning, CVs). 3 mandates and 11 candidates available as seed data from Varsha (May 2026). Build resumes once meaningful form dataset exists (target: 50+ entries with notes).",
+      "deliverables": [
+        {
+          "label": "System prompt architecture",
+          "status": "done"
+        },
+        {
+          "label": "Seed data received — 3 mandates, 11 candidates, verdicts from Varsha",
+          "status": "done"
+        },
+        {
+          "label": "API prototype built",
+          "status": "blocked"
+        },
+        {
+          "label": "Tested against closed mandates",
+          "status": "blocked"
+        },
+        {
+          "label": "Ishwa review and sign-off",
+          "status": "blocked"
+        }
+      ],
+      "blocker": "Deliberately held. The 50-search PoC (agreed 9 Jul, target completion ~end July) is the unlock path — build resumes once PoC entries land with Section 5 notes populated.",
+      "milestone": {
+        "label": "Prototype validated against live mandates",
+        "status": "blocked"
+      }
+    },
+    {
+      "num": "Phase 7",
+      "name": "Data Capture",
+      "tag": "ACTIVE",
+      "status": "active",
+      "title": "Data capture — 50-search proof of concept agreed 9 July",
+      "desc": "9 July working session restructured the approach: instead of distributing all ~400 searches at once (client-side data-quality concern), a proof of concept with 50 recent and significant searches (excluding DMACC), prioritising clients where the team works directly with founders or senior leadership. Client-level data collected first (~135 clients — context, reason, stage, sector, compensation); working with whatever the client provides. Soft search strategy section removed from the schema (difficult to implement). 300–400 pre-populated line items to be validated by Somanshu's team, weightages added to master sheet. Section 5 depth (named candidates, accept/reject reasoning, CVs) remains the gold standard per Varsha's format.",
+      "deliverables": [
+        {
+          "label": "17 — Queue form — live on GitHub Pages",
+          "status": "done"
+        },
+        {
+          "label": "17 — Apps Script v3 — bound to Google Sheet, deployed",
+          "status": "done"
+        },
+        {
+          "label": "18 — Mandate Reference Sheet — 409 mandates, 60 columns, sent to Somanshu",
+          "status": "done"
+        },
+        {
+          "label": "Intake_Log + Closure_Log tabs — auto-created on first submission",
+          "status": "done"
+        },
+        {
+          "label": "Queue form added to engagement hub (13 Jul) — was live but not linked",
+          "status": "done"
+        },
+        {
+          "label": "9 Jul — 50-search PoC agreed (ex-DMACC, founder-led clients prioritised)",
+          "status": "done"
+        },
+        {
+          "label": "Soft search strategy section removed from schema (9 Jul)",
+          "status": "done"
+        },
+        {
+          "label": "Somanshu — 50-search list by Thu 16 Jul, criteria shared for client approval",
+          "status": "pending"
+        },
+        {
+          "label": "Client-level data for 135 clients to Amit — due Mon 13 Jul",
+          "status": "pending"
+        },
+        {
+          "label": "Team entry — 10 in-depth searches each (Chhaya, Namrata, Varsha, Mohit + Shalini, to confirm) — target end of next week",
+          "status": "pending"
+        },
+        {
+          "label": "Daily review cadence from Mon 13 Jul",
+          "status": "pending"
+        },
+        {
+          "label": "Section 5 notes with candidate reasoning + CVs — CRITICAL PATH",
+          "status": "pending"
+        }
+      ],
+      "milestone": {
+        "label": "50-search PoC completed with Section 5 depth — unlocks matching engine build.",
+        "status": "pending"
+      }
+    },
+    {
+      "num": "Phase 8",
+      "name": "BD Analytics",
+      "tag": "UPCOMING",
+      "status": "upcoming",
+      "title": "BD pattern analysis — strategic intelligence layer",
+      "desc": "Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership.",
+      "deliverables": [
+        {
+          "label": "Industry label standardisation",
+          "status": "blocked"
+        },
+        {
+          "label": "BD pattern report",
+          "status": "blocked"
+        },
+        {
+          "label": "Mandate risk scoring model",
+          "status": "blocked"
+        }
+      ],
+      "milestone": {
+        "label": "BD analytics report delivered to Ishwa leadership",
+        "status": "blocked"
+      }
+    }
+  ],
+  "open_actions": [
+    {
+      "action": "Set up comparison session — Sourcing Assistant vs ChatGPT (Shalini, Somanshu, possibly Chhaya) — week of 13 Jul",
+      "note": "No organic access to the tool to date — treat the session as first structured exposure, not a re-trial."
+    },
+    {
+      "action": "Confirm receipt — client-level data for 135 clients (due from Somanshu Mon 13 Jul)",
+      "note": "Client context, reason, stage, sector, compensation. Work with whatever arrives."
+    },
+    {
+      "action": "Review Somanshu's 50-search list + criteria (due Thu 16 Jul)",
+      "note": "Ex-DMACC, founder/senior-leadership clients. Criteria shared for client approval."
+    },
+    {
+      "action": "Track PoC entry cadence — daily review from 13 Jul, 10 per person, target end of next week",
+      "note": "Section 5 depth is the point — named candidates, accept/reject reasoning, CVs."
+    },
+    {
+      "action": "Confirm fifth PoC entrant (transcript said 'Ishwa' — assumed Shalini)",
+      "note": "Somanshu holds the distributor role; confirm before workload is assumed."
+    },
+    {
+      "action": "Move model selection from Sourcing Assistant page into Vercel proxy",
+      "note": "Single-edit maintenance for all tools on any future model change; keeps internal model names out of client-facing errors."
+    },
+    {
+      "action": "Recurring check — vendor AI model deprecation notices",
+      "note": "Keep pinned model versions current."
+    },
+    {
+      "action": "LinkedIn Recruiter status confirmation with Ishwa",
+      "note": "Pending, not yet resolved"
+    },
+    {
+      "action": "Soft ask — Resdex profile review recording",
+      "note": "No pressure, not a blocker"
+    }
+  ],
+  "key_decisions": [
+    {
+      "decision": "Engagement re-engaged — 9 Jul working session held",
+      "rationale": "Resolves the 29 June chase. Session with Shalini and Somanshu produced a concrete data plan with owners and dates."
+    },
+    {
+      "decision": "50-search PoC instead of full 400 distribution",
+      "rationale": "Client concern: full-set distribution to the broader team risks inaccurate entries. 50 recent, significant searches (ex-DMACC), founder-led clients, 10 per person, daily review."
+    },
+    {
+      "decision": "Client-level data first (~135 clients)",
+      "rationale": "Less complex to gather than search-specific detail; unblocks analysis while search-level entry proceeds. Working with whatever the client provides."
+    },
+    {
+      "decision": "Soft search strategy section removed from schema",
+      "rationale": "Agreed 9 Jul — difficult to implement in practice."
+    },
+    {
+      "decision": "13A superseded by master-sheet validation path",
+      "rationale": "Same data points captured (weightages, must-haves, dealbreakers, comp philosophy), validated by the client-side team — stronger endorsement than a document review. Clears the 13A blocker open since April."
+    },
+    {
+      "decision": "Model selection to move into Vercel proxy",
+      "rationale": "Pinned model versions in the page require per-tool edits on vendor model changes. Proxy-side selection makes any future change a single edit covering all tools."
+    },
+    {
+      "decision": "Matching engine build deliberately held",
+      "rationale": "Re-work risk too high with 11 candidate samples. Will build once 50+ mandate form entries with Section 5 notes exist. Forms are primary training data — not recordings."
+    },
+    {
+      "decision": "Varsha verdict format is the gold standard for Section 5",
+      "rationale": "Named candidates, brief reasoning per candidate, CVs attached — this is exactly the signal the matching engine needs. Communicated to Somanshu in 14 May email."
+    }
+  ]
 };
 
-fetch('status.json?v=' + Date.now())
-  .then(r => r.json())
-  .then(data => {
-    document.getElementById('footer-date').textContent = 'Project Tracker · ' + data.last_updated;
-    const s = data.summary;
+  const statusMap = {
+    done:     { badge: 'Complete', badgeClass: 'badge-done',     dot: 'done',     card: 'done' },
+    active:   { badge: 'Active',   badgeClass: 'badge-active',   dot: 'active',   card: 'active' },
+    blocked:  { badge: 'Blocked',  badgeClass: 'badge-blocked',  dot: 'blocked',  card: 'blocked' },
+    upcoming: { badge: 'Upcoming', badgeClass: 'badge-upcoming', dot: 'upcoming', card: '' },
+  };
 
-    const html = `
-      <div class="title-block">
-        <div class="eyebrow">Engagement Overview</div>
-        <h1 class="page-title">AI-Powered Executive Search Engine</h1>
-        <p class="page-sub">A phase-by-phase view of the engagement — what has been completed, what is in progress, and what is pending before the build can proceed.</p>
-        <div class="meta-row">
-          <div class="meta-item"><div class="meta-dot"></div> 7 phases total</div>
-          <div class="meta-item"><div class="meta-dot"></div> ${s.phases_complete} phases complete</div>
-          <div class="meta-item"><div class="meta-dot"></div> ${s.client_inputs_pending} client inputs pending</div>
-          <div class="meta-updated">Last updated: ${data.last_updated}</div>
-        </div>
-      </div>
+  function render(data) {
+    document.getElementById('updated-date').textContent = 'Last updated: ' + (data.last_updated || '');
+    if (data.you_are_here) document.getElementById('yah-text').textContent = data.you_are_here;
+    if (data.summary) {
+      if (data.summary.phases_complete)      document.getElementById('sum-phases').textContent = data.summary.phases_complete;
+      if (data.summary.deliverables_built)   document.getElementById('sum-deliv').textContent  = data.summary.deliverables_built;
+      if (data.summary.client_inputs_pending) document.getElementById('sum-inputs').textContent = data.summary.client_inputs_pending;
+    }
 
-      <div class="summary-bar">
-        <div class="summary-card"><div class="summary-val">${s.phases_complete}</div><div class="summary-label">Phases complete</div></div>
-        <div class="summary-card"><div class="summary-val">${s.deliverables_built}</div><div class="summary-label">Deliverables built</div></div>
-        <div class="summary-card"><div class="summary-val">${s.client_inputs_pending}</div><div class="summary-label">Client inputs pending</div></div>
-        <div class="summary-card"><div class="summary-val">${s.build_time}</div><div class="summary-label">Build time once unlocked</div></div>
-      </div>
+    const container = document.getElementById('phases');
+    container.innerHTML = '';
+    const phases = data.phases || [];
 
-      <div class="legend">
-        <div class="leg"><div class="leg-dot done"></div>Complete</div>
-        <div class="leg"><div class="leg-dot active"></div>Active — in progress</div>
-        <div class="leg"><div class="leg-dot blocked"></div>Blocked — awaiting input</div>
-        <div class="leg"><div class="leg-dot upcoming"></div>Upcoming</div>
-      </div>
-
-      <div class="you-are-here"><div class="yah-pulse"></div>${data.you_are_here}</div>
-
-      <div class="phases" id="phases-container"></div>
-    `;
-
-    document.getElementById('main-content').innerHTML = html;
-
-    const container = document.getElementById('phases-container');
-    data.phases.forEach((p, i) => {
-      const s = statusMap[p.status];
+    phases.forEach((p, i) => {
+      const st = statusMap[p.status] || statusMap.upcoming;
       const isFirst = i === 0;
-      const isLast  = i === data.phases.length - 1;
-      const prevStatus = i > 0 ? data.phases[i-1].status : '';
-      const topLineClass = isFirst ? 'hide' : prevStatus === 'done' ? 'done' : prevStatus === 'active' ? 'active' : '';
-      const botLineClass = isLast ? 'hide' : p.status === 'done' ? 'done' : '';
+      const isLast  = i === phases.length - 1;
 
-      const delivHTML = p.deliverables.map(d =>
+      const topLineClass = isFirst ? 'hide' :
+        (phases[i-1].status === 'done' ? 'done' : phases[i-1].status === 'active' ? 'active' : '');
+      const botLineClass = isLast ? 'hide' :
+        (p.status === 'done' ? 'done' : p.status === 'active' ? 'active' : '');
+
+      const delivHTML = (p.deliverables || []).map(d =>
         `<span class="deliverable ${d.status}">${d.label}</span>`
       ).join('');
 
@@ -230,9 +1110,14 @@ fetch('status.json?v=' + Date.now())
         ? `<div class="blocker"><strong>Waiting on:</strong> ${p.blocker}</div>`
         : '';
 
-      const mStatus = p.milestone?.status || 'blocked';
+      const mFlagClass = p.milestone?.status === 'done' ? 'done'
+        : p.milestone?.status === 'pending' ? 'pending' : 'blocked';
+
       const milestoneHTML = p.milestone
-        ? `<div class="milestone"><div class="milestone-flag ${mStatus}"></div><span><strong>Milestone:</strong> ${p.milestone.label}</span></div>`
+        ? `<div class="milestone">
+             <div class="milestone-flag ${mFlagClass}"></div>
+             <span><strong>Milestone:</strong> ${p.milestone.label}</span>
+           </div>`
         : '';
 
       const row = document.createElement('div');
@@ -245,13 +1130,13 @@ fetch('status.json?v=' + Date.now())
         </div>
         <div class="spine">
           <div class="spine-top ${topLineClass}"></div>
-          <div class="spine-dot ${s.dot}"></div>
+          <div class="spine-dot ${st.dot}"></div>
           <div class="spine-bottom ${botLineClass}"></div>
         </div>
-        <div class="phase-card ${s.card}">
+        <div class="phase-card ${st.card}">
           <div class="card-header">
             <div class="card-title">${p.title}</div>
-            <span class="status-badge ${s.badgeClass}">${s.badge}</span>
+            <span class="status-badge ${st.badgeClass}">${st.badge}</span>
           </div>
           <div class="card-body">
             <div class="card-desc">${p.desc}</div>
@@ -263,11 +1148,14 @@ fetch('status.json?v=' + Date.now())
       `;
       container.appendChild(row);
     });
-  })
-  .catch(err => {
-    document.getElementById('main-content').innerHTML =
-      '<div style="text-align:center;padding:80px 40px;font-size:14px;color:#B5451B;">Could not load project status. Please refresh the page.</div>';
-  });
+  }
+
+  render(FALLBACK);
+  fetch('status.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d && d.phases) render(d); })
+    .catch(() => {});
+
 </script>
 </body>
 </html>
