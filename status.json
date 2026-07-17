@@ -1,18 +1,22 @@
 {
-  "last_updated": "13 July 2026",
+  "last_updated": "17 July 2026",
   "current_phase": 7,
-  "you_are_here": "Phases 4, 5, 7 active — Rubric · Sourcing Layer · Data Capture. Engagement re-engaged: 9 July working session held, 50-search PoC agreed and underway. Matching engine (Phase 6) held pending PoC data.",
+  "you_are_here": "Phases 4, 5, 7 active — Rubric · Sourcing Layer · Live Data Capture. Fresh-build pivot confirmed 17 Jul: no retrospective back-fill; live capture over ~6 months is the calibration path for the matching engine (Phase 6).",
   "summary": {
     "phases_complete": "3 / 8",
-    "deliverables_built": "23",
+    "deliverables_built": "34",
     "client_inputs_pending": "2",
-    "build_time": "Sourcing Assistant v2 live and restored. 50-search PoC is the unlock path for the matching engine.",
+    "build_time": "Live capture pipeline (form 15.2 + Sheet 19 + contained Apps Script v4) built and deployed. Sourcing Assistant v3 with Search Memory live. End-to-end tests pending.",
     "new_mandate_id_from": "ISH-202603-0411"
   },
   "naming_note": {
-    "17_Ishwa_Queue_Form.html": "Live on GitHub Pages — ag85amitgupta.github.io/Ishwa/17_Ishwa_Queue_Form.html",
-    "17_Ishwa_Apps_Script.js": "Bound to Google Sheet — deployed, same URL",
-    "18_Ishwa_Mandate_Reference.xlsx": "Shared with Somanshu — internally tracked as 17 on Drive/Sheets"
+    "convention": "Two-digit sequential numbers for NEW documents; decimal bumps (15.2, 16.1, 17.4) for MAJOR updates. Last new-document number used: 20.",
+    "15.2_Ishwa_Combined_Data_Entry_Form.html": "LIVE pipeline form — supersedes 15 and 15.1. Adds Closed/Updated-by attribution.",
+    "16.1_Ishwa_Sourcing_Assistant.html": "v3 Search Memory — live, shared with Ishwa for demo.",
+    "17.4_Ishwa_Apps_Script_v4_2_Contained.js": "Deployed script on Sheet 19 — contained scope (drive.file + bound sheet only).",
+    "20.1_Ishwa_Search_Log_Apps_Script_Contained.js": "Deployed Search Log script — Sheets-only scope, zero Drive.",
+    "17_Ishwa_Queue_Form.html": "RETIRED — legacy back-fill dropped with fresh-build pivot.",
+    "07_Ishwa_ChatGPT_Persona_Prompt.html": "RETIRED 17 Jul."
   },
   "phases": [
     {
@@ -23,19 +27,10 @@
       "title": "Engagement scoping & problem diagnosis",
       "desc": "Structured strategy session with Shalini Gupta. Problem diagnosed: Ishwa's quality edge lives entirely in consultant judgement — no documented framework, no structured AI input. Solution architecture defined across three layers.",
       "deliverables": [
-        {
-          "label": "Problem framing & solution architecture",
-          "status": "done"
-        },
-        {
-          "label": "Engagement folder delivered to client",
-          "status": "done"
-        }
+        { "label": "Problem framing & solution architecture", "status": "done" },
+        { "label": "Engagement folder delivered to client", "status": "done" }
       ],
-      "milestone": {
-        "label": "Engagement folder delivered to Ishwa",
-        "status": "done"
-      }
+      "milestone": { "label": "Engagement folder delivered to Ishwa", "status": "done" }
     },
     {
       "num": "Phase 2",
@@ -45,39 +40,15 @@
       "title": "Data receipt, audit & documentation",
       "desc": "Five data files received from Ishwa (Zoho Recruit + CRM, covering Sep 2022 — Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, interactive forms, and the ChatGPT Search Assistant built and delivered.",
       "deliverables": [
-        {
-          "label": "01 — Leadership data audit",
-          "status": "done"
-        },
-        {
-          "label": "02 — Consultant data audit",
-          "status": "done"
-        },
-        {
-          "label": "03 — Data gap one-pager",
-          "status": "done"
-        },
-        {
-          "label": "04/05 — Intake & closure forms (superseded by 15)",
-          "status": "done"
-        },
-        {
-          "label": "06 — Project tracker (live)",
-          "status": "done"
-        },
-        {
-          "label": "07 — ChatGPT Search Assistant",
-          "status": "done"
-        },
-        {
-          "label": "08/09 — Meeting one-pager & agenda",
-          "status": "done"
-        }
+        { "label": "01 — Leadership data audit", "status": "done" },
+        { "label": "02 — Consultant data audit", "status": "done" },
+        { "label": "03 — Data gap one-pager", "status": "done" },
+        { "label": "04/05 — Intake & closure forms (superseded by 15)", "status": "done" },
+        { "label": "06 — Project tracker (live)", "status": "done" },
+        { "label": "07 — ChatGPT Search Assistant (retired 17 Jul)", "status": "done" },
+        { "label": "08/09 — Meeting one-pager & agenda", "status": "done" }
       ],
-      "milestone": {
-        "label": "All audit documents, templates and meeting prep delivered",
-        "status": "done"
-      }
+      "milestone": { "label": "All audit documents, templates and meeting prep delivered", "status": "done" }
     },
     {
       "num": "Phase 3",
@@ -87,216 +58,81 @@
       "title": "8 April session — decisions locked, build unblocked",
       "desc": "Three-step workflow agreed. Data capture path confirmed (Option C — web forms). Order book received from Somanshu and analysed. Meeting minutes, order book analysis, and rubric scaffold sent to Ishwa on 22 April. Both forms live with Ishwa as of 24 April.",
       "deliverables": [
-        {
-          "label": "11 — Meeting minutes (8 Apr)",
-          "status": "done"
-        },
-        {
-          "label": "12A/12B — Order book analysis (client + internal)",
-          "status": "done"
-        },
-        {
-          "label": "13A — Rubric scaffold — sent to Ishwa",
-          "status": "done"
-        },
-        {
-          "label": "13B — Walkthrough guide — sent to overseer",
-          "status": "done"
-        },
-        {
-          "label": "15 — Combined mandate data entry form — supersedes 04 and 05",
-          "status": "done"
-        },
-        {
-          "label": "Apps Script (Google Sheets integration) — v3 active",
-          "status": "done"
-        }
+        { "label": "11 — Meeting minutes (8 Apr)", "status": "done" },
+        { "label": "12A/12B — Order book analysis (client + internal)", "status": "done" },
+        { "label": "13A — Rubric scaffold — sent to Ishwa", "status": "done" },
+        { "label": "13B — Walkthrough guide — sent to overseer", "status": "done" },
+        { "label": "15 — Combined mandate data entry form — supersedes 04 and 05", "status": "done" },
+        { "label": "Apps Script (Google Sheets integration) — v3 active", "status": "done" }
       ],
-      "milestone": {
-        "label": "Forms live with Ishwa. Data flowing to Google Sheets.",
-        "status": "done"
-      }
+      "milestone": { "label": "Forms live with Ishwa. Data flowing to Google Sheets.", "status": "done" }
     },
     {
       "num": "Phase 4",
       "name": "Rubric Build",
       "tag": "ACTIVE",
       "status": "active",
-      "title": "Rubric calibration — now advancing through the master sheet",
-      "desc": "Rubric substance (weightages, must-haves, dealbreakers, compensation philosophy) advancing through master-sheet validation — agreed path from the 9 July session. 13A document review superseded by this path (13 Jul decision): same data points captured, validated by client-side team. Rubric feeds the matching engine in Phase 6 and the profile scoring logic in Phase 5.",
+      "title": "Rubric calibration — externalise consultant judgement",
+      "desc": "13A superseded by master-sheet validation path. Rubric feeds the matching engine in Phase 6. Zoho ID canonicality question folds into this phase (engine/rubric build).",
       "deliverables": [
-        {
-          "label": "13A rubric scaffold — superseded by master-sheet validation path",
-          "status": "done"
-        },
-        {
-          "label": "Weightages + dealbreakers validated via master sheet",
-          "status": "pending"
-        },
-        {
-          "label": "Rubric walkthrough session (Varsha as participant)",
-          "status": "pending"
-        },
-        {
-          "label": "Somanshu screenshare — data repositories",
-          "status": "pending"
-        }
+        { "label": "Rubric walkthrough session (Varsha as participant)", "status": "pending" },
+        { "label": "Rubric v1 signed off", "status": "pending" },
+        { "label": "Zoho ID integration + canonicality decision (Zoho vs ISH-format)", "status": "pending" }
       ],
-      "milestone": {
-        "label": "Weightages and dealbreakers validated in master sheet — rubric v1 equivalent",
-        "status": "pending"
-      }
+      "milestone": { "label": "Evaluation rubric v1 signed off by Ishwa", "status": "pending" }
     },
     {
       "num": "Phase 5",
       "name": "Sourcing Layer",
       "tag": "ACTIVE",
       "status": "active",
-      "title": "Sourcing compression — primary problem being addressed",
-      "desc": "AI Sourcing Assistant v2 live as of 14 May 2026; tool maintenance 13 July (updated to current AI model, output layout hardened for long generated labels). Major upgrade from v1: multi-title role input, multi-select seniority, Company Stage optional, Key Skills field, expanded sectors, Education field, up to 50 companies per output (mid-tier weighted), Resdex strings appear first, primary + secondary string, company count badge per segment, Copy All and Download XLSX export. 9 July: no organic adoption of the tool to date — verified the link has not been accessed. This is a distribution question, not a tool-quality verdict. Comparison session (Sourcing Assistant vs ChatGPT) to be scheduled for week of 13 July — effectively the tool's first structured exposure to the team. Sourcing tool does not touch Naukri — it replaces the pre-Naukri ChatGPT step only.",
+      "title": "Sourcing compression — v3 Search Memory live",
+      "desc": "Sourcing Assistant v3 (16.1) live: consultant gate (9 names), Save as Good Search with server-assigned SRCH-#### UIDs, Recall by UID repopulates the page editable, unchanged-resave suppression. Backend (Search Log script 20.1) rebuilt 17 Jul under contained scope — Sheets-only, zero Drive access. Shared with Ishwa; live demo requested — ball in their court. Sourcing_Search_Log to be shared view-only with Shalini (direct email add, no open link).",
       "deliverables": [
-        {
-          "label": "14 — Sourcing workflow analysis — shared with Ishwa (live screenshare with Somanshu)",
-          "status": "done"
-        },
-        {
-          "label": "16 — AI Sourcing Assistant v2 — live on GitHub Pages",
-          "status": "done"
-        },
-        {
-          "label": "Vercel proxy deployed — API routed through PiP_AGI",
-          "status": "done"
-        },
-        {
-          "label": "Screen recordings received and analysed (Aparna)",
-          "status": "done"
-        },
-        {
-          "label": "Feedback from consultants incorporated in v2",
-          "status": "done"
-        },
-        {
-          "label": "Tool maintenance — current AI model + output layout hardening (13 Jul)",
-          "status": "done"
-        },
-        {
-          "label": "Comparison session — Sourcing Assistant vs ChatGPT (Amit to set up with Shalini + Somanshu, week of 13 Jul)",
-          "status": "pending"
-        },
-        {
-          "label": "Model selection moved to Vercel proxy — maintenance hardening",
-          "status": "pending"
-        },
-        {
-          "label": "LinkedIn Recruiter status confirmed with Shalini",
-          "status": "pending"
-        },
-        {
-          "label": "200 → 10 scoring design — soft ask, not a blocker",
-          "status": "pending"
-        }
+        { "label": "16.1 — Sourcing Assistant v3 Search Memory — live on GitHub Pages", "status": "done" },
+        { "label": "20.1 — Search Log script — deployed, contained (Sheets-only scope)", "status": "done" },
+        { "label": "Live demo with Ishwa — awaiting their response", "status": "pending" },
+        { "label": "Save → Recall end-to-end test on live URL (doGet path untested; backend rewritten)", "status": "pending" },
+        { "label": "Share Sourcing_Search_Log view-only with Shalini", "status": "pending" },
+        { "label": "LinkedIn Recruiter status confirmed with Shalini", "status": "pending" }
       ],
-      "milestone": {
-        "label": "Sourcing assistant v2 live. Comparison session is the adoption gateway.",
-        "status": "partial"
-      }
+      "milestone": { "label": "Consultants using v3 with Search Memory in live workflow", "status": "partial" }
     },
     {
       "num": "Phase 6",
       "name": "Matching Engine",
       "tag": "BLOCKED",
       "status": "blocked",
-      "title": "Matching engine prototype — deliberately held pending form data",
-      "desc": "AI evaluation layer. Takes structured mandate JSON + candidate profiles, returns ranked shortlist with per-criterion scores and plain-language rationale. Architecture designed. Build deliberately held — will be calibrated against mandate form data (Section 5 notes: named candidates, accept/reject reasoning, CVs). 3 mandates and 11 candidates available as seed data from Varsha (May 2026). Build resumes once meaningful form dataset exists (target: 50+ entries with notes).",
+      "title": "Matching engine — fresh-build pivot; calibrates on live-captured data",
+      "desc": "Fresh-build pivot confirmed with client 17 Jul: no legacy back-fill. Live data capture over ~6 months builds the training set — candidate-level verdicts (reject reasons mandatory, stage captured, CV per row) are the training unit. Engine calibration begins when dataset exists (~Q4 2026 earliest). Six-month horizon accepted by client.",
       "deliverables": [
-        {
-          "label": "System prompt architecture",
-          "status": "done"
-        },
-        {
-          "label": "Seed data received — 3 mandates, 11 candidates, verdicts from Varsha",
-          "status": "done"
-        },
-        {
-          "label": "API prototype built",
-          "status": "blocked"
-        },
-        {
-          "label": "Tested against closed mandates",
-          "status": "blocked"
-        },
-        {
-          "label": "Ishwa review and sign-off",
-          "status": "blocked"
-        }
+        { "label": "System prompt architecture", "status": "done" },
+        { "label": "Seed data — 3 mandates, 11 candidates, verdicts from Varsha", "status": "done" },
+        { "label": "Training dataset via live capture (~6 months)", "status": "pending" },
+        { "label": "API prototype built", "status": "blocked" },
+        { "label": "Tested against closed mandates", "status": "blocked" },
+        { "label": "Ishwa review and sign-off", "status": "blocked" }
       ],
-      "blocker": "Deliberately held. The 50-search PoC (agreed 9 Jul, target completion ~end July) is the unlock path — build resumes once PoC entries land with Section 5 notes populated.",
-      "milestone": {
-        "label": "Prototype validated against live mandates",
-        "status": "blocked"
-      }
+      "blocker": "Awaiting live-capture dataset. Calibration begins ~Q4 2026 when meaningful candidate-verdict volume exists.",
+      "milestone": { "label": "Prototype validated against live mandates", "status": "blocked" }
     },
     {
       "num": "Phase 7",
-      "name": "Data Capture",
+      "name": "Live Data Capture",
       "tag": "ACTIVE",
       "status": "active",
-      "title": "Data capture — 50-search proof of concept agreed 9 July",
-      "desc": "9 July working session restructured the approach: instead of distributing all ~400 searches at once (client-side data-quality concern), a proof of concept with 50 recent and significant searches (excluding DMACC), prioritising clients where the team works directly with founders or senior leadership. Client-level data collected first (~135 clients — context, reason, stage, sector, compensation); working with whatever the client provides. Soft search strategy section removed from the schema (difficult to implement). 300–400 pre-populated line items to be validated by Somanshu's team, weightages added to master sheet. Section 5 depth (named candidates, accept/reject reasoning, CVs) remains the gold standard per Varsha's format.",
+      "title": "Live capture pipeline built and deployed — end-to-end test pending",
+      "desc": "Full new pipeline built 17 Jul: form 15.2 (per-candidate CV blocks, verdicts, stages, mandatory reject reasons, auto not-placed rows, Final Closure lifecycle, Closed/Updated-by attribution) → contained Apps Script v4 (17.4) → Sheet 19 (Mandates / Candidate_Decisions / CV_Index) + CVs to Drive folder per mandate. All scripts run on narrowest OAuth scopes — containment is now the project standard. Old Intake/Closure logs archived, not migrated. Shalini to write consultant SOP for live entry at search close.",
       "deliverables": [
-        {
-          "label": "17 — Queue form — live on GitHub Pages",
-          "status": "done"
-        },
-        {
-          "label": "17 — Apps Script v3 — bound to Google Sheet, deployed",
-          "status": "done"
-        },
-        {
-          "label": "18 — Mandate Reference Sheet — 409 mandates, 60 columns, sent to Somanshu",
-          "status": "done"
-        },
-        {
-          "label": "Intake_Log + Closure_Log tabs — auto-created on first submission",
-          "status": "done"
-        },
-        {
-          "label": "Queue form added to engagement hub (13 Jul) — was live but not linked",
-          "status": "done"
-        },
-        {
-          "label": "9 Jul — 50-search PoC agreed (ex-DMACC, founder-led clients prioritised)",
-          "status": "done"
-        },
-        {
-          "label": "Soft search strategy section removed from schema (9 Jul)",
-          "status": "done"
-        },
-        {
-          "label": "Somanshu — 50-search list by Thu 16 Jul, criteria shared for client approval",
-          "status": "pending"
-        },
-        {
-          "label": "Client-level data for 135 clients to Amit — due Mon 13 Jul",
-          "status": "pending"
-        },
-        {
-          "label": "Team entry — 10 in-depth searches each (Chhaya, Namrata, Varsha, Mohit + Shalini, to confirm) — target end of next week",
-          "status": "pending"
-        },
-        {
-          "label": "Daily review cadence from Mon 13 Jul",
-          "status": "pending"
-        },
-        {
-          "label": "Section 5 notes with candidate reasoning + CVs — CRITICAL PATH",
-          "status": "pending"
-        }
+        { "label": "19 — Live Capture Sheet — converted to Google Sheets, live store", "status": "done" },
+        { "label": "17.4 — Apps Script v4 — deployed, contained scope, same URL", "status": "done" },
+        { "label": "15.2 — Live Data Entry form — built, uploaded to GitHub", "status": "done" },
+        { "label": "Containment rebuild — broad Drive grants revoked on both scripts", "status": "done" },
+        { "label": "END-TO-END TEST: dummy intake + CV → verify Sheet row + Drive folder + CV link", "status": "pending" },
+        { "label": "Consultant SOP for live entry (Shalini)", "status": "pending" },
+        { "label": "Joint Zoom session — form walkthrough + weights validation", "status": "pending" }
       ],
-      "milestone": {
-        "label": "50-search PoC completed with Section 5 depth — unlocks matching engine build.",
-        "status": "pending"
-      }
+      "milestone": { "label": "Pipeline deployed. End-to-end test is the gate before consultant distribution.", "status": "partial" }
     },
     {
       "num": "Phase 8",
@@ -306,95 +142,26 @@
       "title": "BD pattern analysis — strategic intelligence layer",
       "desc": "Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership.",
       "deliverables": [
-        {
-          "label": "Industry label standardisation",
-          "status": "blocked"
-        },
-        {
-          "label": "BD pattern report",
-          "status": "blocked"
-        },
-        {
-          "label": "Mandate risk scoring model",
-          "status": "blocked"
-        }
+        { "label": "Industry label standardisation", "status": "blocked" },
+        { "label": "BD pattern report", "status": "blocked" },
+        { "label": "Mandate risk scoring model", "status": "blocked" }
       ],
-      "milestone": {
-        "label": "BD analytics report delivered to Ishwa leadership",
-        "status": "blocked"
-      }
+      "milestone": { "label": "BD analytics report delivered to Ishwa leadership", "status": "blocked" }
     }
   ],
   "open_actions": [
-    {
-      "action": "Set up comparison session — Sourcing Assistant vs ChatGPT (Shalini, Somanshu, possibly Chhaya) — week of 13 Jul",
-      "note": "No organic access to the tool to date — treat the session as first structured exposure, not a re-trial."
-    },
-    {
-      "action": "Confirm receipt — client-level data for 135 clients (due from Somanshu Mon 13 Jul)",
-      "note": "Client context, reason, stage, sector, compensation. Work with whatever arrives."
-    },
-    {
-      "action": "Review Somanshu's 50-search list + criteria (due Thu 16 Jul)",
-      "note": "Ex-DMACC, founder/senior-leadership clients. Criteria shared for client approval."
-    },
-    {
-      "action": "Track PoC entry cadence — daily review from 13 Jul, 10 per person, target end of next week",
-      "note": "Section 5 depth is the point — named candidates, accept/reject reasoning, CVs."
-    },
-    {
-      "action": "Confirm fifth PoC entrant (transcript said 'Ishwa' — assumed Shalini)",
-      "note": "Somanshu holds the distributor role; confirm before workload is assumed."
-    },
-    {
-      "action": "Move model selection from Sourcing Assistant page into Vercel proxy",
-      "note": "Single-edit maintenance for all tools on any future model change; keeps internal model names out of client-facing errors."
-    },
-    {
-      "action": "Recurring check — vendor AI model deprecation notices",
-      "note": "Keep pinned model versions current."
-    },
-    {
-      "action": "LinkedIn Recruiter status confirmation with Ishwa",
-      "note": "Pending, not yet resolved"
-    },
-    {
-      "action": "Soft ask — Resdex profile review recording",
-      "note": "No pressure, not a blocker"
-    }
+    { "action": "END-TO-END TEST — 15.2 pipeline", "note": "Dummy intake ISH-202607-TEST with one PDF → verify Sheet 19 Mandates row + Drive folder + CV link, then a closure with candidate verdicts → Candidate_Decisions rows. Gate before consultant distribution." },
+    { "action": "Sourcing Assistant Save → Recall test on live 16.1", "note": "doGet path never tested; backend rewritten under contained scope 17 Jul — test does double duty." },
+    { "action": "Await Ishwa response — 16.1 live demo", "note": "16.1 shared; demo requested. Downstream conversations (data-location note, wider rollout) keyed to this." },
+    { "action": "Share Sourcing_Search_Log view-only with Shalini", "note": "Direct email add as Viewer — no open link. Somanshu later, same pattern." },
+    { "action": "Upload record-keeping batch to GitHub", "note": "17.4, 20.1, 98, 99 — repo mirrors deployed state. Record only." },
+    { "action": "Zoho ID canonicality — deferred to engine/rubric build", "note": "Folded into Phase 4/6. Mandate IDs stay machine-assigned/invisible to consultants meanwhile." }
   ],
   "key_decisions": [
-    {
-      "decision": "Engagement re-engaged — 9 Jul working session held",
-      "rationale": "Resolves the 29 June chase. Session with Shalini and Somanshu produced a concrete data plan with owners and dates."
-    },
-    {
-      "decision": "50-search PoC instead of full 400 distribution",
-      "rationale": "Client concern: full-set distribution to the broader team risks inaccurate entries. 50 recent, significant searches (ex-DMACC), founder-led clients, 10 per person, daily review."
-    },
-    {
-      "decision": "Client-level data first (~135 clients)",
-      "rationale": "Less complex to gather than search-specific detail; unblocks analysis while search-level entry proceeds. Working with whatever the client provides."
-    },
-    {
-      "decision": "Soft search strategy section removed from schema",
-      "rationale": "Agreed 9 Jul — difficult to implement in practice."
-    },
-    {
-      "decision": "13A superseded by master-sheet validation path",
-      "rationale": "Same data points captured (weightages, must-haves, dealbreakers, comp philosophy), validated by the client-side team — stronger endorsement than a document review. Clears the 13A blocker open since April."
-    },
-    {
-      "decision": "Model selection to move into Vercel proxy",
-      "rationale": "Pinned model versions in the page require per-tool edits on vendor model changes. Proxy-side selection makes any future change a single edit covering all tools."
-    },
-    {
-      "decision": "Matching engine build deliberately held",
-      "rationale": "Re-work risk too high with 11 candidate samples. Will build once 50+ mandate form entries with Section 5 notes exist. Forms are primary training data — not recordings."
-    },
-    {
-      "decision": "Varsha verdict format is the gold standard for Section 5",
-      "rationale": "Named candidates, brief reasoning per candidate, CVs attached — this is exactly the signal the matching engine needs. Communicated to Somanshu in 14 May email."
-    }
+    { "decision": "Fresh-build pivot — live capture over ~6 months, no retrospective back-fill", "rationale": "Confirmed with Shalini/Somanshu 17 Jul. Six-month horizon accepted. Queue form retired." },
+    { "decision": "Training unit = candidate-level verdicts, not mandate count", "rationale": "30 mandates × 4 reasoned verdicts ≈ 120 labelled decisions. Rejects define thresholds — the engine's 200→10 job is rejecting well." },
+    { "decision": "Containment is the project standard for all scripts", "rationale": "Multi-client account. Every script runs on narrowest OAuth scope; broad Drive grants revoked. Data script sees only what it creates; Search Log script has zero Drive access." },
+    { "decision": "Closure attribution built into form (15.2)", "rationale": "Closer may differ from intake owner over multi-month searches. Mandatory dropdown, merged 15-name roster — attribution is signal." },
+    { "decision": "Decisions log established (file 98)", "rationale": "One row per decision, compound categories capture design-drives-code causality. 33 decisions logged from 17 Jul sessions." }
   ]
 }
