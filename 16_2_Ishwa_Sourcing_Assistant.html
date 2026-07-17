@@ -1,0 +1,1047 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sourcing Assistant — Ishwa Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+  :root {
+    --rust:#B5451B; --rust-lt:#F0D5CB; --rust-dk:#8B3315;
+    --black:#1A1A1A; --g1:#4A4A4A; --g2:#F5F3F1; --g3:#E8E4E0; --g4:#DDDDDD;
+    --white:#FFFFFF; --amber:#FFF8EE; --green:#EBF5EC; --green2:#2D7D32;
+    --serif:'Playfair Display',Georgia,serif;
+    --sans:'DM Sans',system-ui,sans-serif;
+    --mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#F2EFEB;font-family:var(--sans);color:var(--black);min-height:100vh;}
+
+  /* Toast */
+  .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:var(--white);padding:14px 28px;border-radius:2px;border-left:4px solid var(--green2);font-size:13px;font-weight:500;z-index:600;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.35s;opacity:0;white-space:nowrap;}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  .toast.error{border-left-color:var(--rust);}
+
+  /* Header */
+  .page-header{background:var(--black);position:sticky;top:0;z-index:100;border-bottom:3px solid var(--rust);}
+  .header-inner{max-width:1400px;margin:0 auto;padding:18px 48px;display:flex;align-items:center;justify-content:space-between;}
+  .header-brand{display:flex;align-items:baseline;gap:16px;}
+  .brand-firm{font-family:var(--serif);font-size:18px;color:var(--white);font-weight:600;}
+  .brand-div{width:1px;height:14px;background:var(--rust);}
+  .brand-pip{font-size:11px;color:var(--rust);font-weight:600;letter-spacing:0.12em;text-transform:uppercase;}
+  .header-tag{font-family:var(--mono);font-size:11px;color:#666;letter-spacing:0.08em;text-transform:uppercase;}
+
+  /* Layout */
+  .page-body{max-width:1400px;margin:0 auto;padding:44px 48px 80px;}
+
+  .page-title-block{margin-bottom:36px;padding-bottom:28px;border-bottom:1px solid var(--g4);}
+  .form-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:10px;}
+  .form-title{font-family:var(--serif);font-size:42px;font-weight:700;color:var(--black);line-height:1.05;margin-bottom:10px;}
+  .form-subtitle{font-size:15px;color:var(--g1);line-height:1.6;max-width:620px;}
+  .form-meta-row{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap;}
+  .form-meta-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g1);}
+  .meta-dot{width:5px;height:5px;border-radius:50%;background:var(--rust);flex-shrink:0;}
+
+  /* 50/50 two-col */
+  .two-col{display:grid;grid-template-columns:1fr 1fr;gap:48px;align-items:start;}
+
+  /* Input panel */
+  .form-section{margin-bottom:20px;background:var(--white);border-radius:2px;border:1px solid var(--g4);overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:12px;padding:14px 20px;background:var(--g2);border-bottom:1px solid var(--g4);}
+  .section-num{width:24px;height:24px;background:var(--rust);color:var(--white);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:12px;font-weight:600;flex-shrink:0;}
+  .section-title{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--black);}
+  .section-hint{margin-left:auto;font-size:11px;color:#999;font-style:italic;}
+  .section-body{padding:18px 20px;}
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px 18px;}
+  .field-grid.single{grid-template-columns:1fr;}
+  .field-group{display:flex;flex-direction:column;gap:5px;}
+  .field-group.full{grid-column:1/-1;}
+  label{font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--g1);}
+  label .req{color:var(--rust);margin-left:2px;}
+  label .opt{color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;margin-left:4px;}
+  .field-hint{font-size:11px;color:#AAA;line-height:1.4;margin-top:2px;}
+
+  input[type="text"],select,textarea{
+    font-family:var(--sans);font-size:13px;color:var(--black);
+    background:var(--white);border:1.5px solid var(--g4);border-radius:2px;
+    padding:8px 11px;outline:none;transition:border-color 0.15s,box-shadow 0.15s;
+    width:100%;appearance:none;-webkit-appearance:none;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,0.08);}
+  input::placeholder,textarea::placeholder{color:#C0BAB4;}
+  textarea{resize:vertical;line-height:1.55;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A4A4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer;}
+
+  /* Tags */
+  .tag-input-wrap{border:1.5px solid var(--g4);border-radius:2px;padding:6px 8px;min-height:40px;display:flex;flex-wrap:wrap;gap:5px;align-items:flex-start;cursor:text;background:var(--white);transition:border-color 0.15s,box-shadow 0.15s;}
+  .tag-input-wrap:focus-within{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,0.08);}
+  .tag{display:inline-flex;align-items:center;gap:4px;background:var(--rust-lt);color:var(--rust-dk);border-radius:2px;padding:2px 7px 2px 8px;font-size:11px;font-weight:500;animation:tagIn 0.15s ease;}
+  @keyframes tagIn{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
+  .tag-remove{background:none;border:none;cursor:pointer;color:var(--rust);font-size:12px;line-height:1;padding:0;opacity:0.6;}
+  .tag-remove:hover{opacity:1;}
+  .tag-input-field{border:none;outline:none;font-family:var(--sans);font-size:13px;color:var(--black);flex:1;min-width:90px;background:transparent;padding:2px 0;}
+  .tag-input-field::placeholder{color:#C0BAB4;}
+
+  /* Generate button */
+  .generate-row{padding-top:18px;border-top:2px solid var(--g4);margin-top:4px;}
+  .btn-generate{width:100%;padding:14px 24px;background:var(--rust);color:var(--white);border:none;border-radius:2px;font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:0.04em;cursor:pointer;transition:all 0.15s;display:flex;align-items:center;justify-content:center;gap:10px;}
+  .btn-generate:hover{background:var(--rust-dk);transform:translateY(-1px);box-shadow:0 4px 12px rgba(181,69,27,0.28);}
+  .btn-generate:disabled{background:var(--g3);color:#AAA;cursor:not-allowed;transform:none;box-shadow:none;}
+
+  /* Output panel */
+  .output-panel{padding-right:4px;}
+  .output-panel::-webkit-scrollbar{width:4px;}
+  .output-panel::-webkit-scrollbar-track{background:transparent;}
+  .output-panel::-webkit-scrollbar-thumb{background:var(--g4);border-radius:2px;}
+
+  /* States */
+  .output-empty{border:2px dashed var(--g4);border-radius:2px;padding:80px 40px;text-align:center;}
+  .empty-icon{font-size:40px;margin-bottom:16px;opacity:0.25;}
+  .empty-title{font-family:var(--serif);font-size:22px;font-weight:600;color:var(--g1);margin-bottom:8px;}
+  .empty-sub{font-size:13px;color:#AAA;line-height:1.65;max-width:320px;margin:0 auto;}
+
+  .output-loading{display:none;background:var(--white);border:1px solid var(--g4);border-radius:2px;padding:64px 40px;text-align:center;}
+  .output-loading.visible{display:block;}
+  .loading-spinner{width:36px;height:36px;border:3px solid var(--rust-lt);border-top-color:var(--rust);border-radius:50%;animation:spin 0.7s linear infinite;margin:0 auto 16px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
+  .loading-label{font-size:14px;color:var(--g1);font-weight:500;margin-bottom:4px;}
+  .loading-sub{font-size:12px;color:#AAA;}
+
+  .output-error{display:none;background:var(--white);border:1.5px solid var(--rust);border-radius:2px;padding:28px;}
+  .output-error.visible{display:block;}
+  .error-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--rust);margin-bottom:8px;}
+  .error-body{font-size:13px;color:var(--g1);line-height:1.6;}
+
+  .output-results{display:none;}
+  .output-results.visible{display:block;}
+
+  .output-header{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:24px;padding-bottom:18px;border-bottom:2px solid var(--rust);}
+  .output-eyebrow{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:5px;}
+  .output-title{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--black);}
+  .output-meta{font-size:12px;color:#AAA;margin-top:3px;}
+  .btn-regenerate{padding:7px 16px;background:var(--white);border:1.5px solid var(--g4);border-radius:2px;font-family:var(--sans);font-size:12px;font-weight:600;color:var(--g1);cursor:pointer;transition:all 0.15s;white-space:nowrap;flex-shrink:0;margin-left:16px;}
+  .btn-regenerate:hover{border-color:var(--rust);color:var(--rust);}
+
+  .output-block{margin-bottom:32px;}
+  .output-block-label{font-size:10px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:14px;display:flex;align-items:center;gap:10px;}
+  .output-block-label::after{content:'';flex:1;height:1px;background:var(--rust-lt);}
+
+  .segment{margin-bottom:22px;}
+  .segment-header{display:flex;flex-wrap:wrap;align-items:center;gap:8px 10px;margin-bottom:10px;}
+  .segment-tag{font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;padding:3px 11px;border-radius:20px;flex-shrink:0;margin-top:1px;}
+  .segment-tag.direct{background:var(--green);color:var(--green2);}
+  .segment-tag.adjacent{background:#E3F2FD;color:#1565C0;}
+  .segment-tag.stretch{background:var(--amber);color:#E65100;}
+  .segment-count{font-size:10px;font-weight:700;color:var(--rust);background:var(--rust-lt);border-radius:20px;padding:3px 9px;flex-shrink:0;margin-top:1px;letter-spacing:0.04em;}
+  .segment-rationale{font-size:12px;color:var(--g1);font-style:italic;line-height:1.5;flex:1 1 100%;max-width:640px;}
+  .export-row{display:flex;gap:8px;margin-top:8px;}
+  .btn-export{padding:6px 14px;background:var(--white);border:1.5px solid var(--g4);border-radius:2px;font-family:var(--sans);font-size:11px;font-weight:600;color:var(--g1);cursor:pointer;transition:all 0.15s;}
+  .btn-export:hover{border-color:var(--rust);color:var(--rust);}
+
+  .company-list{display:flex;flex-direction:column;gap:6px;}
+  .company-item{display:grid;grid-template-columns:190px 1fr;gap:12px;padding:10px 14px;background:var(--g2);border-radius:2px;border:1px solid var(--g4);align-items:start;}
+  .company-name{font-size:13px;font-weight:600;color:var(--black);line-height:1.4;}
+  .company-note{font-size:12px;color:var(--g1);line-height:1.5;}
+
+  .resdex-block{background:var(--white);border:1px solid var(--g4);border-radius:2px;overflow:hidden;}
+  .resdex-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--g2);border-bottom:1px solid var(--g4);}
+  .resdex-label{font-size:11px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--g1);}
+  .btn-copy{padding:5px 14px;background:var(--black);color:var(--white);border:none;border-radius:2px;font-family:var(--sans);font-size:11px;font-weight:600;cursor:pointer;transition:all 0.15s;}
+  .btn-copy:hover{background:var(--rust);}
+  .btn-copy.copied{background:var(--green2);}
+  .resdex-textarea{width:100%;border:none;outline:none;font-family:var(--mono);font-size:12px;color:var(--black);line-height:1.7;padding:16px;resize:vertical;min-height:140px;background:var(--white);}
+  .resdex-hint{padding:10px 16px;font-size:11px;color:#AAA;border-top:1px solid var(--g4);line-height:1.55;}
+
+  /* String split blocks */
+  .string-split{display:flex;flex-direction:column;gap:0;}
+  .string-part{border-bottom:1px solid var(--g4);}
+  .string-part:last-child{border-bottom:none;}
+  .string-part-label{font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--g1);padding:8px 16px 4px;background:var(--g2);}
+
+  .page-footer{max-width:1400px;margin:0 auto;padding:0 48px 40px;font-size:11px;color:#BBB;display:flex;align-items:center;justify-content:space-between;}
+  .btn-spinner{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,0.35);border-top-color:var(--white);border-radius:50%;animation:spin 0.6s linear infinite;}
+
+  @media(max-width:1024px){
+    .two-col{grid-template-columns:1fr;}
+    .output-panel{position:static;max-height:none;overflow-y:visible;}
+    .page-body,.header-inner,.page-footer{padding-left:24px;padding-right:24px;}
+  }
+  @media(max-width:600px){
+    .field-grid{grid-template-columns:1fr;}
+    .company-item{grid-template-columns:1fr;}
+    .form-title{font-size:32px;}
+  }
+
+  /* v3: consultant bar, gate, modal */
+  .consultant-bar{max-width:1280px;margin:0 auto 14px;display:flex;justify-content:flex-start;align-items:center;gap:28px;padding:12px 18px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;position:sticky;top:62px;z-index:90;box-shadow:0 2px 8px rgba(26,26,26,0.05);}
+  .top-actions{display:none;margin-left:auto;align-items:center;gap:8px;padding-left:14px;border-left:1px solid #DDDDDD;white-space:nowrap;}
+  .top-actions.visible{display:flex;}
+  .consultant-left,.consultant-right{display:flex;align-items:center;gap:10px;}
+  .consultant-label{font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;color:#B5451B;}
+  #consultant-name{font-family:Arial,sans-serif;font-size:13px;padding:8px 12px;border:1px solid #DDDDDD;border-radius:2px;background:#F5F3F1;min-width:230px;color:#1A1A1A;}
+  #recall-uid{font-family:'SF Mono',Consolas,monospace;font-size:12px;padding:8px 10px;border:1px solid #DDDDDD;border-radius:2px;width:120px;text-transform:uppercase;}
+  .btn-recall{font-family:Arial,sans-serif;font-size:12px;font-weight:600;padding:8px 16px;border:1px solid #B5451B;border-radius:2px;background:#fff;color:#B5451B;cursor:pointer;transition:all 0.15s;}
+  .btn-recall:hover{background:#B5451B;color:#fff;}
+  .btn-recall:disabled{opacity:0.5;cursor:default;}
+  .recall-loaded-badge{font-family:Arial,sans-serif;font-size:11px;font-weight:600;color:#2E6B4F;background:#EAF3EE;border:1px solid #CDE3D6;border-radius:2px;padding:5px 10px;}
+  .gate-overlay{max-width:1280px;margin:0 auto;padding:60px 20px;text-align:center;}
+  .gate-msg{display:inline-flex;gap:14px;align-items:flex-start;text-align:left;max-width:520px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;padding:22px 26px;font-family:Arial,sans-serif;font-size:13px;color:#4A4A4A;line-height:1.6;}
+  .gate-msg strong{color:#1A1A1A;font-size:14px;}
+  .gate-icon{font-size:26px;}
+  body.gated .two-col{display:none!important;}
+  body:not(.gated) .gate-overlay{display:none;}
+  .modal-overlay{position:fixed;inset:0;background:rgba(26,26,26,0.45);display:flex;align-items:center;justify-content:center;z-index:200;}
+  .modal-overlay.hidden{display:none;}
+  .modal-box{background:#fff;border-radius:2px;border-top:3px solid #B5451B;padding:30px 34px;max-width:440px;width:90%;font-family:Arial,sans-serif;}
+  .modal-icon{font-size:30px;color:#2E6B4F;margin-bottom:10px;}
+  .modal-title{font-family:Georgia,serif;font-size:19px;font-weight:700;color:#1A1A1A;margin-bottom:8px;}
+  .modal-body{font-size:13px;color:#4A4A4A;line-height:1.6;margin-bottom:22px;}
+  .modal-actions{display:flex;gap:12px;justify-content:flex-end;}
+  .btn-modal-primary{font-family:Arial,sans-serif;font-size:13px;font-weight:600;padding:10px 20px;background:#B5451B;color:#fff;border:none;border-radius:2px;cursor:pointer;}
+  .btn-modal-primary:hover{background:#8F3615;}
+  .btn-modal-secondary{font-family:Arial,sans-serif;font-size:13px;font-weight:500;padding:10px 20px;background:#fff;color:#4A4A4A;border:1px solid #DDDDDD;border-radius:2px;cursor:pointer;}
+  .btn-modal-secondary:hover{border-color:#4A4A4A;}
+  .btn-save-good{font-family:Arial,sans-serif;font-size:13px;font-weight:700;padding:10px 20px;background:#2E6B4F;color:#fff;border:none;border-radius:2px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
+  .btn-save-good:hover{background:#245540;}
+  .btn-save-good:disabled{opacity:0.6;cursor:default;}
+  .output-col{display:flex;flex-direction:column;min-width:0;}
+  .bottom-actions{display:none;align-self:flex-end;margin-top:20px;align-items:center;gap:8px;padding:12px 16px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;box-shadow:0 2px 8px rgba(26,26,26,0.05);}
+  .bottom-actions.visible{display:flex;}
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+
+
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-firm">Ishwa Consulting</span>
+      <div class="brand-div"></div>
+      <span class="brand-pip">PiP_AGI</span>
+    </div>
+    <span class="header-tag">AI Sourcing Assistant — v2</span>
+  </div>
+</header>
+
+<div class="page-body">
+
+  <div class="page-title-block">
+    <div class="form-eyebrow">Sourcing Assistant</div>
+    <h1 class="form-title">Target Companies &amp; Search String</h1>
+    <p class="form-subtitle">Fill in the mandate brief and generate a segmented target company list and a Resdex-ready boolean search string.</p>
+    <div class="form-meta-row">
+      <div class="form-meta-item"><div class="meta-dot"></div> Fill key mandate fields — 2 minutes</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> AI generates segmented target list + Resdex string</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> Edit the string before pasting into Resdex</div>
+    </div>
+  </div>
+
+  <!-- v3: Consultant gate + search recall -->
+<div class="consultant-bar" id="consultant-bar">
+  <div class="consultant-left">
+    <span class="consultant-label">CONSULTANT</span>
+    <select id="consultant-name" onchange="consultantChanged()">
+      <option value="">Select your name to begin…</option>
+    </select>
+  </div>
+  <div class="consultant-right" id="recall-controls" style="visibility:hidden;">
+    <span class="consultant-label">RECALL SEARCH</span>
+    <input type="text" id="recall-uid" placeholder="e.g. SRCH-0003" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();recallSearch();}">
+    <button class="btn-recall" id="recall-btn" onclick="recallSearch()">Recall</button>
+    <span class="recall-loaded-badge" id="recall-badge" style="display:none;"></span>
+  </div>
+  <div class="top-actions" id="top-actions">
+    <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
+    <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
+    <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+    <button class="btn-save-good save-good-sync" id="save-good-btn" onclick="saveGoodSearch()">Save Search?</button>
+  </div>
+</div>
+<div class="gate-overlay" id="gate-overlay">
+  <div class="gate-msg">
+    <div class="gate-icon">👤</div>
+    <div><strong>Select your name above to open the assistant.</strong><br>
+    <span>Every search saved to the Ishwa log is labelled by consultant — that’s what makes recall and future recommendations possible.</span></div>
+  </div>
+</div>
+
+<!-- v3: Save-success modal -->
+<div class="modal-overlay hidden" id="save-modal-overlay">
+  <div class="modal-box">
+    <div class="modal-icon">✓</div>
+    <div class="modal-title" id="save-modal-title">Search record appended</div>
+    <div class="modal-body" id="save-modal-body">Would you like to save a local copy as well?</div>
+    <div class="modal-actions">
+      <button class="btn-modal-secondary" onclick="saveModalNo()">No — reset page</button>
+      <button class="btn-modal-primary" onclick="saveModalYes()">Yes — download copy</button>
+    </div>
+  </div>
+</div>
+
+  <div class="two-col">
+
+    <!-- INPUT -->
+    <div class="input-panel">
+
+      <!-- SECTION 1: Role & Client -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">1</div>
+          <div class="section-title">Role &amp; Client</div>
+          <span class="section-hint">Core mandate fields</span>
+        </div>
+        <div class="section-body">
+          <div class="field-grid">
+
+            <div class="field-group full">
+              <label>Role Title(s) <span class="req">*</span></label>
+              <div class="tag-input-wrap" id="roletitle-wrap" onclick="document.getElementById('roletitle-input').focus()">
+                <input class="tag-input-field" id="roletitle-input" placeholder="Type a title and press Enter — e.g. Head of Engineering">
+              </div>
+              <div class="field-hint">Add multiple titles if the mandate accepts variants (e.g. VP Engineering, Director Engineering).</div>
+            </div>
+
+            <div class="field-group">
+              <label>Sector <span class="req">*</span></label>
+              <select id="sector">
+                <option value="" disabled selected>Select sector</option>
+                <option>BFSI</option>
+                <option>Consumer / FMCG</option>
+                <option>Healthcare / Pharma</option>
+                <option>Technology / IT Services</option>
+                <option>SaaS / Product</option>
+                <option>Infrastructure / Real Estate</option>
+                <option>Construction / EPC</option>
+                <option>Education / EdTech</option>
+                <option>Manufacturing / Industrial</option>
+                <option>Automotive</option>
+                <option>Logistics / Transportation / Supply Chain</option>
+                <option>Retail / D2C</option>
+                <option>Media / Entertainment</option>
+                <option>Energy / Oil &amp; Gas / Renewables</option>
+                <option>Aerospace / Defence</option>
+                <option>Hospitality / Travel</option>
+                <option>Agriculture / Agritech</option>
+                <option>Other</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label>Geography <span class="req">*</span></label>
+              <select id="geography">
+                <option value="" disabled selected>Select</option>
+                <option>Bangalore</option>
+                <option>Gurgaon / Delhi NCR</option>
+                <option>Mumbai</option>
+                <option>Pune</option>
+                <option>Hyderabad</option>
+                <option>Chennai</option>
+                <option>Kolkata</option>
+                <option>Ahmedabad</option>
+                <option>Dubai / Middle East</option>
+                <option>Pan-India</option>
+                <option>Remote / Flexible</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label>Company Stage <span class="opt">optional</span></label>
+              <select id="company-stage">
+                <option value="All" selected>All / Any stage</option>
+                <option>Listed — Large Cap (5000+ Cr)</option>
+                <option>Listed — Mid Cap (1000–5000 Cr)</option>
+                <option>Unlisted — Large (1000+ Cr)</option>
+                <option>Unlisted — Mid (200–1000 Cr)</option>
+                <option>Unlisted — Small (&lt;200 Cr)</option>
+                <option>Growth Stage — Series B/C</option>
+                <option>Early Stage — Seed/Series A</option>
+                <option>Family Business / Conglomerate</option>
+                <option>PE / VC Backed</option>
+              </select>
+            </div>
+
+            <div class="field-group">
+              <label>Seniority <span class="req">*</span></label>
+              <div class="tag-input-wrap" id="seniority-wrap" onclick="document.getElementById('seniority-input').focus()">
+                <input class="tag-input-field" id="seniority-input" placeholder="Type level and press Enter — e.g. Director">
+              </div>
+              <div class="field-hint">Options: CXO/Board · President/VP · Director · AVP/Sr. Manager · Manager</div>
+            </div>
+
+            <div class="field-group">
+              <label>Education <span class="opt">optional</span></label>
+              <select id="education">
+                <option value="">No preference</option>
+                <option>CA (Chartered Accountant)</option>
+                <option>MBA / PGDM — Any</option>
+                <option>MBA — Premier Institute (IIM / ISB / XLRI)</option>
+                <option>B.Tech / B.E.</option>
+                <option>B.Tech + MBA</option>
+                <option>LLB / Legal</option>
+                <option>MBBS / Medical</option>
+                <option>B.Com / M.Com</option>
+                <option>PhD / Research</option>
+              </select>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 2: Mandate Brief -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">2</div>
+          <div class="section-title">Mandate Brief</div>
+          <span class="section-hint">More detail = sharper output</span>
+        </div>
+        <div class="section-body">
+          <div class="field-grid single">
+            <div class="field-group">
+              <label>Target Profile <span class="req">*</span></label>
+              <textarea id="target-profile" rows="4" placeholder="Who are you going after and why? e.g. 'Engineering leaders from mid-size D2C or logistics tech companies. Strong on product-adjacent engineering. Avoiding pure infrastructure or enterprise IT backgrounds. Should have managed teams of 30+ engineers.'"></textarea>
+            </div>
+            <div class="field-group">
+              <label>Mandate Context <span class="opt">optional — improves output significantly</span></label>
+              <textarea id="context" rows="3" placeholder="Why this hire, why now? What does the incoming person need to navigate in their first 6–12 months?"></textarea>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 3: Key Criteria -->
+      <div class="form-section">
+        <div class="section-header">
+          <div class="section-num">3</div>
+          <div class="section-title">Key Criteria</div>
+          <span class="section-hint">Shapes the target universe</span>
+        </div>
+        <div class="section-body">
+          <div class="field-grid single">
+            <div class="field-group">
+              <label>Key Skills <span class="opt">optional</span></label>
+              <div class="tag-input-wrap" id="keyskills-wrap" onclick="document.getElementById('keyskills-input').focus()">
+                <input class="tag-input-field" id="keyskills-input" placeholder="Type a skill and press Enter — e.g. P&amp;L ownership, FIDIC contracts">
+              </div>
+              <div class="field-hint">Specific skills the role requires — separate from background or pedigree.</div>
+            </div>
+            <div class="field-group">
+              <label>Must-Have Background <span class="opt">optional</span></label>
+              <div class="tag-input-wrap" id="musthave-wrap" onclick="document.getElementById('musthave-input').focus()">
+                <input class="tag-input-field" id="musthave-input" placeholder="Type and press Enter — e.g. B2C product experience">
+              </div>
+              <div class="field-hint">Industry, company type, or experience pedigree that is non-negotiable.</div>
+            </div>
+            <div class="field-group">
+              <label>Avoid <span class="opt">optional</span></label>
+              <div class="tag-input-wrap" id="avoid-wrap" onclick="document.getElementById('avoid-input').focus()">
+                <input class="tag-input-field" id="avoid-input" placeholder="Type and press Enter — e.g. Large MNC, pure infrastructure">
+              </div>
+              <div class="field-hint">Backgrounds or company types to exclude from the target universe.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="generate-row">
+        <button class="btn-generate" id="generate-btn" onclick="generate()">
+          Generate Target List &amp; Search String &#8594;
+        </button>
+      </div>
+
+    </div>
+
+    <!-- OUTPUT -->
+    <div class="output-col">
+    <div class="output-panel">
+
+      <div class="output-empty" id="output-empty">
+        <div class="empty-icon">&#9678;</div>
+        <div class="empty-title">Output will appear here</div>
+        <div class="empty-sub">Fill the mandate brief on the left and click Generate. The target company list and Resdex search string will appear here.</div>
+      </div>
+
+      <div class="output-loading" id="output-loading">
+        <div class="loading-spinner"></div>
+        <div class="loading-label">Generating target list and search string&hellip;</div>
+        <div class="loading-sub">Usually takes 15–25 seconds</div>
+      </div>
+
+      <div class="output-error" id="output-error">
+        <div class="error-title">Generation failed</div>
+        <div class="error-body" id="error-body">Something went wrong. Try again.</div>
+      </div>
+
+      <div class="output-results" id="output-results">
+
+        <div class="output-header">
+          <div>
+            <div class="output-eyebrow">AI Output</div>
+            <div class="output-title" id="output-role-title">&#8212;</div>
+            <div class="output-meta" id="output-meta">&#8212;</div>
+          </div>
+        </div>
+
+        <div class="output-block">
+          <div class="output-block-label">Resdex Search String</div>
+          <div class="resdex-block">
+            <div class="resdex-header">
+              <span class="resdex-label">Primary string &mdash; paste directly into Resdex</span>
+              <button class="btn-copy" id="copy-btn" onclick="copyString('resdex-string','copy-btn')">Copy</button>
+            </div>
+            <textarea class="resdex-textarea" id="resdex-string" spellcheck="false"></textarea>
+            <div class="resdex-hint">Edit before pasting. If the string feels too broad, use the secondary string below with more specific terms.</div>
+          </div>
+          <div class="resdex-block" id="resdex-secondary-block" style="margin-top:12px;display:none;">
+            <div class="resdex-header">
+              <span class="resdex-label">Secondary / refined string &mdash; narrower search</span>
+              <button class="btn-copy" id="copy-btn-2" onclick="copyString('resdex-string-2','copy-btn-2')">Copy</button>
+            </div>
+            <textarea class="resdex-textarea" id="resdex-string-2" spellcheck="false"></textarea>
+            <div class="resdex-hint">Use this if the primary string returns too many results. More specific role terms and tighter keyword logic.</div>
+          </div>
+        </div>
+
+        <div class="output-block">
+          <div class="output-block-label">Target Company Universe</div>
+          <div id="company-list-container"></div>
+        </div>
+
+      </div>
+
+    </div>
+
+    <div class="bottom-actions" id="bottom-actions">
+      <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
+      <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
+      <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+      <button class="btn-save-good save-good-sync" onclick="saveGoodSearch()">Save Search?</button>
+    </div>
+
+    </div>
+
+  </div>
+
+</div>
+
+<div class="page-footer">
+  <span>Amit Gupta &mdash; AI Strategy Consultant | PiP_AGI</span>
+  <span>Sourcing Assistant v3.1 · Search Memory · July 2026</span>
+</div>
+
+<script>
+  const PROXY_URL = 'https://ishwa.vercel.app/api/anthropic';
+
+  // ── Tag inputs ──
+  function initTag(inputId, wrapId){
+    const input=document.getElementById(inputId), wrap=document.getElementById(wrapId);
+    input.addEventListener('keydown', e=>{
+      if((e.key==='Enter'||e.key===',') && input.value.trim()){
+        e.preventDefault();
+        const tag=document.createElement('span'); tag.className='tag';
+        tag.innerHTML=input.value.trim()+'<button class="tag-remove" onclick="this.parentElement.remove()">&#215;</button>';
+        wrap.insertBefore(tag,input); input.value='';
+      } else if(e.key==='Backspace'&&!input.value){
+        const tags=wrap.querySelectorAll('.tag'); if(tags.length) tags[tags.length-1].remove();
+      }
+    });
+  }
+  function getTags(wrapId){
+    return Array.from(document.getElementById(wrapId).querySelectorAll('.tag'))
+      .map(t=>t.textContent.replace('\u00d7','').trim()).filter(Boolean);
+  }
+  initTag('roletitle-input','roletitle-wrap');
+  initTag('seniority-input','seniority-wrap');
+  initTag('keyskills-input','keyskills-wrap');
+  initTag('musthave-input','musthave-wrap');
+  initTag('avoid-input','avoid-wrap');
+
+  function showToast(msg,isError){
+    const t=document.getElementById('toast');
+    t.textContent=msg; t.className='toast'+(isError?' error':'');
+    t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),4500);
+  }
+
+  function validate(){
+    const roleTags=getTags('roletitle-wrap');
+    if(!roleTags.length){
+      showToast('Please add at least one Role Title',true);
+      document.getElementById('roletitle-input').focus(); return false;
+    }
+    const seniorityTags=getTags('seniority-wrap');
+    if(!seniorityTags.length){
+      showToast('Please add at least one Seniority level',true);
+      document.getElementById('seniority-input').focus(); return false;
+    }
+    const req=[
+      {id:'sector',label:'Sector'},
+      {id:'geography',label:'Geography'},
+      {id:'target-profile',label:'Target Profile'}
+    ];
+    for(const f of req){
+      const el=document.getElementById(f.id);
+      if(!el||!el.value.trim()){
+        showToast('Please fill in: '+f.label,true);
+        el&&el.scrollIntoView({behavior:'smooth',block:'center'}); el&&el.focus(); return false;
+      }
+    }
+    return true;
+  }
+
+  function buildPrompt(){
+    const roles=getTags('roletitle-wrap');
+    const sector=document.getElementById('sector').value;
+    const geo=document.getElementById('geography').value;
+    const stage=document.getElementById('company-stage').value;
+    const seniority=getTags('seniority-wrap');
+    const education=document.getElementById('education').value;
+    const profile=document.getElementById('target-profile').value.trim();
+    const context=document.getElementById('context').value.trim();
+    const keySkills=getTags('keyskills-wrap');
+    const mustHave=getTags('musthave-wrap');
+    const avoid=getTags('avoid-wrap');
+
+    const stageNote = (stage==='All'||!stage) ? 'Open to all company sizes and stages — include a mix of large corporates, mid-tier companies (200–2000 Cr), and growth-stage firms.' : `Company stage preference: ${stage}`;
+
+    return `You are a specialist executive search researcher for Ishwa Consulting, a leading Indian executive search firm. Generate a sourcing target list and two Resdex boolean search strings for this mandate.
+
+MANDATE:
+- Role Title(s): ${roles.join(' / ')}
+- Sector: ${sector}
+- Geography: ${geo}
+- ${stageNote}
+- Seniority: ${seniority.join(', ')}${education?'\n- Education: '+education:''}
+- Target Profile: ${profile}${context?'\n- Context: '+context:''}${keySkills.length?'\n- Key Skills: '+keySkills.join(', '):''}${mustHave.length?'\n- Must-Have Background: '+mustHave.join(', '):''}${avoid.length?'\n- Avoid: '+avoid.join(', '):''}
+
+IMPORTANT COMPANY LIST INSTRUCTIONS:
+- Include a genuine mix of company sizes: large corporates, mid-tier firms (200–2000 Cr revenue), and smaller specialist companies
+- Do not skew toward only large/well-known brands — mid-tier companies are often the best talent sources for this type of role
+- Aim for up to 50 companies in total across all three segments — be as exhaustive as possible
+- Weight toward mid-tier and specialist companies — include large brands only where genuinely relevant
+- All companies must be real, India-operating organisations
+
+SEARCH STRING INSTRUCTIONS:
+- Primary string: broad enough to return a meaningful pool — keep under 350 characters
+- Secondary string: tighter, more specific — role title variants + 2–3 key skills only, keep under 250 characters
+- Both strings must use correct Resdex boolean syntax (AND, OR, NOT, parentheses, quotes for phrases)
+- Do NOT include company names in the search strings
+
+Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
+
+{
+  "segments": [
+    {
+      "type": "direct",
+      "label": "Direct Sector",
+      "rationale": "one sentence on why these are the primary talent pool",
+      "companies": [{"name": "Company Name", "note": "specific one-line reason this company produces strong candidates for this exact role"}]
+    },
+    {
+      "type": "adjacent",
+      "label": "Adjacent Sector",
+      "rationale": "one sentence on what transfers from this adjacent pool",
+      "companies": [{"name": "Company Name", "note": "specific one-line rationale"}]
+    },
+    {
+      "type": "stretch",
+      "label": "Aspirational Stretch",
+      "rationale": "one sentence on what makes these worth including",
+      "companies": [{"name": "Company Name", "note": "specific one-line rationale"}]
+    }
+  ],
+  "resdex_string": "primary boolean string — broad, under 350 characters",
+  "resdex_string_secondary": "secondary boolean string — tight, under 250 characters"
+}`;
+  }
+
+  function renderOutput(data,roles,sector,geo){
+    document.getElementById('output-role-title').textContent=roles.join(' / ');
+    document.getElementById('output-meta').textContent=sector+' \u00b7 '+geo;
+    const container=document.getElementById('company-list-container');
+    container.innerHTML='';
+    const tagClass={direct:'direct',adjacent:'adjacent',stretch:'stretch'};
+    (data.segments||[]).forEach(seg=>{
+      const count=(seg.companies||[]).length;
+      const div=document.createElement('div'); div.className='segment';
+      div.innerHTML='<div class="segment-header"><span class="segment-tag '+
+        (tagClass[seg.type]||'direct')+'">'+seg.label+'</span>'+
+        '<span class="segment-count">'+count+' '+(count===1?'company':'companies')+'</span>'+
+        '<span class="segment-rationale">'+seg.rationale+'</span></div><div class="company-list">'+
+        (seg.companies||[]).map(c=>'<div class="company-item"><span class="company-name">'+
+        c.name+'</span><span class="company-note">'+c.note+'</span></div>').join('')+'</div>';
+      container.appendChild(div);
+    });
+
+    document.getElementById('resdex-string').value=data.resdex_string||'';
+    document.getElementById('copy-btn').textContent='Copy';
+    document.getElementById('copy-btn').className='btn-copy';
+
+    const secBlock=document.getElementById('resdex-secondary-block');
+    if(data.resdex_string_secondary){
+      document.getElementById('resdex-string-2').value=data.resdex_string_secondary;
+      document.getElementById('copy-btn-2').textContent='Copy';
+      document.getElementById('copy-btn-2').className='btn-copy';
+      secBlock.style.display='';
+    } else {
+      secBlock.style.display='none';
+    }
+  }
+
+  function buildExportText(){
+    const role=document.getElementById('output-role-title').textContent;
+    const meta=document.getElementById('output-meta').textContent;
+    const primary=document.getElementById('resdex-string').value;
+    const secondary=document.getElementById('resdex-string-2')?document.getElementById('resdex-string-2').value:'';
+    let out='ISHWA CONSULTING — AI SOURCING OUTPUT\n';
+    out+='Role: '+role+'\n'+meta+'\n';
+    out+='Generated: '+new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'})+'\n\n';
+    out+='── RESDEX SEARCH STRINGS ──\n\n';
+    out+='Primary:\n'+primary+'\n\n';
+    if(secondary) out+='Secondary (refined):\n'+secondary+'\n\n';
+    out+='── TARGET COMPANY UNIVERSE ──\n\n';
+    const segs=document.querySelectorAll('#company-list-container .segment');
+    segs.forEach(seg=>{
+      const label=seg.querySelector('.segment-tag')?.textContent||'';
+      const count=seg.querySelector('.segment-count')?.textContent||'';
+      const rationale=seg.querySelector('.segment-rationale')?.textContent||'';
+      out+=label+' ('+count+')\n'+rationale+'\n';
+      seg.querySelectorAll('.company-item').forEach(item=>{
+        const name=item.querySelector('.company-name')?.textContent||'';
+        const note=item.querySelector('.company-note')?.textContent||'';
+        out+='  \u2022 '+name+' \u2014 '+note+'\n';
+      });
+      out+='\n';
+    });
+    return out;
+  }
+
+  function exportCopy(){
+    const text=buildExportText();
+    navigator.clipboard.writeText(text).then(()=>{
+      showToast('Full output copied to clipboard \u2713');
+    }).catch(()=>{
+      const ta=document.createElement('textarea');
+      ta.value=text; document.body.appendChild(ta); ta.select(); document.execCommand('copy');
+      document.body.removeChild(ta); showToast('Full output copied to clipboard \u2713');
+    });
+  }
+
+  function exportDownload(){
+    const role=document.getElementById('output-role-title').textContent;
+    const meta=document.getElementById('output-meta').textContent;
+    const primary=document.getElementById('resdex-string').value;
+    const secondary=document.getElementById('resdex-string-2')?document.getElementById('resdex-string-2').value:'';
+    const date=new Date().toLocaleDateString('en-IN',{day:'numeric',month:'short',year:'numeric'});
+
+    const wb=XLSX.utils.book_new();
+
+    // Sheet 1 — Search Strings
+    const stringsData=[
+      ['ISHWA CONSULTING — AI SOURCING OUTPUT','',''],
+      ['Role',role,''],
+      ['Market',meta,''],
+      ['Generated',date,''],
+      ['','',''],
+      ['RESDEX SEARCH STRINGS','',''],
+      ['','',''],
+      ['Primary String','',''],
+      [primary,'',''],
+      ['','',''],
+      ['Secondary String (refined)','',''],
+      [secondary||'—','',''],
+    ];
+    const ws1=XLSX.utils.aoa_to_sheet(stringsData);
+    ws1['!cols']=[{wch:80},{wch:30},{wch:20}];
+    XLSX.utils.book_append_sheet(wb,ws1,'Search Strings');
+
+    // Sheet 2 — Company Universe
+    const companyData=[['Segment','Company','Note','Rationale']];
+    const segs=document.querySelectorAll('#company-list-container .segment');
+    segs.forEach(seg=>{
+      const label=seg.querySelector('.segment-tag')?.textContent||'';
+      const rationale=seg.querySelector('.segment-rationale')?.textContent||'';
+      seg.querySelectorAll('.company-item').forEach(item=>{
+        const name=item.querySelector('.company-name')?.textContent||'';
+        const note=item.querySelector('.company-note')?.textContent||'';
+        companyData.push([label,name,note,rationale]);
+      });
+    });
+    const ws2=XLSX.utils.aoa_to_sheet(companyData);
+    ws2['!cols']=[{wch:22},{wch:30},{wch:55},{wch:55}];
+    XLSX.utils.book_append_sheet(wb,ws2,'Company Universe');
+
+    const filename='Ishwa_Sourcing_'+role.replace(/[^a-zA-Z0-9\s]/g,'').trim().replace(/\s+/g,'_')+'_'+new Date().toISOString().slice(0,10)+'.xlsx';
+    XLSX.writeFile(wb,filename);
+    showToast('Downloaded: '+filename);
+  }
+
+  function copyString(textareaId, btnId){
+    const ta=document.getElementById(textareaId); ta.select(); document.execCommand('copy');
+    const btn=document.getElementById(btnId);
+    btn.textContent='Copied \u2713'; btn.className='btn-copy copied';
+    setTimeout(()=>{btn.textContent='Copy';btn.className='btn-copy';},2500);
+  }
+
+  function setState(state){
+    ['empty','loading','error','results'].forEach(s=>{
+      const el=document.getElementById('output-'+s);
+      el.style.display='none'; el.classList.remove('visible');
+    });
+    const t=document.getElementById('output-'+state);
+    if(t){t.style.display='';t.classList.add('visible');}
+    const show = state==='results';
+    document.getElementById('top-actions').classList.toggle('visible', show);
+    document.getElementById('bottom-actions').classList.toggle('visible', show);
+  }
+
+  async function generate(){
+    if(!validate()) return;
+    const btn=document.getElementById('generate-btn');
+    btn.disabled=true; btn.innerHTML='<span class="btn-spinner"></span>Generating\u2026';
+    setState('loading');
+    const roles=getTags('roletitle-wrap');
+    const sector=document.getElementById('sector').value;
+    const geo=document.getElementById('geography').value;
+    try{
+      const res=await fetch(PROXY_URL,{
+        method:'POST',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify({
+          model:'claude-sonnet-4-6',
+          max_tokens:4000,
+          system:'You are a specialist executive search researcher for the Indian market. Output only valid JSON as instructed. No preamble, no markdown, no explanation. Include a genuine mix of large and mid-tier companies in every segment.',
+          messages:[{role:'user',content:buildPrompt()}]
+        })
+      });
+      const data=await res.json();
+      if(!res.ok) throw new Error(data.error?.message||'Error '+res.status);
+      const text=(data.content?.[0]?.text||'').trim()
+        .replace(/^```json\s*/,'').replace(/^```\s*/,'').replace(/\s*```$/,'');
+      let parsed;
+      try{parsed=JSON.parse(text);}
+      catch(e){throw new Error('Unexpected format. Try regenerating.');}
+      if(!parsed.segments||!parsed.resdex_string) throw new Error('Incomplete output. Try regenerating.');
+      lastParsedData = parsed;
+      renderOutput(parsed,roles,sector,geo);
+      setState('results');
+    }catch(err){
+      document.getElementById('error-body').textContent=err.message||'Something went wrong. Try again.';
+      setState('error');
+    }finally{
+      btn.disabled=false;
+      btn.innerHTML='Generate Target List &amp; Search String &#8594;';
+    }
+  }
+
+  // ══ v3: SEARCH MEMORY ══════════════════════════════════════
+  // Deployment URL for the Search Log Apps Script (file 20) — paste after deployment session:
+  const SEARCH_LOG_URL = 'https://script.google.com/macros/s/AKfycbxd0WpHDmh8VEjwrWqThFuY2WZlqAwpsj8BY_Qozjx39XOMomznuCRZZ8-Y0bs3OgNb/exec';
+
+  // Edit this list as the team changes — one place, nothing else to touch:
+  const CONSULTANTS = ['Somanshu Kalra','Aparna Janakiraman','Chhaya Arora','Mohit Sethi','Rashmi Lamba','Shashidhar D S','Sapna Khatri','Varsha Karthik','Shalini Gupta'];
+
+  var lastParsedData = null;      // outputs of the most recent generation
+  var recalledSnapshot = null;    // normalized snapshot loaded via recall
+  var recalledUID = null;
+  var savedUID = null;            // set after successful append (for local copy filename)
+
+  // Populate dropdown + gate on load
+  (function initConsultantGate(){
+    const sel = document.getElementById('consultant-name');
+    CONSULTANTS.forEach(n=>{
+      const o=document.createElement('option'); o.value=n; o.textContent=n; sel.appendChild(o);
+    });
+    document.body.classList.add('gated');
+  })();
+
+  function consultantChanged(){
+    const name = document.getElementById('consultant-name').value;
+    if(name){
+      document.body.classList.remove('gated');
+      document.getElementById('recall-controls').style.visibility='visible';
+    } else {
+      document.body.classList.add('gated');
+      document.getElementById('recall-controls').style.visibility='hidden';
+    }
+  }
+
+  // ── Descriptor: human-readable one-liner composed from form fields (Option A — deterministic, no AI call) ──
+  function buildDescriptor(){
+    const roles = getTags('roletitle-wrap').join(' / ');
+    const sector = document.getElementById('sector').value;
+    const geo = document.getElementById('geography').value;
+    const sen = getTags('seniority-wrap').join(', ');
+    const parts = [];
+    if(roles) parts.push(roles);
+    if(sen) parts.push(sen);
+    if(sector) parts.push(sector);
+    if(geo) parts.push(geo);
+    return parts.join(' \u00B7 '); // e.g. "Senior Manager · Manager · Technology / IT Services · Gurgaon / Delhi"
+  }
+
+  // ── Snapshot: EVERYTHING on search + results side ──
+  function buildSnapshot(){
+    return {
+      consultant: document.getElementById('consultant-name').value,
+      descriptor: buildDescriptor(),
+      inputs: {
+        role_titles: getTags('roletitle-wrap'),
+        sector: document.getElementById('sector').value,
+        geography: document.getElementById('geography').value,
+        company_stage: document.getElementById('company-stage').value,
+        seniority: getTags('seniority-wrap'),
+        education: document.getElementById('education').value,
+        target_profile: document.getElementById('target-profile').value.trim(),
+        context: document.getElementById('context').value.trim(),
+        key_skills: getTags('keyskills-wrap'),
+        must_have: getTags('musthave-wrap'),
+        avoid: getTags('avoid-wrap')
+      },
+      outputs: {
+        resdex_primary: document.getElementById('resdex-string').value,
+        resdex_secondary: document.getElementById('resdex-string-2') ? document.getElementById('resdex-string-2').value : '',
+        segments: lastParsedData ? (lastParsedData.segments||[]) : []
+      }
+    };
+  }
+
+  // Normalized string for change detection — catches delete-then-retype-identical
+  function snapshotKey(snap){
+    const c = JSON.parse(JSON.stringify(snap));
+    delete c.consultant; // same search recalled by another consultant is still the same search
+    delete c.descriptor; // derived field — pre-descriptor records must not read as "changed" on recall
+    return JSON.stringify(c);
+  }
+
+  // ── Save as Good Search ──
+  async function saveGoodSearch(){
+    if(!lastParsedData){ showToast('Generate a search first.', true); return; }
+    const snap = buildSnapshot();
+
+    // Unchanged recall → no rewrite
+    if(recalledSnapshot && snapshotKey(snap) === recalledSnapshot){
+      showToast('Identical to '+recalledUID+' — already in the Ishwa log, nothing new to save.');
+      return;
+    }
+
+    const saveBtns = document.querySelectorAll('.save-good-sync');
+    saveBtns.forEach(function(b){ b.disabled = true; b.textContent = 'Saving…'; });
+    try{
+      const res = await fetch(SEARCH_LOG_URL, {
+        method:'POST',
+        headers:{'Content-Type':'text/plain;charset=utf-8'},  // avoids CORS preflight; Apps Script reads postData
+        body: JSON.stringify({ action:'append_search', record: snap })
+      });
+      const out = await res.json();
+      if(!out.uid) throw new Error(out.error||'No UID returned');
+      savedUID = out.uid;
+      document.getElementById('save-modal-title').textContent = 'Search record '+out.uid+' appended to Ishwa';
+      document.getElementById('save-modal-overlay').classList.remove('hidden');
+    } catch(err){
+      showToast('Could not append — check connection and try again. ('+(err.message||'')+')', true);
+    } finally {
+      saveBtns.forEach(function(b){ b.disabled = false; b.textContent = 'Save Search?'; });
+    }
+  }
+
+  function saveModalYes(){
+    document.getElementById('save-modal-overlay').classList.add('hidden');
+    exportDownloadWithUID(savedUID);
+    resetSearchPage();
+  }
+  function saveModalNo(){
+    document.getElementById('save-modal-overlay').classList.add('hidden');
+    resetSearchPage();
+  }
+
+  function exportDownloadWithUID(uid){
+    // Reuse existing workbook export, prefix filename with UID
+    const origWriteFile = XLSX.writeFile;
+    XLSX.writeFile = function(wb, name){ origWriteFile.call(XLSX, wb, uid+'_'+name); };
+    try{ exportDownload(); } finally { XLSX.writeFile = origWriteFile; }
+  }
+
+  function resetSearchPage(){
+    ['roletitle-wrap','seniority-wrap','keyskills-wrap','musthave-wrap','avoid-wrap'].forEach(w=>{
+      document.querySelectorAll('#'+w+' .tag').forEach(t=>t.remove());
+    });
+    ['sector','geography','company-stage','education'].forEach(id=>{ document.getElementById(id).selectedIndex=0; });
+    ['target-profile','context'].forEach(id=>{ document.getElementById(id).value=''; });
+    lastParsedData=null; recalledSnapshot=null; recalledUID=null; savedUID=null;
+    document.getElementById('recall-badge').style.display='none';
+    document.getElementById('recall-uid').value='';
+    setState('empty');
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // ── Recall ──
+  function setTags(wrapId, values){
+    document.querySelectorAll('#'+wrapId+' .tag').forEach(t=>t.remove());
+    const wrap=document.getElementById(wrapId);
+    const input=wrap.querySelector('.tag-input-field');
+    (values||[]).forEach(v=>{
+      const tag=document.createElement('span'); tag.className='tag';
+      tag.innerHTML=v+'<button class="tag-remove" onclick="this.parentElement.remove()">\u00d7</button>';
+      wrap.insertBefore(tag,input);
+    });
+  }
+  function setSelect(id, value){
+    const el=document.getElementById(id);
+    for(let i=0;i<el.options.length;i++){ if(el.options[i].value===value){ el.selectedIndex=i; return; } }
+    el.selectedIndex=0;
+  }
+
+  async function recallSearch(){
+    let raw = document.getElementById('recall-uid').value.trim().toUpperCase();
+    const digits = (raw.match(/\d+/)||[''])[0];
+    if(!digits || digits.length>4){ showToast('Enter a search number — e.g. 3, 0003 or SRCH-0003', true); return; }
+    const uid = 'SRCH-' + digits.padStart(4,'0');
+    document.getElementById('recall-uid').value = uid;
+    const btn=document.getElementById('recall-btn');
+    btn.disabled=true; btn.textContent='Loading…';
+    try{
+      const res = await fetch(SEARCH_LOG_URL+'?action=get_search&uid='+encodeURIComponent(uid));
+      const out = await res.json();
+      if(!out.record) throw new Error(out.error||'Not found');
+      const r = out.record;
+
+      setTags('roletitle-wrap', r.inputs.role_titles);
+      setSelect('sector', r.inputs.sector);
+      setSelect('geography', r.inputs.geography);
+      setSelect('company-stage', r.inputs.company_stage);
+      setTags('seniority-wrap', r.inputs.seniority);
+      setSelect('education', r.inputs.education);
+      document.getElementById('target-profile').value = r.inputs.target_profile||'';
+      document.getElementById('context').value = r.inputs.context||'';
+      setTags('keyskills-wrap', r.inputs.key_skills);
+      setTags('musthave-wrap', r.inputs.must_have);
+      setTags('avoid-wrap', r.inputs.avoid);
+
+      lastParsedData = {
+        segments: r.outputs.segments||[],
+        resdex_string: r.outputs.resdex_primary||'',
+        resdex_string_secondary: r.outputs.resdex_secondary||''
+      };
+      renderOutput(lastParsedData, r.inputs.role_titles, r.inputs.sector, r.inputs.geography);
+      setState('results');
+
+      recalledUID = uid;
+      recalledSnapshot = snapshotKey(buildSnapshot());
+      const badge=document.getElementById('recall-badge');
+      badge.textContent = uid+' loaded';
+      badge.style.display='';
+      showToast(uid+' recalled. Edit anything and re-save — unchanged re-saves are ignored.');
+    } catch(err){
+      showToast('Could not recall '+uid+' — '+(err.message||'check the ID'), true);
+    } finally {
+      btn.disabled=false; btn.textContent='Recall';
+    }
+  }
+
+</script>
+</body>
+</html>
