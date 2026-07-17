@@ -1,0 +1,1974 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandate Intake — Ishwa Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rust:#B5451B; --rust-lt:#F0D5CB; --rust-dk:#8B3315;
+    --black:#1A1A1A; --g1:#4A4A4A; --g2:#F5F3F1; --g3:#E8E4E0; --g4:#DDDDDD;
+    --white:#FFFFFF; --amber:#FFF8EE; --green:#EBF5EC; --green2:#2D7D32;
+    --serif:'Playfair Display',Georgia,serif;
+    --sans:'DM Sans',system-ui,sans-serif;
+    --mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#F2EFEB;font-family:var(--sans);color:var(--black);min-height:100vh;}
+
+  /* Toast */
+  .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:var(--white);padding:14px 28px;border-radius:2px;border-left:4px solid var(--green2);font-size:13px;font-weight:500;z-index:600;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.35s;opacity:0;white-space:nowrap;}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  .toast.error{border-left-color:var(--rust);}
+
+  /* Header */
+  .page-header{background:var(--black);position:sticky;top:0;z-index:100;border-bottom:3px solid var(--rust);}
+  .header-inner{max-width:900px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;}
+  .header-brand{display:flex;align-items:baseline;gap:16px;}
+  .brand-firm{font-family:var(--serif);font-size:18px;color:var(--white);font-weight:600;}
+  .brand-div{width:1px;height:14px;background:var(--rust);}
+  .brand-pip{font-size:11px;color:var(--rust);font-weight:600;letter-spacing:0.12em;text-transform:uppercase;}
+  .header-right{display:flex;align-items:center;gap:24px;}
+  .header-tag{font-family:var(--mono);font-size:11px;color:#666;letter-spacing:0.08em;text-transform:uppercase;}
+  .session-ticker{display:flex;flex-direction:column;align-items:center;line-height:1;}
+  .ticker-num{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--rust);transition:all 0.3s;}
+  .ticker-label{font-size:9px;color:#666;letter-spacing:0.10em;text-transform:uppercase;margin-top:2px;}
+
+  /* Body */
+  .page-body{max-width:900px;margin:0 auto;padding:48px 40px 80px;}
+
+  /* Title block */
+  .form-title-block{margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--g4);}
+  .form-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:10px;}
+  .form-title{font-family:var(--serif);font-size:38px;font-weight:700;color:var(--black);line-height:1.1;margin-bottom:12px;}
+  .form-subtitle{font-size:15px;color:var(--g1);line-height:1.6;max-width:620px;}
+  .form-meta-row{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;}
+  .form-meta-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g1);}
+  .meta-dot{width:6px;height:6px;border-radius:50%;background:var(--rust);flex-shrink:0;}
+
+  /* Sections */
+  .form-section{margin-bottom:40px;background:var(--white);border-radius:2px;border:1px solid var(--g4);overflow:hidden;animation:fadeUp 0.4s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px);}to{opacity:1;transform:translateY(0);}}
+  .form-section:nth-child(1){animation-delay:0.05s;}.form-section:nth-child(2){animation-delay:0.10s;}
+  .form-section:nth-child(3){animation-delay:0.15s;}.form-section:nth-child(4){animation-delay:0.20s;}
+  .form-section:nth-child(5){animation-delay:0.25s;}.form-section:nth-child(6){animation-delay:0.30s;}
+  .form-section:nth-child(7){animation-delay:0.35s;}.form-section:nth-child(8){animation-delay:0.40s;}
+
+  .section-header{display:flex;align-items:center;gap:14px;padding:18px 24px;background:var(--g2);border-bottom:1px solid var(--g4);}
+  .section-num{width:28px;height:28px;background:var(--rust);color:var(--white);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;font-weight:600;flex-shrink:0;}
+  .section-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--black);}
+  .section-hint{margin-left:auto;font-size:11px;color:#999;font-style:italic;}
+  .section-body{padding:24px;}
+
+  /* Fields */
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;}
+  .field-grid.single{grid-template-columns:1fr;}
+  .field-grid.thirds{grid-template-columns:1fr 1fr 1fr;}
+  .field-group{display:flex;flex-direction:column;gap:6px;}
+  .field-group.full{grid-column:1/-1;}
+  label{font-size:11px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--g1);}
+  label .req{color:var(--rust);margin-left:2px;}
+  label .opt{color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;margin-left:4px;}
+  .field-hint{font-size:11px;color:#AAA;line-height:1.4;margin-top:2px;}
+
+  input[type="text"],input[type="date"],input[type="number"],select,textarea{
+    font-family:var(--sans);font-size:14px;color:var(--black);
+    background:var(--white);border:1.5px solid var(--g4);border-radius:2px;
+    padding:10px 13px;outline:none;transition:border-color 0.15s,box-shadow 0.15s;
+    width:100%;appearance:none;-webkit-appearance:none;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,0.08);}
+  input::placeholder,textarea::placeholder{color:#C0BAB4;}
+  textarea{resize:vertical;min-height:88px;line-height:1.55;}
+  select{
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A4A4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+    background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer;
+  }
+
+  /* Mandate ID compound field */
+  .mandate-id-wrap{display:flex;align-items:center;border:1.5px solid var(--g4);border-radius:2px;overflow:hidden;background:var(--white);transition:border-color 0.15s,box-shadow 0.15s;}
+  .mandate-id-wrap:focus-within{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,0.08);}
+  .mandate-id-prefix{background:var(--g2);padding:10px 12px;font-family:var(--mono);font-size:13px;color:var(--g1);border-right:1.5px solid var(--g4);white-space:nowrap;flex-shrink:0;}
+  .mandate-id-num{border:none!important;box-shadow:none!important;border-radius:0!important;flex:1;min-width:80px;font-family:var(--mono);font-size:14px;}
+  .mandate-id-num:focus{box-shadow:none!important;}
+
+  /* Tags */
+  .tag-input-wrap{border:1.5px solid var(--g4);border-radius:2px;padding:8px 10px;min-height:46px;display:flex;flex-wrap:wrap;gap:6px;align-items:flex-start;cursor:text;background:var(--white);transition:border-color 0.15s,box-shadow 0.15s;}
+  .tag-input-wrap:focus-within{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,0.08);}
+  .tag{display:inline-flex;align-items:center;gap:5px;background:var(--rust-lt);color:var(--rust-dk);border-radius:2px;padding:3px 8px 3px 9px;font-size:12px;font-weight:500;line-height:1.4;animation:tagIn 0.15s ease;}
+  @keyframes tagIn{from{opacity:0;transform:scale(0.9);}to{opacity:1;transform:scale(1);}}
+  .tag-remove{background:none;border:none;cursor:pointer;color:var(--rust);font-size:14px;line-height:1;padding:0;display:flex;align-items:center;opacity:0.6;transition:opacity 0.1s;}
+  .tag-remove:hover{opacity:1;}
+  .tag-input-field{border:none;outline:none;font-family:var(--sans);font-size:14px;color:var(--black);flex:1;min-width:120px;background:transparent;padding:2px 0;}
+  .tag-input-field::placeholder{color:#C0BAB4;}
+  .tag.dealbreaker{background:#FDECEA;color:#C62828;}
+
+  /* Weights */
+  .weights-container{display:flex;flex-direction:column;gap:16px;}
+  .weight-row{display:grid;grid-template-columns:200px 1fr 56px;align-items:center;gap:16px;}
+  .weight-label{font-size:13px;font-weight:500;color:var(--black);}
+  .weight-label span{display:block;font-size:11px;font-weight:400;color:#999;margin-top:2px;}
+  input[type="range"]{-webkit-appearance:none;appearance:none;width:100%;height:4px;background:var(--g3);border-radius:2px;outline:none;border:none;box-shadow:none;padding:0;cursor:pointer;}
+  input[type="range"]::-webkit-slider-thumb{-webkit-appearance:none;width:18px;height:18px;border-radius:50%;background:var(--rust);cursor:pointer;border:2px solid var(--white);box-shadow:0 1px 4px rgba(0,0,0,0.18);transition:transform 0.15s;}
+  input[type="range"]::-webkit-slider-thumb:hover{transform:scale(1.15);}
+  input[type="range"]::-moz-range-thumb{width:18px;height:18px;border-radius:50%;background:var(--rust);cursor:pointer;border:2px solid var(--white);}
+  .weight-val{font-family:var(--mono);font-size:14px;font-weight:500;color:var(--rust);text-align:right;}
+  .weights-total-row{display:flex;align-items:center;justify-content:flex-end;gap:10px;padding-top:12px;border-top:1px solid var(--g4);margin-top:4px;}
+  .weights-total-label{font-size:12px;color:var(--g1);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;}
+  .weights-total-val{font-family:var(--mono);font-size:18px;font-weight:500;color:var(--black);transition:color 0.2s;}
+  .weights-total-val.over{color:var(--rust);}.weights-total-val.exact{color:var(--green2);}
+  .weights-note{font-size:11px;color:#AAA;font-style:italic;margin-top:8px;line-height:1.5;}
+
+  /* Callout */
+  .callout{background:var(--amber);border-left:3px solid var(--rust);border-radius:0 2px 2px 0;padding:12px 16px;font-size:13px;color:var(--g1);line-height:1.55;margin-bottom:20px;}
+  .callout strong{color:var(--black);font-weight:600;}
+
+  /* Engagement history */
+  .engagement-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+  .engagement-option{padding:14px 16px;border:1.5px solid var(--g4);border-radius:2px;cursor:pointer;transition:all 0.12s;background:var(--white);position:relative;}
+  .engagement-option:hover{border-color:var(--rust);background:var(--rust-lt);}
+  .engagement-option.selected{border-color:var(--rust);background:var(--rust-lt);}
+  .engagement-option input[type="radio"]{position:absolute;opacity:0;pointer-events:none;}
+  .engagement-label{font-size:13px;font-weight:500;color:var(--black);margin-bottom:3px;}
+  .engagement-sub{font-size:11px;color:#AAA;line-height:1.4;}
+  .engagement-option.selected .engagement-label{color:var(--rust-dk);}
+  .engagement-option.selected .engagement-sub{color:var(--rust);opacity:0.75;}
+
+  /* CV Upload */
+  .cv-upload-area{margin-bottom:12px;}
+  .cv-upload-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;padding:24px;border:2px dashed var(--g4);border-radius:2px;background:var(--g2);cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--g1);transition:all 0.15s;}
+  .cv-upload-btn:hover{border-color:var(--rust);background:var(--rust-lt);color:var(--rust-dk);}
+  .cv-file-list{display:flex;flex-direction:column;gap:8px;}
+  .cv-file-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--g2);border:1.5px solid var(--green2);border-radius:2px;animation:tagIn 0.2s ease;}
+  .cv-file-item-left{display:flex;align-items:center;gap:10px;}
+  .cv-file-icon{font-size:22px;flex-shrink:0;}
+  .cv-file-name{font-family:var(--mono);font-size:12px;color:var(--black);font-weight:500;}
+  .cv-file-size{font-size:11px;color:#AAA;margin-top:2px;}
+  .cv-file-staged{font-size:10px;color:var(--green2);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
+  .cv-remove-btn{background:none;border:none;cursor:pointer;color:#CCC;font-size:18px;padding:0;transition:color 0.15s;line-height:1;}
+  .cv-remove-btn:hover{color:var(--rust);}
+
+  /* Confirm modal */
+  .modal-overlay{position:fixed;inset:0;z-index:900;background:rgba(26,26,26,0.70);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+  .modal-overlay.hidden{display:none;}
+  .modal-box{background:var(--white);border-radius:3px;max-width:500px;width:100%;padding:36px;box-shadow:0 24px 64px rgba(0,0,0,0.22);animation:modalIn 0.22s ease;}
+  @keyframes modalIn{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:translateY(0);}}
+  .modal-box.with-cv{border-top:4px solid var(--green2);}
+  .modal-box.no-cv{border-top:4px solid var(--rust);}
+  .modal-icon{font-size:32px;margin-bottom:12px;}
+  .modal-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--black);margin-bottom:10px;line-height:1.25;}
+  .modal-body{font-size:13px;color:var(--g1);line-height:1.65;margin-bottom:10px;}
+  .modal-file-block{font-family:var(--mono);font-size:12px;color:var(--black);background:var(--g2);padding:10px 13px;border-radius:2px;margin-bottom:10px;word-break:break-all;line-height:1.6;}
+  .modal-warning{font-size:12px;color:var(--rust-dk);background:var(--rust-lt);padding:10px 14px;border-radius:2px;line-height:1.6;margin-bottom:24px;}
+  .modal-btn-row{display:flex;gap:12px;}
+  .modal-btn-row .btn{flex:1;}
+
+  /* Submit row */
+  .submit-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;padding-top:32px;border-top:2px solid var(--g4);}
+  .submit-note{font-size:12px;color:#AAA;font-style:italic;}
+  .btn-group{display:flex;gap:12px;}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.04em;padding:11px 24px;border-radius:2px;border:none;cursor:pointer;transition:all 0.15s;}
+  .btn-secondary{background:var(--white);color:var(--g1);border:1.5px solid var(--g4);}
+  .btn-secondary:hover{border-color:var(--g1);color:var(--black);}
+  .btn-primary{background:var(--rust);color:var(--white);}
+  .btn-primary:hover{background:var(--rust-dk);transform:translateY(-1px);box-shadow:0 4px 12px rgba(181,69,27,0.25);}
+  .btn-primary:disabled{background:var(--g4);cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-green{background:var(--green2);color:var(--white);}
+  .btn-green:hover{background:#1b5e20;transform:translateY(-1px);}
+
+  .page-footer{max-width:900px;margin:0 auto;padding:0 40px 40px;font-size:11px;color:#BBB;display:flex;align-items:center;justify-content:space-between;}
+
+  @media(max-width:640px){
+    .page-body{padding:24px 20px 60px;}
+    .field-grid,.field-grid.thirds{grid-template-columns:1fr;}
+    .weight-row{grid-template-columns:1fr;}
+    .header-inner{padding:14px 20px;}
+    .engagement-grid{grid-template-columns:1fr;}
+    .modal-btn-row{flex-direction:column;}
+  }
+
+/* ── Closure extra styles ── */
+
+  :root{
+    --rust:#B5451B;--rust-lt:#F0D5CB;--rust-dk:#8B3315;
+    --black:#1A1A1A;--g1:#4A4A4A;--g2:#F5F3F1;--g3:#E8E4E0;--g4:#DDDDDD;
+    --white:#FFFFFF;--amber:#FFF8EE;
+    --green:#EBF5EC;--green2:#2D7D32;
+    --red:#FDECEA;--red2:#C62828;
+    --blue:#E3F2FD;--blue2:#1565C0;
+    --serif:'Playfair Display',Georgia,serif;
+    --sans:'DM Sans',system-ui,sans-serif;
+    --mono:'DM Mono',monospace;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#F2EFEB;font-family:var(--sans);color:var(--black);min-height:100vh;}
+
+  .toast{position:fixed;bottom:32px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:var(--white);padding:14px 28px;border-radius:2px;border-left:4px solid var(--green2);font-size:13px;font-weight:500;z-index:600;transition:transform 0.35s cubic-bezier(0.34,1.56,0.64,1),opacity 0.35s;opacity:0;white-space:nowrap;}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  .toast.error{border-left-color:var(--rust);}
+
+  /* Header */
+  .page-header{background:var(--black);border-bottom:3px solid var(--rust);position:sticky;top:0;z-index:100;}
+  .header-inner{max-width:900px;margin:0 auto;padding:18px 40px;display:flex;align-items:center;justify-content:space-between;}
+  .header-brand{display:flex;align-items:baseline;gap:16px;}
+  .brand-firm{font-family:var(--serif);font-size:18px;color:var(--white);font-weight:600;}
+  .brand-div{width:1px;height:14px;background:var(--rust);}
+  .brand-pip{font-size:11px;color:var(--rust);font-weight:600;letter-spacing:0.12em;text-transform:uppercase;}
+  .header-right{display:flex;align-items:center;gap:24px;}
+  .header-tag{font-family:var(--mono);font-size:11px;color:#666;letter-spacing:0.08em;text-transform:uppercase;}
+  .session-ticker{display:flex;flex-direction:column;align-items:center;line-height:1;}
+  .ticker-num{font-family:var(--serif);font-size:28px;font-weight:700;color:var(--rust);transition:all 0.3s;}
+  .ticker-label{font-size:9px;color:#666;letter-spacing:0.10em;text-transform:uppercase;margin-top:2px;}
+
+  .page-body{max-width:900px;margin:0 auto;padding:48px 40px 80px;}
+
+  .form-title-block{margin-bottom:40px;padding-bottom:32px;border-bottom:1px solid var(--g4);}
+  .form-eyebrow{font-size:11px;font-weight:600;letter-spacing:0.14em;text-transform:uppercase;color:var(--rust);margin-bottom:10px;}
+  .form-title{font-family:var(--serif);font-size:38px;font-weight:700;color:var(--black);line-height:1.1;margin-bottom:12px;}
+  .form-subtitle{font-size:15px;color:var(--g1);line-height:1.6;max-width:620px;}
+  .form-meta-row{display:flex;gap:24px;margin-top:20px;flex-wrap:wrap;}
+  .form-meta-item{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--g1);}
+  .meta-dot{width:6px;height:6px;border-radius:50%;background:var(--rust);flex-shrink:0;}
+
+  .form-section{margin-bottom:32px;background:var(--white);border-radius:2px;border:1px solid var(--g4);overflow:hidden;animation:fadeUp 0.35s ease both;}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:translateY(0);}}
+  .form-section:nth-child(1){animation-delay:0.05s;}.form-section:nth-child(2){animation-delay:0.10s;}
+  .form-section:nth-child(3){animation-delay:0.15s;}.form-section:nth-child(4){animation-delay:0.20s;}
+  .form-section:nth-child(5){animation-delay:0.25s;}.form-section:nth-child(6){animation-delay:0.30s;}
+
+  .section-header{display:flex;align-items:center;gap:14px;padding:18px 24px;background:var(--g2);border-bottom:1px solid var(--g4);}
+  .section-num{width:28px;height:28px;background:var(--rust);color:var(--white);border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:14px;font-weight:600;flex-shrink:0;}
+  .section-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--black);}
+  .section-hint{margin-left:auto;font-size:11px;color:#999;font-style:italic;}
+  .section-body{padding:24px;}
+
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px 28px;}
+  .field-grid.single{grid-template-columns:1fr;}
+  .field-grid.thirds{grid-template-columns:1fr 1fr 1fr;}
+  .field-group{display:flex;flex-direction:column;gap:6px;}
+  .field-group.full{grid-column:1/-1;}
+  label{font-size:11px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--g1);}
+  label .req{color:var(--rust);margin-left:2px;}
+  label .opt{color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;margin-left:4px;}
+  .field-hint{font-size:11px;color:#AAA;line-height:1.4;margin-top:2px;}
+
+  input[type="text"],input[type="date"],input[type="number"],select,textarea{
+    font-family:var(--sans);font-size:14px;color:var(--black);
+    background:var(--white);border:1.5px solid var(--g4);border-radius:2px;
+    padding:10px 13px;outline:none;transition:border-color 0.15s,box-shadow 0.15s;
+    width:100%;appearance:none;-webkit-appearance:none;
+  }
+  input:focus,select:focus,textarea:focus{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,0.08);}
+  input::placeholder,textarea::placeholder{color:#C0BAB4;}
+  textarea{resize:vertical;line-height:1.55;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A4A4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:36px;cursor:pointer;}
+
+  /* Mandate ID compound field */
+  .mandate-id-wrap{display:flex;align-items:center;border:1.5px solid var(--g4);border-radius:2px;overflow:hidden;background:var(--white);transition:border-color 0.15s,box-shadow 0.15s;}
+  .mandate-id-wrap:focus-within{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,0.08);}
+  .mandate-id-prefix{background:var(--g2);padding:10px 12px;font-family:var(--mono);font-size:13px;color:var(--g1);border-right:1.5px solid var(--g4);white-space:nowrap;flex-shrink:0;}
+  .mandate-id-num{border:none!important;box-shadow:none!important;border-radius:0!important;flex:1;min-width:80px;font-family:var(--mono);font-size:14px;}
+  .mandate-id-num:focus{box-shadow:none!important;}
+
+  /* Outcome toggle */
+  .outcome-toggle{display:flex;gap:0;margin-bottom:28px;border:1.5px solid var(--g4);border-radius:2px;overflow:hidden;}
+  .outcome-btn{flex:1;padding:16px 20px;border:none;background:var(--white);font-family:var(--sans);font-size:14px;font-weight:500;color:var(--g1);cursor:pointer;transition:all 0.15s;text-align:center;display:flex;flex-direction:column;align-items:center;gap:4px;}
+  .outcome-btn+.outcome-btn{border-left:1px solid var(--g4);}
+  .outcome-btn .outcome-icon{font-size:22px;}
+  .outcome-btn .outcome-label{font-size:13px;font-weight:600;}
+  .outcome-btn .outcome-sub{font-size:11px;font-weight:400;color:#AAA;}
+  .outcome-btn.selected-won{background:var(--green);color:var(--green2);border-color:var(--green2);}
+  .outcome-btn.selected-dead{background:var(--red);color:var(--red2);border-color:var(--red2);}
+  .outcome-btn.selected-hold{background:var(--amber);color:#E65100;border-color:#E65100;}
+
+  /* Metric block */
+  .metric-block{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:24px;}
+  .metric-card{border:1.5px solid var(--g4);border-radius:2px;padding:16px 18px;background:var(--g2);transition:border-color 0.15s;}
+  .metric-card:focus-within{border-color:var(--rust);background:var(--white);}
+  .metric-card-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--g1);margin-bottom:8px;}
+  .metric-card-label .req{color:var(--rust);}
+  .metric-input{font-family:var(--serif);font-size:32px;font-weight:700;color:var(--rust);width:100%;border:none;background:transparent;outline:none;padding:0;}
+  .metric-input::placeholder{color:var(--g4);font-size:28px;}
+  .metric-card-sub{font-size:11px;color:#AAA;margin-top:4px;}
+  .rate-display{border:1.5px solid var(--g4);border-radius:2px;padding:16px 18px;background:var(--white);text-align:center;}
+  .rate-val{font-family:var(--serif);font-size:32px;font-weight:700;color:var(--black);transition:color 0.3s;}
+  .rate-val.good{color:var(--green2);}.rate-val.warn{color:#E65100;}.rate-val.bad{color:var(--rust);}
+  .rate-label{font-size:10px;font-weight:600;letter-spacing:0.12em;text-transform:uppercase;color:var(--g1);margin-bottom:8px;}
+  .rate-sub{font-size:11px;color:#AAA;margin-top:4px;}
+
+  /* Dead reason */
+  .dead-section{display:none;}.dead-section.visible{display:block;}
+  .reason-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+  .reason-option{padding:12px 16px;border:1.5px solid var(--g4);border-radius:2px;cursor:pointer;transition:all 0.12s;background:var(--white);}
+  .reason-option:hover{border-color:var(--rust);background:var(--rust-lt);}
+  .reason-option.selected{border-color:var(--rust);background:var(--rust-lt);}
+  .reason-label{font-size:13px;font-weight:500;color:var(--black);margin-bottom:2px;}
+  .reason-sub{font-size:11px;color:#AAA;}
+  .reason-option.selected .reason-label{color:var(--rust-dk);}
+  .reason-option.selected .reason-sub{color:var(--rust);opacity:0.7;}
+
+  .finalclose-row{display:flex;gap:14px;align-items:flex-start;padding:16px;border:1.5px solid var(--g4);border-radius:2px;cursor:pointer;transition:all 0.15s;background:var(--g2);}
+  .finalclose-row:hover{border-color:var(--rust);}
+  .finalclose-row.selected{border-color:var(--rust);background:var(--rust-lt);}
+  .finalclose-check{width:20px;height:20px;border:2px solid var(--g4);border-radius:2px;flex-shrink:0;margin-top:2px;display:flex;align-items:center;justify-content:center;font-size:13px;color:#fff;background:#fff;transition:all 0.15s;}
+  .finalclose-row.selected .finalclose-check{background:var(--rust);border-color:var(--rust);}
+  .finalclose-row.selected .finalclose-check::after{content:'✓';}
+  .finalclose-text{display:flex;flex-direction:column;gap:4px;font-family:var(--sans);}
+  .finalclose-text strong{font-size:14px;color:var(--black);}
+  .finalclose-text span{font-size:12px;color:var(--g1);line-height:1.5;}
+  .notplaced-counter{margin-left:auto;font-family:var(--sans);font-size:11px;font-weight:600;letter-spacing:0.06em;color:var(--g1);}
+  .notplaced-counter.ok{color:var(--green2);}
+  /* v2.1 inline CV controls */
+  .cv-inline-btn{display:inline-flex;align-items:center;gap:6px;padding:7px 14px;border:1.5px dashed var(--g4);border-radius:2px;background:var(--g2);cursor:pointer;font-family:var(--sans);font-size:12px;font-weight:500;color:var(--g1);transition:all 0.15s;white-space:nowrap;}
+  .cv-inline-btn:hover{border-color:var(--rust);color:var(--rust-dk);background:var(--rust-lt);}
+  .cv-inline-chip{display:flex;align-items:center;gap:8px;font-family:var(--mono);font-size:11px;color:var(--black);background:var(--g2);border:1px solid var(--g4);border-radius:2px;padding:7px 10px;margin:10px 16px 0;}
+  .candidate-outcome-block{border-top:1px solid var(--g4);animation:rowIn 0.2s ease;padding-bottom:4px;}
+  /* Placed candidate block */
+  .placed-block{border:1.5px solid var(--green2);border-radius:2px;overflow:hidden;margin-bottom:20px;}
+  .placed-header{display:flex;align-items:center;gap:10px;padding:12px 16px;background:var(--green);border-bottom:1px solid var(--green2);}
+  .placed-badge{font-size:10px;font-weight:700;letter-spacing:0.10em;text-transform:uppercase;color:var(--green2);background:var(--white);padding:3px 9px;border-radius:20px;border:1px solid var(--green2);}
+  .placed-title{font-family:var(--serif);font-size:15px;font-weight:600;color:var(--green2);}
+  .placed-body{padding:16px;}
+
+  /* Shortlisted candidates */
+  .shortlisted-section{margin-top:4px;}
+  .shortlisted-header-row{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;}
+  .shortlisted-label{font-size:11px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--g1);}
+  .candidate-list{display:flex;flex-direction:column;gap:12px;}
+  .candidate-row{border:1.5px solid var(--g4);border-radius:2px;overflow:hidden;animation:rowIn 0.2s ease;}
+  @keyframes rowIn{from{opacity:0;transform:translateY(-6px);}to{opacity:1;transform:translateY(0);}}
+  .candidate-header{display:flex;align-items:center;gap:12px;padding:10px 16px;background:var(--g2);border-bottom:1px solid var(--g4);}
+  .candidate-num{width:22px;height:22px;border-radius:50%;background:var(--g4);color:var(--g1);font-size:11px;font-weight:600;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .candidate-name-input{flex:1;border:none;background:transparent;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--black);outline:none;padding:0;}
+  .candidate-name-input::placeholder{color:#C0BAB4;font-weight:400;}
+  .remove-candidate{background:none;border:none;cursor:pointer;color:#CCC;font-size:18px;line-height:1;padding:0;transition:color 0.15s;}
+  .remove-candidate:hover{color:var(--rust);}
+  .candidate-body{padding:14px 16px;display:grid;grid-template-columns:1fr 1fr;gap:12px 20px;}
+  .candidate-field{display:flex;flex-direction:column;gap:5px;}
+  .candidate-field label{font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:#AAA;}
+
+  .outcome-pills{display:flex;gap:6px;flex-wrap:wrap;}
+  .outcome-pill{padding:5px 12px;border-radius:20px;border:1.5px solid var(--g4);font-size:12px;font-weight:500;cursor:pointer;color:var(--g1);transition:all 0.12s;background:var(--white);white-space:nowrap;}
+  .outcome-pill:hover{border-color:var(--g1);}
+  .outcome-pill.active-offered{background:var(--amber);color:#E65100;border-color:#E65100;}
+  .outcome-pill.active-rejected{background:var(--red);color:var(--red2);border-color:var(--red2);}
+  .outcome-pill.active-withdrew{background:var(--g2);color:var(--g1);border-color:var(--g1);}
+
+  .add-candidate-btn{display:flex;align-items:center;gap:8px;padding:12px 16px;border:1.5px dashed var(--g4);border-radius:2px;background:none;cursor:pointer;font-family:var(--sans);font-size:13px;color:var(--g1);width:100%;transition:all 0.15s;margin-top:12px;}
+  .add-candidate-btn:hover{border-color:var(--rust);color:var(--rust);background:var(--rust-lt);}
+
+  .callout{background:var(--amber);border-left:3px solid var(--rust);border-radius:0 2px 2px 0;padding:12px 16px;font-size:13px;color:var(--g1);line-height:1.55;margin-bottom:20px;}
+  .callout strong{color:var(--black);font-weight:600;}
+
+  /* CV Upload */
+  .cv-upload-area{margin-bottom:12px;}
+  .cv-upload-btn{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;width:100%;padding:24px;border:2px dashed var(--g4);border-radius:2px;background:var(--g2);cursor:pointer;font-family:var(--sans);font-size:14px;font-weight:500;color:var(--g1);transition:all 0.15s;}
+  .cv-upload-btn:hover{border-color:var(--rust);background:var(--rust-lt);color:var(--rust-dk);}
+  .cv-file-list{display:flex;flex-direction:column;gap:8px;}
+  .cv-file-item{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:var(--g2);border:1.5px solid var(--green2);border-radius:2px;animation:rowIn 0.2s ease;}
+  .cv-file-item-left{display:flex;align-items:center;gap:10px;}
+  .cv-file-icon{font-size:22px;flex-shrink:0;}
+  .cv-file-name{font-family:var(--mono);font-size:12px;color:var(--black);font-weight:500;}
+  .cv-file-size{font-size:11px;color:#AAA;margin-top:2px;}
+  .cv-file-staged{font-size:10px;color:var(--green2);font-weight:600;letter-spacing:0.08em;text-transform:uppercase;margin-top:2px;}
+  .cv-remove-btn{background:none;border:none;cursor:pointer;color:#CCC;font-size:18px;padding:0;transition:color 0.15s;line-height:1;}
+  .cv-remove-btn:hover{color:var(--rust);}
+
+  /* Confirm modal */
+  .modal-overlay{position:fixed;inset:0;z-index:900;background:rgba(26,26,26,0.70);display:flex;align-items:center;justify-content:center;padding:20px;backdrop-filter:blur(4px);}
+  .modal-overlay.hidden{display:none;}
+  .modal-box{background:var(--white);border-radius:3px;max-width:500px;width:100%;padding:36px;box-shadow:0 24px 64px rgba(0,0,0,0.22);animation:modalIn 0.22s ease;}
+  @keyframes modalIn{from{opacity:0;transform:translateY(-14px);}to{opacity:1;transform:translateY(0);}}
+  .modal-box.with-cv{border-top:4px solid var(--green2);}
+  .modal-box.no-cv{border-top:4px solid var(--rust);}
+  .modal-icon{font-size:32px;margin-bottom:12px;}
+  .modal-title{font-family:var(--serif);font-size:22px;font-weight:700;color:var(--black);margin-bottom:10px;line-height:1.25;}
+  .modal-body{font-size:13px;color:var(--g1);line-height:1.65;margin-bottom:10px;}
+  .modal-file-block{font-family:var(--mono);font-size:12px;color:var(--black);background:var(--g2);padding:10px 13px;border-radius:2px;margin-bottom:10px;word-break:break-all;line-height:1.6;white-space:pre-line;}
+  .modal-warning{font-size:12px;color:var(--rust-dk);background:var(--rust-lt);padding:10px 14px;border-radius:2px;line-height:1.6;margin-bottom:24px;}
+  .modal-btn-row{display:flex;gap:12px;}
+  .modal-btn-row .btn{flex:1;}
+
+  .submit-row{display:flex;align-items:center;justify-content:space-between;gap:16px;margin-top:8px;padding-top:32px;border-top:2px solid var(--g4);}
+  .submit-note{font-size:12px;color:#AAA;font-style:italic;}
+  .btn-group{display:flex;gap:12px;}
+  .btn{font-family:var(--sans);font-size:13px;font-weight:600;letter-spacing:0.04em;padding:11px 24px;border-radius:2px;border:none;cursor:pointer;transition:all 0.15s;}
+  .btn-secondary{background:var(--white);color:var(--g1);border:1.5px solid var(--g4);}
+  .btn-secondary:hover{border-color:var(--g1);color:var(--black);}
+  .btn-primary{background:var(--rust);color:var(--white);}
+  .btn-primary:hover{background:var(--rust-dk);transform:translateY(-1px);box-shadow:0 4px 12px rgba(181,69,27,0.25);}
+  .btn-primary:disabled{background:var(--g4);cursor:not-allowed;transform:none;box-shadow:none;}
+  .btn-green{background:var(--green2);color:var(--white);}
+  .btn-green:hover{background:#1b5e20;transform:translateY(-1px);}
+
+  .page-footer{max-width:900px;margin:0 auto;padding:0 40px 40px;font-size:11px;color:#BBB;display:flex;align-items:center;justify-content:space-between;}
+
+  @media(max-width:640px){
+    .page-body{padding:24px 20px 60px;}
+    .field-grid,.field-grid.thirds,.metric-block,.reason-grid{grid-template-columns:1fr;}
+    .candidate-body{grid-template-columns:1fr;}
+    .header-inner{padding:14px 20px;}
+    .outcome-toggle{flex-direction:column;}
+    .modal-btn-row{flex-direction:column;}
+  }
+
+
+  /* ── Closure section locked state ── */
+  #closure-section { transition: opacity 0.4s; }
+  #closure-section.locked { opacity: 0.32; pointer-events: none; user-select: none; }
+  .closure-lock-notice {
+    background: var(--g2); border: 1.5px solid var(--g4); border-radius: 2px;
+    padding: 18px 24px; display: flex; align-items: center; gap: 14px; margin-bottom: 32px;
+  }
+  .closure-lock-notice.hidden { display: none; }
+  .closure-lock-notice-icon { font-size: 22px; flex-shrink: 0; }
+  .closure-lock-text strong { display:block; font-size:14px; font-weight:600; color:var(--black); margin-bottom:2px; }
+  .closure-lock-text span { font-size:13px; color:var(--g1); }
+  /* Divider between forms */
+  .form-block-divider {
+    margin: 48px 0 44px; display: flex; align-items: center; gap: 16px;
+  }
+  .form-block-divider-line { flex: 1; height: 1px; background: var(--rust); opacity: 0.3; }
+  .form-block-divider-label {
+    font-family: var(--mono); font-size: 10px; font-weight: 600; letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--rust); white-space: nowrap;
+  }
+  /* Mandate carry-over badge */
+  .mandate-carry-badge {
+    display: none; align-items: center; gap: 10px;
+    background: var(--green); border: 1.5px solid var(--green2); border-radius: 2px;
+    padding: 12px 18px; margin-bottom: 24px; animation: fadeUp 0.3s ease;
+  }
+  .mandate-carry-badge.visible { display: flex; }
+  .mandate-carry-badge span { font-size: 13px; font-weight: 500; color: var(--green2); }
+  .mandate-carry-badge .carried-id { font-family: var(--mono); font-size: 13px; font-weight: 700; color: var(--rust); background: var(--white); padding: 2px 10px; border-radius: 2px; }
+
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<!-- Confirm modal -->
+<div class="modal-overlay hidden" id="modal-overlay">
+  <div class="modal-box" id="modal-box">
+    <div class="modal-icon" id="modal-icon"></div>
+    <div class="modal-title" id="modal-title"></div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-file-block" id="modal-file-block" style="display:none;"></div>
+    <div class="modal-warning" id="modal-warning" style="display:none;"></div>
+    <div class="modal-btn-row">
+      <button class="btn btn-secondary" onclick="closeModal()">Go Back &amp; Edit</button>
+      <button class="btn btn-green" id="modal-confirm-btn" onclick="confirmSubmit()">Confirm &amp; Submit</button>
+    </div>
+  </div>
+</div>
+
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-firm">Ishwa Consulting</span>
+      <div class="brand-div"></div>
+      <span class="brand-pip">PiP_AGI</span>
+    </div>
+    <div class="header-right">
+      <span class="header-tag">Mandate Intake — v1</span>
+      <div class="session-ticker">
+        <div class="ticker-num" id="ticker-num">0</div>
+        <div class="ticker-label">This session</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<div class="page-body">
+
+  <div class="form-title-block">
+    <div class="form-eyebrow">Search Intake</div>
+    <h1 class="form-title">New Mandate Brief</h1>
+    <p class="form-subtitle">Complete this form at the start of every new search. The structured data captured here feeds directly into the AI matching engine — the more precise the input, the more accurate the shortlist.</p>
+    <div class="form-meta-row">
+      <div class="form-meta-item"><div class="meta-dot"></div> Fields marked * are required</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> Weights must sum to 100</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> Takes approx. 8–12 minutes</div>
+    </div>
+  </div>
+
+  <!-- 1: Mandate Identity -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Mandate Identity</div>
+      <span class="section-hint">Basic reference fields</span>
+    </div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Mandate ID <span class="req">*</span></label>
+          <div class="mandate-id-wrap">
+            <span class="mandate-id-prefix" id="mandate-prefix">ISH-202604-</span>
+            <input class="mandate-id-num" type="number" id="mandate-num" placeholder="1234" min="1" max="9999">
+          </div>
+          <div class="field-hint">Numbers only — use the same ID in Zoho Recruit and CRM</div>
+        </div>
+        <div class="field-group">
+          <label>Date Opened <span class="req">*</span></label>
+          <input type="date" id="date-opened" placeholder="dd/mm/yyyy">
+        </div>
+        <div class="field-group">
+          <label>BD Owner <span class="req">*</span></label>
+          <select id="bd-owner">
+            <option value="" disabled selected>Select consultant</option>
+            <option>Shashidhar DS</option><option>Aniket Halgekar</option>
+            <option>Varsha Karthik</option><option>Devika Sen</option>
+            <option>Arvind Pandit</option><option>Mohit Sethi</option>
+            <option>Shalini Gupta</option><option>Vibhuti Kohli</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Execution Owner <span class="req">*</span></label>
+          <select id="exec-owner">
+            <option value="" disabled selected>Select consultant</option>
+            <option>Varsha Karthik</option><option>Preeti Sharma</option>
+            <option>Namrata Singh</option><option>Aparna Janakiraman</option>
+            <option>Chhaya Arora</option><option>Nitika Tarway</option>
+            <option>Devika Sen</option><option>Rashmi Lamba</option>
+            <option>Sapna Khatri</option><option>Mohit Sethi</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Target Closure Date <span class="opt">optional</span></label>
+          <input type="date" id="target-date" min="2020-01-01">
+        </div>
+        <div class="field-group">
+          <label>Ishwa EDGE Mandate? <span class="req">*</span></label>
+          <select id="edge-flag">
+            <option value="" disabled selected>Select</option>
+            <option value="yes">Yes — EDGE process applies</option>
+            <option value="no">No — standard search</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2: Role & Client -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Role & Client</div>
+      <span class="section-hint">What the mandate is for</span>
+    </div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Role Title <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Chief Financial Officer" id="role-title">
+        </div>
+        <div class="field-group">
+          <label>Client Name <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. Bajaj Finance Limited" id="client-name">
+        </div>
+        <div class="field-group">
+          <label>Sector <span class="req">*</span></label>
+          <select id="sector">
+            <option value="" disabled selected>Select sector</option>
+            <option>BFSI</option><option>Consumer / FMCG</option>
+            <option>Healthcare / Pharma</option><option>Technology / IT Services</option>
+            <option>Infrastructure / Real Estate</option><option>Education</option>
+            <option>Manufacturing / Industrial</option><option>Logistics / Transportation</option>
+            <option>Media / Entertainment</option><option>Energy / Oil & Gas</option><option>Other</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Geography <span class="req">*</span></label>
+          <select id="geography">
+            <option value="" disabled selected>Select location</option>
+            <option>Bangalore</option><option>Gurgaon / Delhi NCR</option>
+            <option>Mumbai</option><option>Pune</option><option>Hyderabad</option>
+            <option>Chennai</option><option>Dubai / Middle East</option>
+            <option>International</option><option>Remote / Flexible</option>
+          </select>
+        </div>
+        <div class="field-group">
+          <label>Reports To <span class="req">*</span></label>
+          <input type="text" placeholder="e.g. CEO & Board" id="reports-to">
+        </div>
+        <div class="field-group">
+          <label>Company Stage <span class="req">*</span></label>
+          <select id="company-stage">
+            <option value="" disabled selected>Select stage</option>
+            <option>Listed — Large Cap (5000+ headcount)</option>
+            <option>Listed — Mid Cap (1000–5000 headcount)</option>
+            <option>Unlisted — Large (1000+ headcount)</option>
+            <option>Unlisted — Mid (200–1000 headcount)</option>
+            <option>Growth Stage — Series B/C (50–200)</option>
+            <option>Early Stage — Seed/Series A (&lt;50)</option>
+            <option>Family Business / Conglomerate</option>
+            <option>PE / VC Backed</option>
+          </select>
+        </div>
+        <div class="field-group full">
+          <label>Mandate Context <span class="req">*</span></label>
+          <textarea placeholder="What is the specific business context for this hire? Why now? What has changed? What does the incoming person need to navigate in their first 6–12 months?" id="context" rows="4"></textarea>
+          <div class="field-hint">2–4 sentences. This is the most important field for accurate AI matching.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3: Search Strategy -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Search Strategy</div>
+      <span class="section-hint">How you intend to run this search</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>Why this matters.</strong> Only 14% of mandates in the current data have any search strategy recorded. This is the field that allows the AI to learn from your best searches over time.
+      </div>
+      <div class="field-grid single">
+        <div class="field-group">
+          <label>Target Profile Description <span class="req">*</span></label>
+          <textarea placeholder="Who are you going after and why? e.g. 'CFOs from capital-intensive listed businesses — infra, telecom, or manufacturing — who have handled external debt issuance.'" id="target-profile" rows="4"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Channels & Sources <span class="opt">optional</span></label>
+          <textarea placeholder="e.g. LinkedIn deep search, Zoho Recruit database, specific companies to map, referrals from existing network" id="channels" rows="3"></textarea>
+        </div>
+        <div class="field-group">
+          <label>Known Complications <span class="opt">optional</span></label>
+          <textarea placeholder="Anything that makes this search non-standard — geography constraints, confidentiality requirements, competing mandates" id="complications" rows="3"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4: Criteria -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Evaluation Criteria</div>
+      <span class="section-hint">Must-haves, dealbreakers, and nice-to-haves</span>
+    </div>
+    <div class="section-body">
+      <div class="field-grid single">
+        <div class="field-group">
+          <label>Must-Have Criteria <span class="req">*</span></label>
+          <div class="tag-input-wrap" id="musthave-wrap" onclick="document.getElementById('musthave-input').focus()">
+            <input class="tag-input-field" id="musthave-input" placeholder="Type a criterion and press Enter…">
+          </div>
+          <div class="field-hint">Press Enter after each item.</div>
+        </div>
+        <div class="field-group">
+          <label>Dealbreakers <span class="req">*</span></label>
+          <div class="tag-input-wrap" id="dealbreaker-wrap" onclick="document.getElementById('dealbreaker-input').focus()">
+            <input class="tag-input-field" id="dealbreaker-input" placeholder="Type a dealbreaker and press Enter…">
+          </div>
+          <div class="field-hint">These trigger automatic disqualification in the scoring engine.</div>
+        </div>
+        <div class="field-group">
+          <label>Nice-to-Haves <span class="opt">optional</span></label>
+          <div class="tag-input-wrap" id="nicetohave-wrap" onclick="document.getElementById('nicetohave-input').focus()">
+            <input class="tag-input-field" id="nicetohave-input" placeholder="Type a preference and press Enter…">
+          </div>
+        </div>
+        <div class="field-group">
+          <label>Work Experience Range — in years <span class="req">*</span></label>
+          <div class="field-grid thirds" style="margin-top:0;">
+            <div class="field-group">
+              <input type="number" placeholder="Min years" id="exp-min" min="0" max="40">
+            </div>
+            <div class="field-group">
+              <input type="number" placeholder="Max years" id="exp-max" min="0" max="40">
+            </div>
+            <div class="field-group">
+              <select id="pedigree">
+                <option value="" disabled selected>Pedigree requirement</option>
+                <option>MBA preferred</option><option>MBA required</option>
+                <option>Tier-1 MBA required</option><option>CA required</option>
+                <option>Not required</option>
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 5: Commercials -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Commercials</div>
+      <span class="section-hint">All optional — for BD analytics only</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>None of these fields are required to run the search.</strong> Fill in what you know — this data feeds the BD pattern analysis layer over time.
+      </div>
+      <div class="field-grid">
+        <div class="field-group">
+          <label>CTC Budget — Min (₹) <span class="opt">optional</span></label>
+          <input type="number" placeholder="e.g. 12000000" id="ctc-min">
+        </div>
+        <div class="field-group">
+          <label>CTC Budget — Max (₹) <span class="opt">optional</span></label>
+          <input type="number" placeholder="e.g. 18000000" id="ctc-max">
+        </div>
+        <div class="field-group">
+          <label>Fees Percentage <span class="opt">optional</span></label>
+          <input type="number" placeholder="e.g. 16" id="fees-pct" min="0" max="100">
+        </div>
+        <div class="field-group">
+          <label>Retainer Amount (₹) <span class="opt">optional</span></label>
+          <input type="number" placeholder="e.g. 350000" id="retainer">
+        </div>
+        <div class="field-group">
+          <label>Client Contact <span class="opt">optional</span></label>
+          <input type="text" placeholder="Name of primary contact at client" id="client-contact">
+        </div>
+        <div class="field-group">
+          <label>Number of Positions <span class="opt">optional</span></label>
+          <input type="number" placeholder="1" id="num-positions" min="1">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6: Scoring Weights -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Scoring Weights</div>
+      <span class="section-hint">How much each criterion counts in the AI ranking</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>Default weights are pre-set.</strong> Adjust for this specific mandate. Weights must total 100.
+      </div>
+      <div class="weights-container">
+        <div class="weight-row">
+          <div class="weight-label">Sector Fit<span>Relevance of candidate's industry background</span></div>
+          <input type="range" min="5" max="60" value="35" id="w-sector" oninput="updateWeights()">
+          <div class="weight-val" id="wv-sector">35</div>
+        </div>
+        <div class="weight-row">
+          <div class="weight-label">Seniority Level<span>Career trajectory and current level match</span></div>
+          <input type="range" min="5" max="60" value="25" id="w-seniority" oninput="updateWeights()">
+          <div class="weight-val" id="wv-seniority">25</div>
+        </div>
+        <div class="weight-row">
+          <div class="weight-label">Tenure Pattern<span>Stability, progression, and longevity signals</span></div>
+          <input type="range" min="5" max="50" value="20" id="w-tenure" oninput="updateWeights()">
+          <div class="weight-val" id="wv-tenure">20</div>
+        </div>
+        <div class="weight-row">
+          <div class="weight-label">Compensation Band<span>Current vs. offered CTC alignment</span></div>
+          <input type="range" min="5" max="50" value="20" id="w-comp" oninput="updateWeights()">
+          <div class="weight-val" id="wv-comp">20</div>
+        </div>
+        <div class="weights-total-row">
+          <span class="weights-total-label">Total</span>
+          <span class="weights-total-val" id="weights-total">100</span>
+          <span style="font-size:12px;color:#AAA">/ 100</span>
+        </div>
+        <p class="weights-note">* Baseline criteria set. Additional criteria added once the evaluation rubric is formalised.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 7: Client Engagement History -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div class="section-title">Client Engagement History</div>
+      <span class="section-hint">Internal only — informs how the search is prioritised</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>Internal signal only — never shared with the client.</strong> Helps calibrate how much upfront qualification is needed before committing search resources.
+      </div>
+      <label style="display:block;margin-bottom:14px;">How would you characterise this client's prior engagement with Ishwa? <span class="req">*</span></label>
+      <div class="engagement-grid">
+        <div class="engagement-option" onclick="selectEngagement(this,'No prior history')">
+          <input type="radio" name="engagement" value="No prior history">
+          <div class="engagement-label">No prior history</div>
+          <div class="engagement-sub">First-time client — no previous mandates on record</div>
+        </div>
+        <div class="engagement-option" onclick="selectEngagement(this,'Previous searches — mostly successful')">
+          <input type="radio" name="engagement" value="Previous searches — mostly successful">
+          <div class="engagement-label">Previous searches — mostly successful</div>
+          <div class="engagement-sub">Good track record — mandates typically closed</div>
+        </div>
+        <div class="engagement-option" onclick="selectEngagement(this,'Previous searches — mixed outcomes')">
+          <input type="radio" name="engagement" value="Previous searches — mixed outcomes">
+          <div class="engagement-label">Previous searches — mixed outcomes</div>
+          <div class="engagement-sub">Some closed, some stalled — worth monitoring</div>
+        </div>
+        <div class="engagement-option" onclick="selectEngagement(this,'Previous searches — mostly stalled')">
+          <input type="radio" name="engagement" value="Previous searches — mostly stalled">
+          <div class="engagement-label">Previous searches — mostly stalled</div>
+          <div class="engagement-sub">Pattern of mandates not reaching closure — extra qualification needed upfront</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 8: CV Attachments -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div class="section-title">Mandate Documents</div>
+      <span class="section-hint">Optional — JD, client brief, org chart, or reference CVs</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>Files upload to the central Ishwa Drive on submission.</strong> Each file is renamed with the Mandate ID automatically — nothing stays on your machine. Candidate CVs with outcomes belong in the Closure form below, attached per candidate.
+      </div>
+      <div class="cv-upload-area">
+        <input type="file" id="cv-files" multiple accept=".pdf,.doc,.docx" style="display:none;" onchange="handleCVFiles(this)">
+        <button class="cv-upload-btn" onclick="document.getElementById('cv-files').click()">
+          <span style="font-size:22px;">📎</span>
+          <span>Click to select CV files — or drag and drop here</span>
+          <span style="font-size:11px;color:#AAA;">PDF, DOC, DOCX &nbsp;·&nbsp; Multiple files supported</span>
+        </button>
+      </div>
+      <div class="cv-file-list" id="cv-file-list"></div>
+    </div>
+  </div>
+
+  <div class="submit-row">
+    <span class="submit-note">All fields marked * must be complete before the AI engine can process this mandate.</span>
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="resetForm()">Clear Form</button>
+      <button class="btn btn-primary" id="submit-btn" onclick="initiateIntakeSubmit()">Submit Intake & Continue →</button>
+    </div>
+  </div>
+
+</div>
+
+
+
+<div class="page-footer">
+  <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
+  <span>Mandate Data Entry v2.1  ·  July 2026</span>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     DIVIDER
+════════════════════════════════════════════════════ -->
+<div class="page-body" style="padding-top:0;padding-bottom:0;max-width:900px;margin:0 auto;">
+  <div class="form-block-divider">
+    <div class="form-block-divider-line"></div>
+    <div class="form-block-divider-label">Search Closure — complete any time, in any sitting</div>
+    <div class="form-block-divider-line"></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════════
+     CLOSURE FORM
+════════════════════════════════════════════════════ -->
+<div id="closure-section">
+
+  <!-- Closure toast (separate) -->
+  <div class="toast" id="cl-toast"></div>
+
+  <!-- Closure confirm modal -->
+  <div class="modal-overlay hidden" id="cl-modal-overlay">
+    <div class="modal-box" id="cl-modal-box">
+      <div class="modal-icon" id="cl-modal-icon"></div>
+      <div class="modal-title" id="cl-modal-title"></div>
+      <div class="modal-body" id="cl-modal-body"></div>
+      <div class="modal-file-block" id="cl-modal-file-block" style="display:none;"></div>
+      <div class="modal-warning" id="cl-modal-warning" style="display:none;"></div>
+      <div class="modal-btn-row">
+        <button class="btn btn-secondary" onclick="closureCloseModal()">Go Back &amp; Edit</button>
+        <button class="btn btn-green" id="cl-modal-confirm-btn" onclick="closureConfirmSubmit()">Confirm &amp; Submit</button>
+      </div>
+    </div>
+  </div>
+
+  <header class="page-header" style="position:relative;top:auto;">
+    <div class="header-inner">
+      <div class="header-brand">
+        <span class="brand-firm">Ishwa Consulting</span>
+        <div class="brand-div"></div>
+        <span class="brand-pip">PiP_AGI</span>
+      </div>
+      <div class="header-right">
+        <span class="header-tag">Search Closure — v2.1</span>
+        <div class="session-ticker">
+          <div class="ticker-num" id="cl-ticker-num">0</div>
+          <div class="ticker-label">This session</div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="page-body">
+
+    <!-- Standalone notice (v2.1 — closure is always open; mandates span weeks) -->
+    <div class="closure-lock-notice" id="closure-lock-notice">
+      <div class="closure-lock-notice-icon">🗂️</div>
+      <div class="closure-lock-text">
+        <strong>This section works on its own — no need to fill Intake first</strong>
+        <span>Closing a mandate opened earlier? Just enter its Mandate ID below. If you submit Intake in this sitting, the ID carries over automatically.</span>
+      </div>
+    </div>
+
+    <!-- Carry badge (shown after unlock) -->
+    <div class="mandate-carry-badge" id="mandate-carry-badge">
+      <span>✓ Intake submitted — Mandate ID</span>
+      <span class="carried-id" id="carried-mandate-id">—</span>
+      <span>carried over. Complete the closure record below.</span>
+    </div>
+
+    <div class="form-title-block">
+    <div class="form-eyebrow">Search Closure</div>
+    <h1 class="form-title">Mandate Closure Record</h1>
+    <p class="form-subtitle">Complete this form when a search reaches its conclusion — whether placed, dead, or on hold. Every entry makes the matching engine progressively smarter.</p>
+    <div class="form-meta-row">
+      <div class="form-meta-item"><div class="meta-dot"></div> Takes approx. 5–8 minutes</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> Complete for every closed mandate, including dead searches</div>
+    </div>
+  </div>
+
+  <!-- 1: Mandate Reference — lean -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div class="section-title">Mandate Reference</div>
+      <span class="section-hint">All other details are derived from the intake record</span>
+    </div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Mandate ID <span class="req">*</span></label>
+          <div class="mandate-id-wrap">
+            <span class="mandate-id-prefix" id="cl-mandate-prefix">ISH-202604-</span>
+            <input class="mandate-id-num" type="number" id="cl-mandate-num" placeholder="1234" min="1" max="9999">
+          </div>
+          <div class="field-hint">Must match the ID from the intake form</div>
+        </div>
+        <div class="field-group">
+          <label>Date Closed <span class="req">*</span></label>
+          <input type="date" id="date-closed" min="2020-01-01">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2: Outcome -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div class="section-title">Search Outcome</div>
+      <span class="section-hint">What happened</span>
+    </div>
+    <div class="section-body">
+      <label style="display:block;margin-bottom:12px;">Outcome <span class="req">*</span></label>
+      <div class="outcome-toggle">
+        <button class="outcome-btn" onclick="selectOutcome('won',this)">
+          <span class="outcome-icon">✓</span>
+          <span class="outcome-label">Closed Won</span>
+          <span class="outcome-sub">Candidate placed & joining confirmed</span>
+        </button>
+        <button class="outcome-btn" onclick="selectOutcome('dead',this)">
+          <span class="outcome-icon">✕</span>
+          <span class="outcome-label">Dead</span>
+          <span class="outcome-sub">Search abandoned or client withdrew</span>
+        </button>
+        <button class="outcome-btn" onclick="selectOutcome('hold',this)">
+          <span class="outcome-icon">⏸</span>
+          <span class="outcome-label">On Hold</span>
+          <span class="outcome-sub">Paused — may resume</span>
+        </button>
+      </div>
+      <div class="dead-section" id="dead-section">
+        <div class="callout">
+          <strong>Most under-captured data point in Ishwa's system.</strong> 161 of 236 dead searches have no explanation on record. One selection here closes that gap.
+        </div>
+        <label style="display:block;margin-bottom:12px;">Primary Reason for Dead <span class="req">*</span></label>
+        <div class="reason-grid">
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">Client Withdrew</div><div class="reason-sub">Client cancelled or deprioritised the mandate</div></div>
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">Hired Internally</div><div class="reason-sub">Role was filled from within the organisation</div></div>
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">Budget Constraint</div><div class="reason-sub">Fee or compensation terms could not be agreed</div></div>
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">No Suitable Candidates</div><div class="reason-sub">Long-list exhausted without a qualifying profile</div></div>
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">Client Unresponsive</div><div class="reason-sub">Client went silent — no feedback or engagement</div></div>
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">Brief Changed</div><div class="reason-sub">Role evolved significantly mid-search</div></div>
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">Candidate Declined</div><div class="reason-sub">Offer made but candidate withdrew</div></div>
+          <div class="reason-option" onclick="selectReason(this)"><div class="reason-label">Other</div><div class="reason-sub">See additional notes below</div></div>
+        </div>
+        <div class="field-group" style="margin-top:16px;">
+          <label>Additional Context <span class="opt">optional but valuable</span></label>
+          <textarea placeholder="Any context that would help identify a pattern" rows="3" id="dead-notes"></textarea>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3: Shortlist Metrics -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div class="section-title">Shortlist Metrics</div>
+      <span class="section-hint">The numbers behind the 75% claim</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>These two fields make the 75% shortlist metric trackable for the first time.</strong> Filling this in for every mandate is what gives the AI a quality baseline.
+      </div>
+      <div class="metric-block">
+        <div class="metric-card">
+          <div class="metric-card-label">CVs Shared <span class="req">*</span></div>
+          <input class="metric-input" type="number" placeholder="—" id="cvs-shared" min="0" oninput="calcRate()">
+          <div class="metric-card-sub">Total profiles sent to client</div>
+        </div>
+        <div class="metric-card">
+          <div class="metric-card-label">Shortlisted for Interview <span class="req">*</span></div>
+          <input class="metric-input" type="number" placeholder="—" id="cvs-shortlisted" min="0" oninput="calcRate();syncNotPlacedRows()">
+          <div class="metric-card-sub">Client agreed to interview</div>
+        </div>
+        <div class="rate-display">
+          <div class="rate-label">Shortlist Rate</div>
+          <div class="rate-val" id="rate-val">—</div>
+          <div class="rate-sub">Target: 75% or above</div>
+        </div>
+      </div>
+      <div class="field-grid thirds">
+        <div class="field-group">
+          <label>Offers Made <span class="opt">optional</span></label>
+          <input type="number" placeholder="0" id="offers-made" min="0">
+        </div>
+        <div class="field-group">
+          <label>Offer Accepted Date <span class="opt">optional</span></label>
+          <input type="date" id="offer-date" min="2020-01-01">
+        </div>
+        <div class="field-group">
+          <label>Candidate Joining Date <span class="opt">optional</span></label>
+          <input type="date" id="joining-date" min="2020-01-01" oninput="syncJoiningDates('joining-date','placed-joining')">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4: Candidate Outcomes -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div class="section-title">Candidate Outcomes</div>
+      <span class="section-hint">Every candidate considered — CV, verdict, stage, and why</span>
+    </div>
+    <div class="section-body">
+
+      <!-- Placed candidate -->
+      <div class="placed-block">
+        <div class="placed-header">
+          <span class="placed-badge">Placed</span>
+          <span class="placed-title">Candidate who accepted the offer</span>
+        </div>
+        <div class="placed-body">
+          <div class="field-grid">
+            <div class="field-group">
+              <label>Placed Candidate Name <span class="opt">optional</span></label>
+              <input type="text" placeholder="Full name" id="placed-name" oninput="syncNotPlacedRows()">
+            </div>
+            <div class="field-group">
+              <label>Joining Date <span class="opt">optional</span></label>
+              <input type="date" id="placed-joining" min="2020-01-01" oninput="syncJoiningDates('placed-joining','joining-date')">
+            </div>
+            <div class="field-group">
+              <label>Placed Candidate CV <span class="opt">optional but high value</span></label>
+              <input type="file" id="placed-cv" accept=".pdf,.doc,.docx" style="display:none;" onchange="attachCandidateCV('placed', this)">
+              <button class="cv-inline-btn" id="placed-cv-btn" onclick="document.getElementById('placed-cv').click()">📎 Attach CV</button>
+              <div class="cv-inline-chip" id="placed-cv-chip" style="display:none;"></div>
+            </div>
+            <div class="field-group">
+              <label>What Clinched It <span class="opt">optional</span></label>
+              <input type="text" placeholder="e.g. Only candidate with listed-company capital-raise exposure" id="placed-note">
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Not placed candidates -->
+      <div class="placed-block" style="border-color:var(--g4);margin-top:18px;">
+        <div class="placed-header">
+          <span class="placed-badge" style="background:var(--g1);">Not Placed</span>
+          <span class="placed-title">Every shortlisted candidate who wasn’t placed</span>
+          <span class="notplaced-counter" id="notplaced-counter"></span>
+        </div>
+        <div class="placed-body">
+          <div class="callout">
+            <strong>Rows below are created automatically from your “Shortlisted for Interview” number</strong> (minus one if a placed candidate is named). Each one needs a name, CV, verdict, stage, and one line of why — this is the engine’s core training data. Screen-stage rejects can be added on top with the button below.
+          </div>
+          <div class="candidate-list" id="candidate-list"></div>
+          <button class="add-candidate-btn" onclick="addCandidate()">
+            <span style="font-size:18px;line-height:1;">+</span> Add another candidate (e.g. rejected at screen)
+          </button>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 5: Commercials & Learnings -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div class="section-title">Commercials & Learnings</div>
+      <span class="section-hint">All optional — for BD analytics and institutional memory</span>
+    </div>
+    <div class="section-body">
+      <div class="callout">
+        <strong>None of these fields are required.</strong> Commercials feed the BD analytics layer. Learnings feed the AI's institutional memory.
+      </div>
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Final CTC Accepted (₹) <span class="opt">optional</span></label>
+          <input type="number" placeholder="e.g. 15000000" id="final-ctc">
+        </div>
+        <div class="field-group">
+          <label>Total Revenue (₹) <span class="opt">optional</span></label>
+          <input type="number" placeholder="Fees + retainer" id="total-revenue">
+        </div>
+        <div class="field-group full">
+          <label>Anything Else the AI Should Know <span class="opt">optional — one line is plenty</span></label>
+          <input type="text" placeholder="e.g. Client quietly prioritised IIM pedigree over everything stated in the brief" id="ai-notes">
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Final Closure -->
+  <div class="form-section">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div class="section-title">Final Closure</div>
+      <span class="section-hint">Locks the record — choose deliberately</span>
+    </div>
+    <div class="section-body">
+      <div class="finalclose-row" id="finalclose-row" onclick="toggleFinalClosure()">
+        <div class="finalclose-check" id="finalclose-check"></div>
+        <div class="finalclose-text">
+          <strong>Mark this mandate as finally closed</strong>
+          <span>Tick this only when nothing more will happen on this mandate — all candidates accounted for, outcome final. Submitting with this ticked stamps the record FINAL in the log. Leave unticked to submit a progress update instead.</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="submit-row">
+    <span class="submit-note" id="closure-submit-note">This record will be appended to the shared mandate log and fed into the AI matching engine.</span>
+    <div class="btn-group">
+      <button class="btn btn-secondary" onclick="resetClosureForm()">Clear Form</button>
+      <button class="btn btn-primary" id="closure-submit-btn" onclick="initiateClosureSubmit()">Submit Closure Record →</button>
+    </div>
+  </div>
+
+  </div>
+
+  <div class="page-footer">
+    <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
+    <span>Search Closure v2.1  ·  July 2026</span>
+  </div>
+
+</div><!-- /closure-section -->
+
+<script>
+  var APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz9-_XQFGEJuRGamKuKoYzfDQGhCQVqADFcRdFCe2F1ad9HvllfKvSAMAhrsCCBKQWB/exec";
+
+  var sessionCount = 0;
+  var selectedEngagement = '';
+  var cvFiles = [];
+  var pendingPayload = null;
+
+  // ── Mandate ID prefix (auto-updates month) ──
+  (function(){
+    const now = new Date();
+    const yr = now.getFullYear();
+    const mn = String(now.getMonth()+1).padStart(2,'0');
+    document.getElementById('mandate-prefix').textContent = `ISH-${yr}${mn}-`;
+  })();
+
+  function getMandateId(){
+    const prefix = document.getElementById('mandate-prefix').textContent;
+    const num = document.getElementById('mandate-num').value.trim();
+    return num ? prefix + num : '';
+  }
+
+  // ── Tag inputs ──
+  function initTagInput(inputId, wrapId, type){
+    const input = document.getElementById(inputId);
+    const wrap  = document.getElementById(wrapId);
+    input.addEventListener('keydown', e => {
+      if((e.key==='Enter'||e.key===',') && input.value.trim()){
+        e.preventDefault();
+        const tag = document.createElement('span');
+        tag.className = 'tag'+(type==='dealbreaker'?' dealbreaker':'');
+        tag.innerHTML = `${input.value.trim()}<button class="tag-remove" onclick="this.parentElement.remove()">×</button>`;
+        wrap.insertBefore(tag, input);
+        input.value='';
+      } else if(e.key==='Backspace' && !input.value){
+        const tags = wrap.querySelectorAll('.tag');
+        if(tags.length) tags[tags.length-1].remove();
+      }
+    });
+  }
+  function getTagValues(wrapId){
+    return Array.from(document.getElementById(wrapId).querySelectorAll('.tag'))
+      .map(t=>t.textContent.replace('×','').trim()).join(' | ');
+  }
+  initTagInput('musthave-input','musthave-wrap','must');
+  initTagInput('dealbreaker-input','dealbreaker-wrap','dealbreaker');
+  initTagInput('nicetohave-input','nicetohave-wrap','nice');
+
+  // ── Weights ──
+  function updateWeights(){
+    const ids=['w-sector','w-seniority','w-tenure','w-comp'];
+    const vals=ids.map(id=>parseInt(document.getElementById(id).value));
+    const total=vals.reduce((a,b)=>a+b,0);
+    ids.forEach((id,i)=>document.getElementById('wv-'+id.replace('w-','')).textContent=vals[i]);
+    const el=document.getElementById('weights-total');
+    el.textContent=total;
+    el.className='weights-total-val '+(total>100?'over':total===100?'exact':'');
+  }
+
+  // ── Engagement history ──
+  function selectEngagement(el,value){
+    document.querySelectorAll('.engagement-option').forEach(o=>o.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedEngagement=value;
+  }
+
+  // ── CV file handling ──
+  function handleCVFiles(input){
+    Array.from(input.files).forEach(file=>{
+      const id='cvf-'+Date.now()+'-'+Math.random().toString(36).slice(2,6);
+      cvFiles.push({id, file});
+      const item=document.createElement('div');
+      item.className='cv-file-item';
+      item.id=id;
+      item.innerHTML=`
+        <div class="cv-file-item-left">
+          <div class="cv-file-icon">📄</div>
+          <div>
+            <div class="cv-file-name">${file.name}</div>
+            <div class="cv-file-size">${(file.size/1024).toFixed(0)} KB</div>
+            <div class="cv-file-staged">Staged — uploads to Drive on submission</div>
+          </div>
+        </div>
+        <button class="cv-remove-btn" onclick="removeCV('${id}')">×</button>
+      `;
+      document.getElementById('cv-file-list').appendChild(item);
+    });
+    input.value='';
+  }
+
+  function removeCV(id){
+    cvFiles = cvFiles.filter(f=>f.id!==id);
+    const el=document.getElementById(id);
+    if(el) el.remove();
+  }
+
+  // v2.1 — files travel inside the payload as base64; Apps Script writes them to the central Drive
+  function intakeFileToB64(file){
+    return new Promise((res, rej)=>{
+      const r = new FileReader();
+      r.onload = ()=> res(r.result.split(',')[1]);
+      r.onerror = ()=> rej(new Error('Read failed'));
+      r.readAsDataURL(file);
+    });
+  }
+  async function collectIntakeDocs(){
+    const out = [];
+    for(const entry of cvFiles){
+      const nameParts = entry.file.name.split('.');
+      const ext = nameParts.pop();
+      const base = nameParts.join('.').replace(/[^a-zA-Z0-9_\-]/g,'_');
+      out.push({filename: base + '.' + ext, ext: ext, data: await intakeFileToB64(entry.file)});
+    }
+    return out;
+  }
+
+  // ── Toast ──
+  function showToast(msg,isError){
+    const t=document.getElementById('toast');
+    t.textContent=msg;
+    t.className='toast'+(isError?' error':'');
+    t.classList.add('show');
+    setTimeout(()=>t.classList.remove('show'),4500);
+  }
+
+  // ── Validate ──
+  function validate(){
+    const required=['date-opened','bd-owner','exec-owner','edge-flag',
+                    'role-title','client-name','sector','geography','reports-to',
+                    'company-stage','context','target-profile'];
+    if(!getMandateId()){
+      showToast('Please enter a Mandate ID number.',true);
+      document.getElementById('mandate-num').focus();
+      return false;
+    }
+    for(const id of required){
+      const el=document.getElementById(id);
+      if(!el||!el.value.trim()){
+        showToast('Please complete all required fields.',true);
+        if(el){el.focus();el.scrollIntoView({behavior:'smooth',block:'center'});}
+        return false;
+      }
+    }
+    if(!getTagValues('musthave-wrap')){showToast('Please add at least one must-have criterion.',true);return false;}
+    if(!getTagValues('dealbreaker-wrap')){showToast('Please add at least one dealbreaker.',true);return false;}
+    if(!selectedEngagement){showToast('Please select a client engagement history option.',true);return false;}
+    return true;
+  }
+
+  // ── Build payload ──
+  function buildPayload(){
+    return {
+      form_type:"intake",
+      mandate_id: getMandateId(),
+      date_opened: document.getElementById('date-opened').value,
+      bd_owner: document.getElementById('bd-owner').value,
+      exec_owner: document.getElementById('exec-owner').value,
+      target_date: document.getElementById('target-date').value,
+      edge_flag: document.getElementById('edge-flag').value,
+      role_title: document.getElementById('role-title').value,
+      client_name: document.getElementById('client-name').value,
+      sector: document.getElementById('sector').value,
+      geography: document.getElementById('geography').value,
+      reports_to: document.getElementById('reports-to').value,
+      company_stage: document.getElementById('company-stage').value,
+      context: document.getElementById('context').value,
+      target_profile: document.getElementById('target-profile').value,
+      channels: document.getElementById('channels').value,
+      complications: document.getElementById('complications').value,
+      must_have: getTagValues('musthave-wrap'),
+      dealbreakers: getTagValues('dealbreaker-wrap'),
+      nice_to_have: getTagValues('nicetohave-wrap'),
+      exp_min: document.getElementById('exp-min').value,
+      exp_max: document.getElementById('exp-max').value,
+      pedigree: document.getElementById('pedigree').value,
+      ctc_min: document.getElementById('ctc-min').value,
+      ctc_max: document.getElementById('ctc-max').value,
+      fees_pct: document.getElementById('fees-pct').value,
+      retainer: document.getElementById('retainer').value,
+      client_contact: document.getElementById('client-contact').value,
+      num_positions: document.getElementById('num-positions').value,
+      w_sector: document.getElementById('w-sector').value,
+      w_seniority: document.getElementById('w-seniority').value,
+      w_tenure: document.getElementById('w-tenure').value,
+      w_comp: document.getElementById('w-comp').value,
+      client_engagement_history: selectedEngagement
+    };
+  }
+
+  // ── Merged form entry point — button calls this ──
+  function initiateIntakeSubmit(){
+    initiateSubmit();
+  }
+
+  // ── Initiate submit — show modal ──
+  function initiateSubmit(){
+    if(!validate()) return;
+    pendingPayload = buildPayload();
+    const hasCVs = cvFiles.length > 0;
+    const box = document.getElementById('modal-box');
+    const icon = document.getElementById('modal-icon');
+    const title = document.getElementById('modal-title');
+    const body = document.getElementById('modal-body');
+    const fileBlock = document.getElementById('modal-file-block');
+    const warning = document.getElementById('modal-warning');
+    const confirmBtn = document.getElementById('modal-confirm-btn');
+
+    if(hasCVs){
+      box.className='modal-box with-cv';
+      icon.textContent='📎';
+      title.textContent='Confirm submission';
+      body.textContent='The following documents will be uploaded to the central Ishwa Drive when you confirm — nothing is saved to your machine:';
+      const mandateId = getMandateId();
+      const fileNames = cvFiles.map(entry=>{
+        const nameParts=entry.file.name.split('.');
+        const ext=nameParts.pop();
+        const base=nameParts.join('.').replace(/[^a-zA-Z0-9_\-]/g,'_');
+        return `${mandateId}_${base}.${ext}`;
+      }).join('\n');
+      fileBlock.textContent = fileNames;
+      fileBlock.style.display='block';
+      warning.style.display='none';
+      confirmBtn.textContent='Confirm & Submit';
+    } else {
+      box.className='modal-box no-cv';
+      icon.textContent='📋';
+      title.textContent='Proceed without attaching a CV?';
+      body.textContent='No CV files have been staged for this mandate. You can go back and attach files, or proceed to submit the mandate brief without them.';
+      fileBlock.style.display='none';
+      warning.style.display='none';
+      confirmBtn.textContent='Yes, Submit';
+    }
+    document.getElementById('modal-overlay').classList.remove('hidden');
+  }
+
+  function closeModal(){
+    document.getElementById('modal-overlay').classList.add('hidden');
+    pendingPayload = null;
+  }
+
+  // ── Confirm & Submit ──
+  // MERGED CHANGE: after successful submit, call unlockClosure(mandateId) before resetForm
+  async function confirmSubmit(){
+    document.getElementById('modal-overlay').classList.add('hidden');
+    const btn = document.getElementById('submit-btn');
+    btn.disabled=true; btn.textContent='Submitting…';
+    const mandateId = pendingPayload.mandate_id;
+    try{
+      if(cvFiles.length>0){
+        btn.textContent='Uploading documents…';
+        pendingPayload.mandate_docs = await collectIntakeDocs();
+      }
+      pendingPayload.submitted_at = new Date().toISOString();
+      await fetch(APPS_SCRIPT_URL,{
+        method:'POST', mode:'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(pendingPayload)
+      });
+      sessionCount++;
+      document.getElementById('ticker-num').textContent=sessionCount;
+      showToast('✓ Mandate submitted. Scroll down to complete the Closure record.');
+      unlockClosure(mandateId);
+      resetForm();
+    } catch(err){
+      showToast('Submission failed. Check your connection and try again.',true);
+    } finally{
+      btn.disabled=false; btn.textContent='Submit Intake & Continue →';
+      pendingPayload=null;
+    }
+  }
+
+  // ── Reset ──
+  // MERGED CHANGE: after unlock, don't clear mandate-num or scroll to top
+  function resetForm(){
+    const closureUnlocked = !document.getElementById('closure-section').classList.contains('locked');
+    ['date-opened','bd-owner','exec-owner','target-date','edge-flag',
+     'role-title','client-name','sector','geography','reports-to','company-stage',
+     'context','target-profile','channels','complications','exp-min','exp-max',
+     'pedigree','ctc-min','ctc-max','fees-pct','retainer','client-contact','num-positions']
+    .forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    if(!closureUnlocked) document.getElementById('mandate-num').value='';
+    ['musthave-wrap','dealbreaker-wrap','nicetohave-wrap']
+      .forEach(w=>document.getElementById(w).querySelectorAll('.tag').forEach(t=>t.remove()));
+    document.getElementById('w-sector').value=35;
+    document.getElementById('w-seniority').value=25;
+    document.getElementById('w-tenure').value=20;
+    document.getElementById('w-comp').value=20;
+    updateWeights();
+    document.querySelectorAll('.engagement-option').forEach(o=>o.classList.remove('selected'));
+    selectedEngagement='';
+    cvFiles=[];
+    document.getElementById('cv-file-list').innerHTML='';
+    if(!closureUnlocked) window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+  // ── Unlock closure section after intake submit ──
+  function unlockClosure(mandateId) {
+    var sec = document.getElementById('closure-section');
+    sec.classList.remove('locked');
+    // Hide lock notice, show carry badge
+    document.getElementById('closure-lock-notice').classList.add('hidden');
+    var badge = document.getElementById('mandate-carry-badge');
+    badge.classList.add('visible');
+    document.getElementById('carried-mandate-id').textContent = mandateId;
+    // Pre-fill closure mandate ID fields (prefix already set by closure script IIFE)
+    document.getElementById('cl-mandate-num').value = document.getElementById('mandate-num').value;
+    document.getElementById('cl-mandate-num').readOnly = true;
+    document.getElementById('cl-mandate-prefix').style.opacity = '0.6';
+    // Scroll to closure section
+    setTimeout(function(){
+      document.getElementById('closure-section').scrollIntoView({behavior:'smooth', block:'start'});
+    }, 500);
+  }
+</script>
+
+<script>
+
+
+  var closureSessionCount = 0;
+  var selectedOutcome = '';
+  var selectedDeadReason = '';
+  var candidateCount = 0;
+  var cvClosureFiles = [];
+  var pendingClosurePayload = null;
+
+  // ── Mandate ID prefix ──
+  (function(){
+    const now = new Date();
+    document.getElementById('cl-mandate-prefix').textContent =
+      'ISH-' + now.getFullYear() + String(now.getMonth()+1).padStart(2,'0') + '-';
+  })();
+
+  function getClosureMandateId(){
+    const prefix = document.getElementById('cl-mandate-prefix').textContent;
+    const num = document.getElementById('cl-mandate-num').value.trim();
+    return num ? prefix + num : '';
+  }
+
+  // ── Outcome toggle ──
+  function selectOutcome(type, btn){
+    document.querySelectorAll('.outcome-btn').forEach(b=>b.className='outcome-btn');
+    if(type==='won')  btn.classList.add('selected-won');
+    if(type==='dead') btn.classList.add('selected-dead');
+    if(type==='hold') btn.classList.add('selected-hold');
+    selectedOutcome = type;
+    document.getElementById('dead-section').classList.toggle('visible', type==='dead');
+  }
+
+  function selectReason(el){
+    document.querySelectorAll('.reason-option').forEach(r=>r.classList.remove('selected'));
+    el.classList.add('selected');
+    selectedDeadReason = el.querySelector('.reason-label').textContent;
+  }
+
+  var finalClosureSelected = false;
+  function toggleFinalClosure(){
+    finalClosureSelected = !finalClosureSelected;
+    document.getElementById('finalclose-row').classList.toggle('selected', finalClosureSelected);
+    const btn = document.getElementById('closure-submit-btn');
+    btn.textContent = finalClosureSelected ? 'Submit & Finally Close Mandate →' : 'Submit Closure Record →';
+    document.getElementById('closure-submit-note').textContent = finalClosureSelected
+      ? 'This submission will be stamped FINAL — the mandate is complete and all candidates accounted for.'
+      : 'This record will be appended to the shared mandate log and fed into the AI matching engine.';
+  }
+
+  function syncNotPlacedRows(){
+    const shortlisted = parseInt(document.getElementById('cvs-shortlisted').value)||0;
+    const placedFilled = document.getElementById('placed-name').value.trim() ? 1 : 0;
+    const target = Math.max(shortlisted - placedFilled, 0);
+    let current = document.querySelectorAll('.candidate-row').length;
+    while(current < target){ addCandidate(); current++; }
+    // never auto-delete rows — consultants may have typed into them
+    updateNotPlacedCounter();
+  }
+  function updateNotPlacedCounter(){
+    const shortlisted = parseInt(document.getElementById('cvs-shortlisted').value)||0;
+    const placedFilled = document.getElementById('placed-name').value.trim() ? 1 : 0;
+    const target = Math.max(shortlisted - placedFilled, 0);
+    let complete = 0;
+    document.querySelectorAll('.candidate-row').forEach(row=>{
+      const id = row.id.replace('candidate-','');
+      const name = row.querySelector('.candidate-name-input')?.value.trim()||'';
+      const reason = document.getElementById(`creason-${id}`)?.value.trim()||'';
+      if(name && (candidateVerdicts[id]||'') && (candidateStages[id]||'') && reason) complete++;
+    });
+    const el = document.getElementById('notplaced-counter');
+    if(!el) return;
+    if(target===0){ el.textContent=''; return; }
+    el.textContent = complete + ' of ' + target + ' accounted for';
+    el.className = 'notplaced-counter' + (complete>=target?' ok':'');
+  }
+  setInterval(updateNotPlacedCounter, 1500);
+
+  function calcRate(){
+    const shared = parseInt(document.getElementById('cvs-shared').value)||0;
+    const listed = parseInt(document.getElementById('cvs-shortlisted').value)||0;
+    const el = document.getElementById('rate-val');
+    if(!shared||!listed){el.textContent='—';el.className='rate-val';return;}
+    const pct = Math.round((listed/shared)*100);
+    el.textContent = pct+'%';
+    el.className = 'rate-val '+(pct>=75?'good':pct>=50?'warn':'bad');
+  }
+
+  // ── Candidate rows (v2.1 — CV-anchored outcome blocks) ──
+  var candidateCVs = {};   // n -> {name, size, base64, ext}
+
+  function addCandidate(){
+    candidateCount++;
+    const n = candidateCount;
+    const row = document.createElement('div');
+    row.className='candidate-row'; row.id=`candidate-${n}`;
+    row.innerHTML=`
+      <div class="candidate-header">
+        <div class="candidate-num">${n}</div>
+        <input class="candidate-name-input" type="text" placeholder="Candidate name" id="cname-${n}">
+        <input type="file" id="cvfile-${n}" accept=".pdf,.doc,.docx" style="display:none;" onchange="attachCandidateCV(${n}, this)">
+        <button class="cv-inline-btn" id="cvbtn-${n}" onclick="document.getElementById('cvfile-${n}').click()">📎 Upload CV</button>
+        <button class="remove-candidate" onclick="removeCandidateRow(${n})">×</button>
+      </div>
+      <div class="candidate-outcome-block" id="coutcome-${n}" style="display:none;">
+        <div class="cv-inline-chip" id="cvchip-${n}"></div>
+        <div class="candidate-body">
+          <div class="candidate-field">
+            <label>Verdict <span class="req">*</span></label>
+            <div class="outcome-pills" id="cpills-${n}">
+              <span class="outcome-pill" onclick="setVerdict(${n},this,'Offered — Declined','active-offered')">Offered — Declined</span>
+              <span class="outcome-pill" onclick="setVerdict(${n},this,'Rejected','active-rejected')">Rejected</span>
+              <span class="outcome-pill" onclick="setVerdict(${n},this,'Withdrew','active-withdrew')">Withdrew</span>
+            </div>
+          </div>
+          <div class="candidate-field">
+            <label>Stage <span class="req">*</span></label>
+            <div class="outcome-pills" id="cstage-${n}">
+              <span class="outcome-pill" onclick="setStage(${n},this,'Consultant screen')">Consultant screen</span>
+              <span class="outcome-pill" onclick="setStage(${n},this,'Client interview')">Client interview</span>
+              <span class="outcome-pill" onclick="setStage(${n},this,'Offer stage')">Offer stage</span>
+            </div>
+          </div>
+          <div class="candidate-field">
+            <label>Source <span class="opt">optional</span></label>
+            <div class="outcome-pills" id="csource-${n}">
+              <span class="outcome-pill" onclick="setSource(${n},this,'Naukri')">Naukri</span>
+              <span class="outcome-pill" onclick="setSource(${n},this,'LinkedIn')">LinkedIn</span>
+              <span class="outcome-pill" onclick="setSource(${n},this,'Referral')">Referral</span>
+              <span class="outcome-pill" onclick="setSource(${n},this,'Database')">Database</span>
+            </div>
+          </div>
+          <div class="candidate-field">
+            <label>Client's Words <span class="opt">optional — verbatim if you have it</span></label>
+            <input type="text" id="cclient-${n}" placeholder="e.g. 'Too operator, not enough strategist'" style="font-size:13px;padding:7px 10px;">
+          </div>
+          <div class="candidate-field" style="grid-column:1/-1;">
+            <label>Why <span class="req" id="creq-${n}">*</span> <span style="font-size:10px;color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;">one line is enough — this is what the AI learns from</span></label>
+            <input type="text" id="creason-${n}" placeholder="e.g. Notice period 6 months, client needed 30 days / No capital-raise exposure" style="font-size:13px;padding:7px 10px;">
+          </div>
+        </div>
+      </div>`;
+    document.getElementById('candidate-list').appendChild(row);
+  }
+
+  function removeCandidateRow(n){
+    delete candidateCVs[n];
+    const el=document.getElementById(`candidate-${n}`); if(el) el.remove();
+  }
+
+  var candidateVerdicts = {};  // n -> verdict
+  var candidateStages = {};    // n -> stage
+  var candidateSources = {};   // n -> source
+
+  function setVerdict(n, el, val, activeClass){
+    el.closest('.outcome-pills').querySelectorAll('.outcome-pill').forEach(p=>p.className='outcome-pill');
+    el.classList.add(activeClass);
+    candidateVerdicts[n]=val;
+  }
+  function setStage(n, el, val){
+    el.closest('.outcome-pills').querySelectorAll('.outcome-pill').forEach(p=>p.className='outcome-pill');
+    el.classList.add('active-offered');
+    candidateStages[n]=val;
+  }
+  function setSource(n, el, val){
+    el.closest('.outcome-pills').querySelectorAll('.outcome-pill').forEach(p=>p.className='outcome-pill');
+    el.classList.add('active-offered');
+    candidateSources[n]=val;
+  }
+
+  // Read a File into base64 (content only, no data: prefix)
+  function fileToBase64(file){
+    return new Promise((res, rej)=>{
+      const r = new FileReader();
+      r.onload = ()=> res(r.result.split(',')[1]);
+      r.onerror = ()=> rej(new Error('Read failed'));
+      r.readAsDataURL(file);
+    });
+  }
+
+  async function attachCandidateCV(n, input){
+    const file = input.files[0];
+    if(!file) return;
+    if(file.size > 4*1024*1024){
+      closureShowToast('CV too large — please keep files under 4 MB.', true);
+      input.value=''; return;
+    }
+    const ext = file.name.split('.').pop();
+    let b64 = '';
+    try{ b64 = await fileToBase64(file); }
+    catch(e){ closureShowToast('Could not read the file. Try again.', true); input.value=''; return; }
+
+    if(n === 'placed'){
+      candidateCVs['placed'] = {name:file.name, size:file.size, base64:b64, ext:ext};
+      const chip = document.getElementById('placed-cv-chip');
+      chip.style.display='flex';
+      chip.innerHTML = `📄 ${file.name} <span style="color:#AAA;">(${(file.size/1024).toFixed(0)} KB)</span> <button class="cv-remove-btn" onclick="removeCandidateCVChip('placed')">×</button>`;
+      document.getElementById('placed-cv-btn').textContent='📎 Replace CV';
+    } else {
+      candidateCVs[n] = {name:file.name, size:file.size, base64:b64, ext:ext};
+      const block = document.getElementById(`coutcome-${n}`);
+      block.style.display='block';
+      const chip = document.getElementById(`cvchip-${n}`);
+      chip.innerHTML = `📄 ${file.name} <span style="color:#AAA;">(${(file.size/1024).toFixed(0)} KB)</span> — <span style="color:var(--green2);font-weight:600;">attached, uploads on submit</span> <button class="cv-remove-btn" onclick="removeCandidateCVChip(${n})">×</button>`;
+      document.getElementById(`cvbtn-${n}`).textContent='📎 Replace CV';
+    }
+    input.value='';
+  }
+
+  function removeCandidateCVChip(n){
+    delete candidateCVs[n];
+    if(n === 'placed'){
+      document.getElementById('placed-cv-chip').style.display='none';
+      document.getElementById('placed-cv-btn').textContent='📎 Attach CV';
+    } else {
+      document.getElementById(`cvchip-${n}`).innerHTML='';
+      document.getElementById(`coutcome-${n}`).style.display='none';
+      document.getElementById(`cvbtn-${n}`).textContent='📎 Upload CV';
+    }
+  }
+
+  // Structured candidate records + legacy string (keeps existing Sheet columns intact)
+  function getCandidateRecords(){
+    const records = [];
+    const placed = document.getElementById('placed-name').value.trim();
+    if(placed){
+      records.push({
+        name: placed, verdict: 'Placed',
+        stage: 'Offer stage',
+        source: '', client_words: '',
+        reason: document.getElementById('placed-note').value.trim(),
+        joining: document.getElementById('placed-joining').value,
+        cv: candidateCVs['placed'] ? {filename: candidateCVs['placed'].name, ext: candidateCVs['placed'].ext, data: candidateCVs['placed'].base64} : null
+      });
+    }
+    document.querySelectorAll('.candidate-row').forEach(row=>{
+      const id = row.id.replace('candidate-','');
+      const name = row.querySelector('.candidate-name-input')?.value||'';
+      if(!name.trim()) return;
+      records.push({
+        name: name.trim(),
+        verdict: candidateVerdicts[id]||'',
+        stage: candidateStages[id]||'',
+        source: candidateSources[id]||'',
+        client_words: document.getElementById(`cclient-${id}`)?.value.trim()||'',
+        reason: document.getElementById(`creason-${id}`)?.value.trim()||'',
+        joining: '',
+        cv: candidateCVs[id] ? {filename: candidateCVs[id].name, ext: candidateCVs[id].ext, data: candidateCVs[id].base64} : null
+      });
+    });
+    return records;
+  }
+
+  function getCandidates(){
+    // Legacy flat string for existing Sheet column
+    return getCandidateRecords().map(r=>{
+      let s = `${r.name} — ${r.verdict}`;
+      if(r.stage) s += ` @ ${r.stage}`;
+      if(r.reason) s += ` (${r.reason})`;
+      if(r.client_words) s += ` | Client: "${r.client_words}"`;
+      return s;
+    }).join(' || ');
+  }
+
+  // Per-candidate validation: reject/withdrew/offered-declined need a reason
+  function validateCandidateRows(){
+    let ok = true, firstBad = null;
+    document.querySelectorAll('.candidate-row').forEach(row=>{
+      const id = row.id.replace('candidate-','');
+      const name = row.querySelector('.candidate-name-input')?.value.trim()||'';
+      if(!name) return;
+      const verdict = candidateVerdicts[id]||'';
+      const stage = candidateStages[id]||'';
+      const reason = document.getElementById(`creason-${id}`)?.value.trim()||'';
+      if(!verdict || !stage || !reason){
+        ok = false; if(!firstBad) firstBad = row;
+        row.style.borderColor = 'var(--rust)';
+      } else {
+        row.style.borderColor = '';
+      }
+    });
+    if(!ok && firstBad){
+      firstBad.scrollIntoView({behavior:'smooth', block:'center'});
+      closureShowToast('Every named candidate needs a verdict, a stage, and one line of why.', true);
+    }
+    return ok;
+  }
+
+  // ── Toast ──
+  function closureShowToast(msg,isError){
+    const t=document.getElementById('cl-toast');
+    t.textContent=msg; t.className='toast'+(isError?' error':'');
+    t.classList.add('show'); setTimeout(()=>t.classList.remove('show'),4500);
+  }
+
+  // ── Validate ──
+  function closureValidate(){
+    if(!getClosureMandateId()){
+      closureShowToast('Please enter a Mandate ID number.',true);
+      document.getElementById('cl-mandate-num').focus(); return false;
+    }
+    if(!document.getElementById('date-closed').value){
+      closureShowToast('Please enter a date closed.',true);
+      document.getElementById('date-closed').focus(); return false;
+    }
+    if(!selectedOutcome){ closureShowToast('Please select a search outcome.',true); return false; }
+    if(selectedOutcome==='dead'&&!selectedDeadReason){
+      closureShowToast('Please select a reason for the dead mandate.',true); return false;
+    }
+    const cvs = document.getElementById('cvs-shared').value;
+    const shortlisted = document.getElementById('cvs-shortlisted').value;
+    if(!cvs||!shortlisted){
+      closureShowToast('Please enter CVs shared and shortlisted numbers.',true); return false;
+    }
+    if(!validateCandidateRows()) return false;
+    if(finalClosureSelected){
+      const shortlisted = parseInt(document.getElementById('cvs-shortlisted').value)||0;
+      const placedFilled = document.getElementById('placed-name').value.trim() ? 1 : 0;
+      const target = Math.max(shortlisted - placedFilled, 0);
+      let named = 0;
+      document.querySelectorAll('.candidate-row').forEach(row=>{
+        if((row.querySelector('.candidate-name-input')?.value.trim()||'')) named++;
+      });
+      if(named < target){
+        closureShowToast('Final closure needs all '+target+' shortlisted candidates accounted for — '+named+' entered so far.', true);
+        return false;
+      }
+    }
+    return true;
+  }
+
+  // ── Build payload ──
+  function closureBuildPayload(){
+    return {
+      form_type: "closure",
+      mandate_ref: getClosureMandateId(),
+      date_closed: document.getElementById('date-closed').value,
+      outcome: selectedOutcome==='won'?'Closed Won':selectedOutcome==='dead'?'Dead':'On Hold',
+      dead_reason: selectedDeadReason,
+      dead_notes: document.getElementById('dead-notes').value,
+      cvs_shared: document.getElementById('cvs-shared').value,
+      cvs_shortlisted: document.getElementById('cvs-shortlisted').value,
+      shortlist_rate: document.getElementById('rate-val').textContent,
+      offers_made: document.getElementById('offers-made').value,
+      offer_date: document.getElementById('offer-date').value,
+      joining_date: document.getElementById('joining-date').value,
+      candidates: getCandidates(),
+      candidates_json: getCandidateRecords(),
+      final_closure: finalClosureSelected ? 'FINAL' : 'Progress update',
+      final_ctc: document.getElementById('final-ctc').value,
+      total_revenue: document.getElementById('total-revenue').value,
+      ai_notes: document.getElementById('ai-notes').value,
+      submitted_at: new Date().toISOString()
+    };
+  }
+
+  // ── Initiate submit ──
+  function initiateClosureSubmit(){
+    if(!closureValidate()) return;
+    pendingClosurePayload = closureBuildPayload();
+    const attachedCVs = pendingClosurePayload.candidates_json.filter(r=>r.cv);
+    const box = document.getElementById('cl-modal-box');
+
+    if(attachedCVs.length > 0){
+      box.className='modal-box with-cv';
+      document.getElementById('cl-modal-icon').textContent='📎';
+      document.getElementById('cl-modal-title').textContent='Confirm submission';
+      document.getElementById('cl-modal-body').textContent='The following CVs will be uploaded to the central Ishwa Drive, mapped to each candidate\u2019s outcome — nothing is saved to your machine:';
+      const mandateId = pendingClosurePayload.mandate_ref;
+      const fileNames = attachedCVs.map(r=>{
+        const safe = r.name.replace(/[^a-zA-Z0-9_\-]/g,'_');
+        return `${mandateId}_${safe}.${r.cv.ext}  —  ${r.verdict||'(no verdict)'}`;
+      }).join('\n');
+      document.getElementById('cl-modal-file-block').textContent=fileNames;
+      document.getElementById('cl-modal-file-block').style.display='block';
+      document.getElementById('cl-modal-warning').style.display='none';
+      document.getElementById('cl-modal-confirm-btn').textContent='Confirm & Submit';
+    } else {
+      box.className='modal-box no-cv';
+      document.getElementById('cl-modal-icon').textContent='📋';
+      document.getElementById('cl-modal-title').textContent='Proceed without any CVs?';
+      document.getElementById('cl-modal-body').textContent='No candidate CVs are attached. Every CV with a verdict makes the AI measurably smarter — you can go back and attach them, or submit without.';
+      document.getElementById('cl-modal-file-block').style.display='none';
+      document.getElementById('cl-modal-warning').style.display='none';
+      document.getElementById('cl-modal-confirm-btn').textContent='Yes, Submit';
+    }
+    document.getElementById('cl-modal-overlay').classList.remove('hidden');
+  }
+
+  function closureCloseModal(){
+    document.getElementById('cl-modal-overlay').classList.add('hidden');
+    pendingClosurePayload=null;
+  }
+
+  async function closureConfirmSubmit(){
+    document.getElementById('cl-modal-overlay').classList.add('hidden');
+    const btn=document.getElementById('submit-btn');
+    btn.disabled=true; btn.textContent='Submitting…';
+    const mandateId = pendingClosurePayload.mandate_ref;
+    try{
+      await fetch(APPS_SCRIPT_URL,{
+        method:'POST',mode:'no-cors',
+        headers:{'Content-Type':'application/json'},
+        body:JSON.stringify(pendingClosurePayload)
+      });
+      closureSessionCount++;
+      document.getElementById('cl-ticker-num').textContent=closureSessionCount;
+      closureShowToast('✓ Closure record submitted successfully.');
+      resetForm();
+    } catch(err){
+      closureShowToast('Submission failed. Check your connection and try again.',true);
+    } finally{
+      btn.disabled=false; btn.textContent='Submit Closure Record →';
+      pendingClosurePayload=null;
+    }
+  }
+
+  // ── Reset ──
+  function resetClosureForm(){
+    document.getElementById('cl-mandate-num').value='';
+    document.getElementById('date-closed').value='';
+    ['cvs-shared','cvs-shortlisted','offers-made','offer-date','joining-date',
+     'placed-name','placed-joining','placed-note','final-ctc','total-revenue',
+     'ai-notes','dead-notes']
+    .forEach(id=>{const el=document.getElementById(id);if(el)el.value='';});
+    document.getElementById('rate-val').textContent='—';
+    document.getElementById('rate-val').className='rate-val';
+    document.querySelectorAll('.outcome-btn').forEach(b=>b.className='outcome-btn');
+    document.querySelectorAll('.reason-option').forEach(r=>r.classList.remove('selected'));
+    document.getElementById('dead-section').classList.remove('visible');
+    document.getElementById('candidate-list').innerHTML='';
+    candidateCount=0; selectedOutcome=''; selectedDeadReason='';
+    candidateCVs={}; candidateVerdicts={}; candidateStages={}; candidateSources={};
+    if(finalClosureSelected) toggleFinalClosure();
+    const pchip=document.getElementById('placed-cv-chip'); if(pchip){pchip.style.display='none';}
+    const pbtn=document.getElementById('placed-cv-btn'); if(pbtn){pbtn.textContent='📎 Attach CV';}
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+
+
+  // Fix closure submit btn reference
+  (function(){
+    var origInitiate = initiateClosureSubmit;
+    // patch submit btn id
+    var _origConfirm = closureConfirmSubmit;
+    closureConfirmSubmit = async function(){
+      document.getElementById('cl-modal-overlay').classList.add('hidden');
+      var btn = document.getElementById('closure-submit-btn');
+      btn.disabled=true; btn.textContent='Submitting…';
+      try{
+        btn.textContent='Uploading…';
+        await fetch(APPS_SCRIPT_URL,{
+          method:'POST', mode:'no-cors',
+          headers:{'Content-Type':'application/json'},
+          body: JSON.stringify(pendingClosurePayload)
+        });
+        closureSessionCount++;
+        document.getElementById('cl-ticker-num').textContent = closureSessionCount;
+        closureShowToast('✓ Closure record submitted. CVs uploaded to the central Drive.');
+        pendingClosurePayload = null;
+        resetClosureForm();
+      } catch(err){
+        closureShowToast('Submission failed. Check your connection and try again.', true);
+      } finally{
+        btn.disabled=false; btn.textContent = finalClosureSelected ? 'Submit & Finally Close Mandate →' : 'Submit Closure Record →';
+      }
+    };
+  })();
+
+  // ── Joining date two-way sync ──
+  function syncJoiningDates(sourceId, targetId){
+    const src = document.getElementById(sourceId);
+    const tgt = document.getElementById(targetId);
+    if(src && tgt && !tgt.value) tgt.value = src.value;
+  }
+
+</script>
+</body>
+</html>
