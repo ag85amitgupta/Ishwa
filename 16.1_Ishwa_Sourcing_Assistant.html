@@ -174,7 +174,7 @@
   }
 
   /* v3: consultant bar, gate, modal */
-  .consultant-bar{max-width:1280px;margin:0 auto 14px;display:flex;justify-content:space-between;align-items:center;gap:20px;padding:12px 18px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;}
+  .consultant-bar{max-width:1280px;margin:0 auto 14px;display:flex;justify-content:flex-start;align-items:center;gap:56px;padding:12px 18px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;}
   .consultant-left,.consultant-right{display:flex;align-items:center;gap:10px;}
   .consultant-label{font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;color:#B5451B;}
   #consultant-name{font-family:Arial,sans-serif;font-size:13px;padding:8px 12px;border:1px solid #DDDDDD;border-radius:2px;background:#F5F3F1;min-width:230px;color:#1A1A1A;}
@@ -203,6 +203,7 @@
   .btn-save-good{font-family:Arial,sans-serif;font-size:13px;font-weight:700;padding:10px 20px;background:#2E6B4F;color:#fff;border:none;border-radius:2px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
   .btn-save-good:hover{background:#245540;}
   .btn-save-good:disabled{opacity:0.6;cursor:default;}
+  .bottom-action-row{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:24px;padding-top:18px;border-top:1px solid #DDDDDD;}
 </style>
 </head>
 <body>
@@ -477,7 +478,7 @@
             <div class="export-row">
               <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
               <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
-              <button class="btn-save-good" id="save-good-btn" onclick="saveGoodSearch()">Save as Good Search ✓</button>
+              <button class="btn-save-good save-good-sync" id="save-good-btn" onclick="saveGoodSearch()">Save as Good Search ✓</button>
             </div>
           </div>
         </div>
@@ -505,6 +506,13 @@
         <div class="output-block">
           <div class="output-block-label">Target Company Universe</div>
           <div id="company-list-container"></div>
+        </div>
+
+        <div class="bottom-action-row">
+          <button class="btn-regenerate" onclick="generate()">&#8634; Regenerate</button>
+          <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
+          <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+          <button class="btn-save-good save-good-sync" onclick="saveGoodSearch()">Save as Good Search ✓</button>
         </div>
 
       </div>
@@ -896,8 +904,8 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
       return;
     }
 
-    const btn = document.getElementById('save-good-btn');
-    btn.disabled = true; btn.textContent = 'Saving…';
+    const saveBtns = document.querySelectorAll('.save-good-sync');
+    saveBtns.forEach(function(b){ b.disabled = true; b.textContent = 'Saving…'; });
     try{
       const res = await fetch(SEARCH_LOG_URL, {
         method:'POST',
@@ -912,7 +920,7 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     } catch(err){
       showToast('Could not append — check connection and try again. ('+(err.message||'')+')', true);
     } finally {
-      btn.disabled = false; btn.textContent = 'Save as Good Search ✓';
+      saveBtns.forEach(function(b){ b.disabled = false; b.textContent = 'Save as Good Search ✓'; });
     }
   }
 
