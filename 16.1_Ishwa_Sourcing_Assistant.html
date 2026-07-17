@@ -174,7 +174,9 @@
   }
 
   /* v3: consultant bar, gate, modal */
-  .consultant-bar{max-width:1280px;margin:0 auto 14px;display:flex;justify-content:flex-start;align-items:center;gap:56px;padding:12px 18px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;}
+  .consultant-bar{max-width:1280px;margin:0 auto 14px;display:flex;justify-content:flex-start;align-items:center;gap:44px;padding:12px 18px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;position:sticky;top:62px;z-index:90;box-shadow:0 2px 8px rgba(26,26,26,0.05);}
+  .top-actions{display:none;margin-left:auto;align-items:center;gap:8px;padding-left:20px;border-left:1px solid #DDDDDD;}
+  .top-actions.visible{display:flex;}
   .consultant-left,.consultant-right{display:flex;align-items:center;gap:10px;}
   .consultant-label{font-family:Arial,sans-serif;font-size:10px;font-weight:700;letter-spacing:0.1em;color:#B5451B;}
   #consultant-name{font-family:Arial,sans-serif;font-size:13px;padding:8px 12px;border:1px solid #DDDDDD;border-radius:2px;background:#F5F3F1;min-width:230px;color:#1A1A1A;}
@@ -203,7 +205,8 @@
   .btn-save-good{font-family:Arial,sans-serif;font-size:13px;font-weight:700;padding:10px 20px;background:#2E6B4F;color:#fff;border:none;border-radius:2px;cursor:pointer;transition:all 0.15s;white-space:nowrap;}
   .btn-save-good:hover{background:#245540;}
   .btn-save-good:disabled{opacity:0.6;cursor:default;}
-  .bottom-action-row{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:24px;padding-top:18px;border-top:1px solid #DDDDDD;}
+  .bottom-actions{display:none;max-width:1280px;margin:8px auto 36px;justify-content:flex-end;align-items:center;gap:8px;padding:14px 18px;background:#fff;border:1px solid #DDDDDD;border-radius:2px;box-shadow:0 2px 8px rgba(26,26,26,0.05);}
+  .bottom-actions.visible{display:flex;}
 </style>
 </head>
 <body>
@@ -249,6 +252,12 @@
     <input type="text" id="recall-uid" placeholder="e.g. SRCH-0003" spellcheck="false">
     <button class="btn-recall" id="recall-btn" onclick="recallSearch()">Recall</button>
     <span class="recall-loaded-badge" id="recall-badge" style="display:none;"></span>
+  </div>
+  <div class="top-actions" id="top-actions">
+    <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
+    <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
+    <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+    <button class="btn-save-good save-good-sync" id="save-good-btn" onclick="saveGoodSearch()">Save Search?</button>
   </div>
 </div>
 <div class="gate-overlay" id="gate-overlay">
@@ -473,14 +482,6 @@
             <div class="output-title" id="output-role-title">&#8212;</div>
             <div class="output-meta" id="output-meta">&#8212;</div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end;">
-            <button class="btn-regenerate" onclick="generate()">&#8634; Regenerate</button>
-            <div class="export-row">
-              <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
-              <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
-              <button class="btn-save-good save-good-sync" id="save-good-btn" onclick="saveGoodSearch()">Save as Good Search ✓</button>
-            </div>
-          </div>
         </div>
 
         <div class="output-block">
@@ -508,19 +509,19 @@
           <div id="company-list-container"></div>
         </div>
 
-        <div class="bottom-action-row">
-          <button class="btn-regenerate" onclick="generate()">&#8634; Regenerate</button>
-          <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
-          <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
-          <button class="btn-save-good save-good-sync" onclick="saveGoodSearch()">Save as Good Search ✓</button>
-        </div>
-
       </div>
 
     </div>
 
   </div>
 
+</div>
+
+<div class="bottom-actions" id="bottom-actions">
+  <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
+  <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
+  <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+  <button class="btn-save-good save-good-sync" onclick="saveGoodSearch()">Save Search?</button>
 </div>
 
 <div class="page-footer">
@@ -788,6 +789,9 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     });
     const t=document.getElementById('output-'+state);
     if(t){t.style.display='';t.classList.add('visible');}
+    const show = state==='results';
+    document.getElementById('top-actions').classList.toggle('visible', show);
+    document.getElementById('bottom-actions').classList.toggle('visible', show);
   }
 
   async function generate(){
@@ -920,7 +924,7 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     } catch(err){
       showToast('Could not append — check connection and try again. ('+(err.message||'')+')', true);
     } finally {
-      saveBtns.forEach(function(b){ b.disabled = false; b.textContent = 'Save as Good Search ✓'; });
+      saveBtns.forEach(function(b){ b.disabled = false; b.textContent = 'Save Search?'; });
     }
   }
 
@@ -972,8 +976,11 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
   }
 
   async function recallSearch(){
-    const uid = document.getElementById('recall-uid').value.trim().toUpperCase();
-    if(!/^SRCH-\d{4}$/.test(uid)){ showToast('Enter a valid ID — e.g. SRCH-0003', true); return; }
+    let raw = document.getElementById('recall-uid').value.trim().toUpperCase();
+    const digits = (raw.match(/\d+/)||[''])[0];
+    if(!digits || digits.length>4){ showToast('Enter a search number — e.g. 3, 0003 or SRCH-0003', true); return; }
+    const uid = 'SRCH-' + digits.padStart(4,'0');
+    document.getElementById('recall-uid').value = uid;
     const btn=document.getElementById('recall-btn');
     btn.disabled=true; btn.textContent='Loading…';
     try{
