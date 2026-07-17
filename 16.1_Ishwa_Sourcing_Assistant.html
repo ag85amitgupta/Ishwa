@@ -250,7 +250,7 @@
   </div>
   <div class="consultant-right" id="recall-controls" style="visibility:hidden;">
     <span class="consultant-label">RECALL SEARCH</span>
-    <input type="text" id="recall-uid" placeholder="e.g. SRCH-0003" spellcheck="false">
+    <input type="text" id="recall-uid" placeholder="e.g. SRCH-0003" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();recallSearch();}">
     <button class="btn-recall" id="recall-btn" onclick="recallSearch()">Recall</button>
     <span class="recall-loaded-badge" id="recall-badge" style="display:none;"></span>
   </div>
