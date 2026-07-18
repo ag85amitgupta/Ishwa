@@ -942,6 +942,9 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
       const out = await res.json();
       if(!out.uid) throw new Error(out.error||'No UID returned');
       savedUID = out.uid;
+      // v3.1: register saved state — unchanged re-saves after dismiss are suppressed
+      recalledSnapshot = snapshotKey(snap);
+      recalledUID = out.uid;
       document.getElementById('save-modal-title').textContent = 'Search record '+out.uid+' appended to Ishwa';
       document.getElementById('save-modal-overlay').classList.remove('hidden');
     } catch(err){
