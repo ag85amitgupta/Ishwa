@@ -1,22 +1,24 @@
 {
-  "last_updated": "18 July 2026",
+  "last_updated": "18 July 2026 (late session close)",
   "current_phase": 7,
-  "you_are_here": "Phases 4, 5, 7 active — Rubric · Sourcing Layer · Live Data Capture. Both live pipelines tested and working (18 Jul). Consultant distribution track PARKED until post-Ishwa context call (w/c 20 Jul).",
+  "you_are_here": "Phases 4, 5, 7 active — Rubric · Sourcing Layer · Live Data Capture. Both pipelines live-tested working. E2E TEST + distribution track PARKED until post-Ishwa context call (w/c 20 Jul). Sourcing Assistant at v3.1 with search fingerprints + duplicate detection.",
   "summary": {
     "phases_complete": "3 / 8",
     "deliverables_built": "34",
     "client_inputs_pending": "2",
-    "build_time": "Live capture pipeline (form 15.2 + Sheet 19 + contained Apps Script v4) deployed and live-tested. Sourcing Assistant v3 with Search Memory live and Save → Recall verified. Distribution parked pending Ishwa context call.",
+    "build_time": "Live capture pipeline (15.2 + Sheet 19 + contained 17.4) live-tested working. Sourcing Assistant 16.2 v3.1 + Search Log 20.2 v3.1 deployed and verified across two consultants: dismissible save dialog, re-save suppression, consultant-agnostic search fingerprints, soft duplicate flagging.",
     "new_mandate_id_from": "ISH-202603-0411"
   },
   "naming_note": {
-    "convention": "Two-digit sequential numbers for NEW documents; decimal bumps (15.2, 16.1, 17.4) for MAJOR updates. Last new-document number used: 20.",
-    "15.2_Ishwa_Combined_Data_Entry_Form.html": "LIVE pipeline form — supersedes 15 and 15.1. Adds Closed/Updated-by attribution. Live-tested 18 Jul.",
-    "16.1_Ishwa_Sourcing_Assistant.html": "v3 Search Memory — live, shared with Ishwa for demo. Save → Recall verified on live URL 18 Jul.",
-    "17.4_Ishwa_Apps_Script_v4_2_Contained.js": "Deployed script on Sheet 19 — contained scope (drive.file + bound sheet only).",
-    "20.1_Ishwa_Search_Log_Apps_Script_Contained.js": "Deployed Search Log script — Sheets-only scope, zero Drive.",
+    "convention": "Two-digit sequential for NEW documents; decimal bumps (15.2, 16.2, 17.4) for MAJOR updates — dotted decimals only. Filename bumps are never Claude's default: propose, Amit decides; same-day iterations stay inside the existing filename. Last new-document number used: 20. Script-internal versions (v3.1, v4) are separate lineage.",
+    "15.2_Ishwa_Combined_Data_Entry_Form.html": "LIVE pipeline form — supersedes 15/15.1. Closed/Updated-by attribution. Live-tested 18 Jul.",
+    "16.2_Ishwa_Sourcing_Assistant.html": "v3.1 LIVE — descriptor, sticky bar, dismissible save dialog (x / click-outside / Escape), same-session re-save suppression, server duplicate message. Supersedes 16.1.",
+    "17.4_Ishwa_Apps_Script_v4_Contained.js": "Deployed on Sheet 19 — contained scope (drive.file + bound sheet only).",
+    "20.2_Ishwa_Search_Log_Apps_Script_Contained.js": "v3.1 DEPLOYED — Sheets-only scope, zero Drive. Search fingerprints + soft duplicate detection (same fingerprint + same consultant → row written with duplicate_of/parent_saved; flat parent mapping to earliest row). Supersedes 20.1.",
+    "index.html": "Hub — cards open in new tab (target=_blank, noopener); points to 15.2 + 16.2.",
     "17_Ishwa_Queue_Form.html": "RETIRED — legacy back-fill dropped with fresh-build pivot.",
-    "07_Ishwa_ChatGPT_Persona_Prompt.html": "RETIRED 17 Jul."
+    "07_Ishwa_ChatGPT_Persona_Prompt.html": "RETIRED 17 Jul.",
+    "16.1 / 20.1": "RETIRED 18 Jul — superseded by 16.2 / 20.2 (same deployment URL, redeployed as new version)."
   },
   "phases": [
     {
@@ -38,12 +40,12 @@
       "tag": "COMPLETE",
       "status": "done",
       "title": "Data receipt, audit & documentation",
-      "desc": "Five data files received from Ishwa (Zoho Recruit + CRM, covering Sep 2022 — Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, interactive forms, and the ChatGPT Search Assistant built and delivered.",
+      "desc": "Five data files received from Ishwa (Zoho Recruit + CRM, Sep 2022 — Mar 2026). Full audit completed. Three structural gaps identified. Audit documents, data capture templates, interactive forms built and delivered.",
       "deliverables": [
         { "label": "01 — Leadership data audit", "status": "done" },
         { "label": "02 — Consultant data audit", "status": "done" },
         { "label": "03 — Data gap one-pager", "status": "done" },
-        { "label": "04/05 — Intake & closure forms (superseded by 15)", "status": "done" },
+        { "label": "04/05 — Intake & closure forms (superseded by 15.x)", "status": "done" },
         { "label": "06 — Project tracker (live)", "status": "done" },
         { "label": "07 — ChatGPT Search Assistant (retired 17 Jul)", "status": "done" },
         { "label": "08/09 — Meeting one-pager & agenda", "status": "done" }
@@ -56,14 +58,14 @@
       "tag": "COMPLETE",
       "status": "done",
       "title": "8 April session — decisions locked, build unblocked",
-      "desc": "Three-step workflow agreed. Data capture path confirmed (Option C — web forms). Order book received from Somanshu and analysed. Meeting minutes, order book analysis, and rubric scaffold sent to Ishwa on 22 April. Both forms live with Ishwa as of 24 April.",
+      "desc": "Three-step workflow agreed. Data capture path confirmed (Option C — web forms). Order book received from Somanshu and analysed. Minutes, order book analysis, rubric scaffold sent 22 April. Forms live with Ishwa 24 April.",
       "deliverables": [
         { "label": "11 — Meeting minutes (8 Apr)", "status": "done" },
         { "label": "12A/12B — Order book analysis (client + internal)", "status": "done" },
         { "label": "13A — Rubric scaffold — sent to Ishwa", "status": "done" },
         { "label": "13B — Walkthrough guide — sent to overseer", "status": "done" },
-        { "label": "15 — Combined mandate data entry form — supersedes 04 and 05", "status": "done" },
-        { "label": "Apps Script (Google Sheets integration) — v3 active", "status": "done" }
+        { "label": "15 — Combined mandate data entry form", "status": "done" },
+        { "label": "Apps Script (Google Sheets integration)", "status": "done" }
       ],
       "milestone": { "label": "Forms live with Ishwa. Data flowing to Google Sheets.", "status": "done" }
     },
@@ -73,7 +75,7 @@
       "tag": "ACTIVE",
       "status": "active",
       "title": "Rubric calibration — externalise consultant judgement",
-      "desc": "13A superseded by master-sheet validation path. Rubric feeds the matching engine in Phase 6. Zoho ID canonicality question folds into this phase (engine/rubric build).",
+      "desc": "13A superseded by master-sheet validation path. Rubric feeds the matching engine in Phase 6. Zoho ID canonicality question folds into this phase. New input for later: search_fingerprint convergence (same search shape across consultants) is rubric-relevant evidence.",
       "deliverables": [
         { "label": "Rubric walkthrough session (Varsha as participant)", "status": "pending" },
         { "label": "Rubric v1 signed off", "status": "pending" },
@@ -86,17 +88,19 @@
       "name": "Sourcing Layer",
       "tag": "ACTIVE",
       "status": "active",
-      "title": "Sourcing compression — v3 Search Memory live and verified",
-      "desc": "Sourcing Assistant v3 (16.1) live: consultant gate (9 names), Save as Good Search with server-assigned SRCH-#### UIDs, Recall by UID repopulates the page editable, unchanged-resave suppression. Backend (Search Log script 20.1) contained scope — Sheets-only, zero Drive access. Save → Recall verified on live URL 18 Jul (doGet path confirmed working). Shared with Ishwa; live demo requested — ball in their court. Sourcing_Search_Log to be shared view-only with Shalini (direct email add, no open link).",
+      "title": "Sourcing compression — 16.2 at v3.1, fingerprints + duplicate detection live",
+      "desc": "16.2 v3.1 live: consultant gate, Save with server-assigned SRCH-#### UIDs, Recall fully editable, dismissible save dialog, same-session re-save suppression, duplicate message ('Identical to SRCH-####, which you saved on [date]. Logged as a repeat.'). Backend 20.2 v3.1: search_fingerprint (consultant-agnostic content key) on every record; same fingerprint + same consultant = soft flag (row written, duplicate_of + parent_saved in JSON, flat mapping to earliest row); different consultant = clean save, linked silently by fingerprint for convergence mining. Verified across Somanshu (flagged) + Chhaya (clean) 18 Jul. Descriptor CONTENT open — Shalini to choose A2 (target_profile excerpt) vs B (AI one-liner).",
       "deliverables": [
-        { "label": "16.1 — Sourcing Assistant v3 Search Memory — live on GitHub Pages", "status": "done" },
-        { "label": "20.1 — Search Log script — deployed, contained (Sheets-only scope)", "status": "done" },
-        { "label": "Save → Recall end-to-end test on live URL — verified 18 Jul", "status": "done" },
+        { "label": "16.2 — Sourcing Assistant v3.1 — live on GitHub Pages", "status": "done" },
+        { "label": "20.2 — Search Log script v3.1 — deployed, contained (Sheets-only)", "status": "done" },
+        { "label": "Save → Recall verified end-to-end", "status": "done" },
+        { "label": "Fingerprints + duplicate detection — verified across two consultants", "status": "done" },
         { "label": "Live demo with Ishwa — awaiting their response", "status": "pending" },
-        { "label": "Share Sourcing_Search_Log view-only with Shalini", "status": "pending" },
+        { "label": "Share Sourcing_Search_Log view-only with Shalini (direct email add)", "status": "pending" },
+        { "label": "Descriptor content decision — on agenda for Shalini call", "status": "pending" },
         { "label": "LinkedIn Recruiter status confirmed with Shalini", "status": "pending" }
       ],
-      "milestone": { "label": "Consultants using v3 with Search Memory in live workflow", "status": "partial" }
+      "milestone": { "label": "Consultants using v3.1 with Search Memory in live workflow", "status": "partial" }
     },
     {
       "num": "Phase 6",
@@ -104,7 +108,7 @@
       "tag": "BLOCKED",
       "status": "blocked",
       "title": "Matching engine — fresh-build pivot; calibrates on live-captured data",
-      "desc": "Fresh-build pivot confirmed with client 17 Jul: no legacy back-fill. Live data capture over ~6 months builds the training set — candidate-level verdicts (reject reasons mandatory, stage captured, CV per row) are the training unit. Engine calibration begins when dataset exists (~Q4 2026 earliest). Six-month horizon accepted by client.",
+      "desc": "Fresh-build pivot confirmed 17 Jul: no legacy back-fill. Live capture over ~6 months builds the training set — candidate-level verdicts are the training unit. Calibration begins ~Q4 2026. At calibration: group Search Log by search_fingerprint — recurring shapes = mandate archetypes / template candidates.",
       "deliverables": [
         { "label": "System prompt architecture", "status": "done" },
         { "label": "Seed data — 3 mandates, 11 candidates, verdicts from Varsha", "status": "done" },
@@ -121,19 +125,20 @@
       "name": "Live Data Capture",
       "tag": "ACTIVE",
       "status": "active",
-      "title": "Pipeline deployed and live-tested — distribution parked pending Ishwa context call",
-      "desc": "Full pipeline built 17 Jul, live-tested by Amit 18 Jul — all working: form 15.2 (per-candidate CV blocks, verdicts, stages, mandatory reject reasons, auto not-placed rows, Final Closure lifecycle, Closed/Updated-by attribution) → contained Apps Script v4 (17.4) → Sheet 19 (Mandates / Candidate_Decisions / CV_Index) + CVs to Drive folder per mandate. All scripts on narrowest OAuth scopes — containment is the project standard. Old Intake/Closure logs archived, not migrated. ENTIRE DISTRIBUTION TRACK PARKED until post-Ishwa context call (w/c 20 Jul).",
+      "title": "Pipeline live-tested working — distribution track PARKED behind Ishwa context call",
+      "desc": "Pipeline (15.2 → contained 17.4 → Sheet 19 + Drive folders per mandate) live-tested by Amit 18 Jul — works. Client-paced: no push from our end; the ~6-month window is calibration time. ENTIRE DISTRIBUTION TRACK PARKED until post-Ishwa context call (w/c 20 Jul): formal E2E sign-off pass, consultant SOP (Shalini), joint Zoom walkthrough, consultant rollout. Do not resurface until Amit confirms the call happened.",
       "deliverables": [
-        { "label": "19 — Live Capture Sheet — converted to Google Sheets, live store", "status": "done" },
-        { "label": "17.4 — Apps Script v4 — deployed, contained scope, same URL", "status": "done" },
-        { "label": "15.2 — Live Data Entry form — built, live-tested 18 Jul", "status": "done" },
-        { "label": "Containment rebuild — broad Drive grants revoked on both scripts", "status": "done" },
-        { "label": "Pipeline live-test (intake + CV + closure verdicts) — verified 18 Jul", "status": "done" },
-        { "label": "PARKED — Formal E2E sign-off pass (post-context call)", "status": "parked" },
-        { "label": "PARKED — Consultant SOP for live entry (Shalini)", "status": "parked" },
-        { "label": "PARKED — Joint Zoom session — form walkthrough + weights validation", "status": "parked" }
+        { "label": "19 — Live Capture Sheet — live store", "status": "done" },
+        { "label": "17.4 — Apps Script v4 — deployed, contained scope", "status": "done" },
+        { "label": "15.2 — Live Data Entry form — live, tested", "status": "done" },
+        { "label": "Containment rebuild — broad Drive grants revoked", "status": "done" },
+        { "label": "Pipeline live-test — verified working 18 Jul", "status": "done" },
+        { "label": "PARKED — formal E2E sign-off pass", "status": "parked" },
+        { "label": "PARKED — consultant SOP (Shalini)", "status": "parked" },
+        { "label": "PARKED — joint Zoom walkthrough + weights validation", "status": "parked" },
+        { "label": "PARKED — consultant distribution", "status": "parked" }
       ],
-      "milestone": { "label": "Pipeline deployed and verified. Distribution parked behind Ishwa context call.", "status": "partial" }
+      "milestone": { "label": "Pipeline verified. Distribution parked behind Ishwa context call.", "status": "partial" }
     },
     {
       "num": "Phase 8",
@@ -154,22 +159,24 @@
     {
       "label": "E2E TEST — PARKED until post-Ishwa context call (w/c 20 Jul)",
       "scope": "Formal E2E sign-off pass + everything downstream: consultant SOP (Shalini), joint Zoom walkthrough, consultant distribution of 15.2.",
-      "note": "Amit live-tested the pipeline 18 Jul and it works. Do NOT resurface any of this track until Amit confirms the Ishwa context call has happened."
+      "note": "Pipeline live-tested working by Amit 18 Jul. Do NOT resurface any of this track until Amit confirms the Ishwa context call has happened."
     }
   ],
   "open_actions": [
-    { "action": "Ishwa context call (w/c 20 Jul)", "note": "Unlocks the parked distribution track. Everything in 'parked' waits on this." },
-    { "action": "Await Ishwa response — 16.1 live demo", "note": "16.1 shared; demo requested. Downstream conversations (data-location note, wider rollout) keyed to this." },
+    { "action": "Ishwa context call (w/c 20 Jul)", "note": "Unlocks the parked distribution track." },
+    { "action": "Await Ishwa response — Sourcing Assistant live demo", "note": "Downstream: data-location note, wider rollout — keyed to this." },
     { "action": "Share Sourcing_Search_Log view-only with Shalini", "note": "Direct email add as Viewer — no open link. Somanshu later, same pattern." },
+    { "action": "Descriptor content — Shalini call", "note": "A2 (target_profile excerpt) vs B (AI one-liner). Claude to prep meeting bullets when Amit asks. Rebuild is small either way." },
     { "action": "Zoho ID canonicality — deferred to engine/rubric build", "note": "Folded into Phase 4/6. Mandate IDs stay machine-assigned/invisible to consultants meanwhile." }
   ],
   "key_decisions": [
     { "decision": "Fresh-build pivot — live capture over ~6 months, no retrospective back-fill", "rationale": "Confirmed with Shalini/Somanshu 17 Jul. Six-month horizon accepted. Queue form retired." },
-    { "decision": "Training unit = candidate-level verdicts, not mandate count", "rationale": "30 mandates × 4 reasoned verdicts ≈ 120 labelled decisions. Rejects define thresholds — the engine's 200→10 job is rejecting well." },
-    { "decision": "Containment is the project standard for all scripts", "rationale": "Multi-client account. Every script runs on narrowest OAuth scope; broad Drive grants revoked. Data script sees only what it creates; Search Log script has zero Drive access." },
-    { "decision": "Closure attribution built into form (15.2)", "rationale": "Closer may differ from intake owner over multi-month searches. Mandatory dropdown, merged 15-name roster — attribution is signal." },
-    { "decision": "Decisions log established (file 98)", "rationale": "One row per decision, compound categories capture design-drives-code causality. 33 decisions logged from 17 Jul sessions." },
-    { "decision": "GitHub is form hosting only — not a record-keeping channel (18 Jul)", "rationale": "Amit's call: pushing scripts/logs to GitHub for archival is not an efficient path. Deployed-state record lives in the decisions log (98) and this status file. GitHub Pages remains hosting for 15.2 and 16.1 only." },
-    { "decision": "Distribution track parked behind Ishwa context call (18 Jul)", "rationale": "Formal E2E sign-off, consultant SOP, and Zoom walkthrough all pause until Amit's context call with Ishwa (w/c 20 Jul). Pipeline itself is verified working." }
+    { "decision": "Training unit = candidate-level verdicts, not mandate count", "rationale": "Rejects define thresholds — the engine's 200→10 job is rejecting well." },
+    { "decision": "Containment is the project standard for all scripts", "rationale": "Multi-client account. Narrowest OAuth scopes; broad Drive grants revoked. Search Log script has zero Drive access." },
+    { "decision": "GitHub is form hosting only — never record-keeping (18 Jul)", "rationale": "Deployed-state record lives in the decisions log (98) and the 00 context file. Repo sanitisation at Amit's convenience, not an action item." },
+    { "decision": "Distribution track parked behind Ishwa context call (18 Jul)", "rationale": "E2E sign-off, SOP, Zoom walkthrough all pause. Pipeline itself verified working. Client-paced — no push." },
+    { "decision": "search_fingerprint + soft duplicate detection (18 Jul, rows 42-43)", "rationale": "Consultant-agnostic content key on every record. Same consultant repeat → flagged, row still written with duplicate_of (flat mapping to earliest parent). Cross-consultant identical → clean save, linked silently — convergence mined later by grouping on fingerprint. Driven by Amit's 'across 3 consultants' question." },
+    { "decision": "Filename bumps never Claude's default (18 Jul, row 37)", "rationale": "Propose, Amit decides. Same-day iterations stay inside existing filename — avoids hub/repo/URL re-sync churn." },
+    { "decision": "Verification discipline (18 Jul, row 44)", "rationale": "Behavioural claims about deployed code verified against source before stated. Lesson from duplicate-row bug." }
   ]
 }
