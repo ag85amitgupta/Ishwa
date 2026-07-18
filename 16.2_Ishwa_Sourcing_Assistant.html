@@ -921,6 +921,12 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
   }
 
   // ── Save as Good Search ──
+  function fmtSavedDate(iso){
+    if(!iso) return 'an earlier date';
+    var d = new Date(iso);
+    if(isNaN(d)) return iso.slice(0,10);
+    return d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getFullYear();
+  }
   async function saveGoodSearch(){
     if(!lastParsedData){ showToast('Generate a search first.', true); return; }
     const snap = buildSnapshot();
@@ -937,7 +943,7 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
       const res = await fetch(SEARCH_LOG_URL, {
         method:'POST',
         headers:{'Content-Type':'text/plain;charset=utf-8'},  // avoids CORS preflight; Apps Script reads postData
-        body: JSON.stringify({ action:'append_search', record: snap })
+        body: JSON.stringify({ action:'append_search', record: snap, fingerprint: snapshotKey(snap) })
       });
       const out = await res.json();
       if(!out.uid) throw new Error(out.error||'No UID returned');
@@ -946,6 +952,10 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
       recalledSnapshot = snapshotKey(snap);
       recalledUID = out.uid;
       document.getElementById('save-modal-title').textContent = 'Search record '+out.uid+' appended to Ishwa';
+      // v3.1: server-side duplicate flag — same search, same consultant, earlier save
+      document.getElementById('save-modal-body').textContent = out.duplicate_of
+        ? 'Identical to '+out.duplicate_of+', which you saved on '+fmtSavedDate(out.parent_saved)+'. Logged as a repeat. Would you like a local copy as well?'
+        : 'Would you like to save a local copy as well?';
       document.getElementById('save-modal-overlay').classList.remove('hidden');
     } catch(err){
       showToast('Could not append — check connection and try again. ('+(err.message||'')+')', true);
