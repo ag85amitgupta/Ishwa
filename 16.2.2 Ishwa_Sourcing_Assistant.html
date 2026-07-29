@@ -62,7 +62,7 @@
   label .opt{color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;margin-left:4px;}
   .field-hint{font-size:11px;color:#AAA;line-height:1.4;margin-top:2px;}
 
-  input[type="text"],select,textarea{
+  input[type="text"],input[type="date"],select,textarea{
     font-family:var(--sans);font-size:13px;color:var(--black);
     background:var(--white);border:1.5px solid var(--g4);border-radius:2px;
     padding:8px 11px;outline:none;transition:border-color 0.15s,box-shadow 0.15s;
@@ -230,7 +230,7 @@
   body:not([data-page="generator"]) .top-actions{display:none!important;}
 
   /* Recall card */
-  .recall-card{max-width:900px;}
+  .recall-card{max-width:none;}
   .section-header.plain{padding-left:20px;}
   .scope-block{margin-top:22px;padding-top:18px;border-top:1px solid var(--g4);}
   .scope-label{font-size:10px;font-weight:600;letter-spacing:0.10em;text-transform:uppercase;color:var(--g1);margin-bottom:11px;}
@@ -260,6 +260,26 @@
   .results-empty{background:#fff;border:2px dashed var(--g4);border-radius:2px;padding:56px 40px;text-align:center;}
   .results-empty .empty-title{font-size:19px;margin-bottom:8px;}
   #label-input{margin-top:4px;}
+  input[type="date"]{cursor:pointer;font-family:var(--sans);min-height:37px;}
+  input[type="date"]::-webkit-calendar-picker-indicator{cursor:pointer;opacity:.5;}
+  input[type="date"]:hover::-webkit-calendar-picker-indicator{opacity:1;}
+  .date-hint{margin-top:10px;}
+  .btn-reset:hover{border-color:var(--rust);color:var(--rust);}
+  .btn-reset-inline{display:block;margin:0 0 10px auto;background:none;border:none;font-family:var(--sans);font-size:11.5px;font-weight:600;color:#A8A29C;cursor:pointer;padding:2px 0;transition:color .15s;}
+  .btn-reset-inline:hover{color:var(--rust);}
+  .recall-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:stretch;}
+  .recall-grid>.form-section{margin-bottom:0;display:flex;flex-direction:column;}
+  .recall-grid .section-body{flex:1;display:flex;flex-direction:column;}
+  .recall-grid .generate-row{margin-top:auto;}
+  .new-search-card{border-left:3px solid var(--rust);}
+  .new-search-body{gap:0;}
+  .new-search-copy{font-size:13px;color:var(--g1);line-height:1.65;margin-bottom:22px;}
+  .btn-new-search{width:100%;margin-top:auto;padding:14px 24px;background:var(--white);border:1.5px solid var(--rust);border-radius:2px;font-family:var(--sans);font-size:14px;font-weight:600;letter-spacing:0.04em;color:var(--rust);cursor:pointer;white-space:nowrap;transition:all .15s;}
+  .btn-new-search:hover{background:var(--rust);color:var(--white);transform:translateY(-1px);box-shadow:0 4px 12px rgba(181,69,27,0.20);}
+  .btn-new-search:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+  @media(max-width:1024px){
+    .recall-grid{grid-template-columns:1fr;}
+  }
   @media(max-width:900px){
     .results-head{display:none;}
     .result-row{grid-template-columns:1fr;gap:5px;}
@@ -287,6 +307,34 @@
 
 <div class="page-body">
 
+  <!-- Shared page title — content set per step by goPage() -->
+  <div class="page-title-block" id="page-title-block">
+    <div class="form-eyebrow" id="pt-eyebrow">Sourcing Assistant</div>
+    <h1 class="form-title" id="pt-title">Target Companies &amp; Search String</h1>
+    <p class="form-subtitle" id="pt-subtitle">Fill in the mandate brief and generate a segmented target company list and a Resdex-ready boolean search string.</p>
+    <div class="form-meta-row" id="pt-meta">
+      <div class="form-meta-item"><div class="meta-dot"></div> Fill key mandate fields — 2 minutes</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> AI generates segmented target list + Resdex string</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> Edit the string before pasting into Resdex</div>
+    </div>
+  </div>
+
+  <!-- ══ STEP NAVIGATION — also the way between pages ══ -->
+  <nav class="stepper" id="stepper" aria-label="Where you are">
+    <button class="step" id="step-1" type="button" onclick="goPage('search')">
+      <span class="step-num">1</span>
+      <span>Recall a search<span class="step-sub">Find what has already been run</span></span>
+    </button>
+    <button class="step" id="step-2" type="button" onclick="goPage('results')" disabled>
+      <span class="step-num">2</span>
+      <span>Matches<span class="step-sub" id="step-2-sub">Nothing searched yet</span></span>
+    </button>
+    <button class="step" id="step-3" type="button" onclick="goPage('generator')">
+      <span class="step-num">3</span>
+      <span>Build a search<span class="step-sub">Generate targets and search strings</span></span>
+    </button>
+  </nav>
+
   <!-- Consultant gate -->
 <div class="consultant-bar" id="consultant-bar">
   <div class="consultant-left">
@@ -305,6 +353,7 @@
     <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
     <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
     <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+    <button class="btn-export btn-reset" onclick="confirmReset()">&#10005; Reset page</button>
     <button class="btn-save-good save-good-sync" id="save-good-btn" onclick="saveGoodSearch()">Save Search?</button>
   </div>
 </div>
@@ -316,34 +365,16 @@
   </div>
 </div>
 
-  <!-- ══ STEP NAVIGATION — also the way between pages ══ -->
-  <nav class="stepper" id="stepper" aria-label="Where you are">
-    <button class="step" id="step-1" type="button" onclick="goPage('search')">
-      <span class="step-num">1</span>
-      <span>Recall a search<span class="step-sub">Find what has already been run</span></span>
-    </button>
-    <button class="step" id="step-2" type="button" onclick="goPage('results')" disabled>
-      <span class="step-num">2</span>
-      <span>Matches<span class="step-sub" id="step-2-sub">Nothing searched yet</span></span>
-    </button>
-    <button class="step" id="step-3" type="button" onclick="goPage('generator')">
-      <span class="step-num">3</span>
-      <span>Build a search<span class="step-sub">Generate targets and search strings</span></span>
-    </button>
-  </nav>
+
 
   <!-- ══ PAGE 1 — RECALL ══ -->
   <div class="page-pane" id="page-search">
-    <div class="page-title-block">
-      <div class="form-eyebrow">Search Memory</div>
-      <h1 class="form-title">Find a search</h1>
-      <p class="form-subtitle">Look up a search that has already been run — yours or a colleague's. Fill in whatever you remember. Every field you add narrows the result.</p>
-    </div>
+    <div class="recall-grid">
 
     <div class="form-section recall-card">
       <div class="section-header plain">
         <div class="section-title">What are you looking for</div>
-        <span class="section-hint">Partial matches work — "tata" finds "Tata Motors"</span>
+        <span class="section-hint">All optional — partial matches work, "tata" finds "Tata Motors"</span>
       </div>
       <div class="section-body">
         <div class="field-grid">
@@ -363,10 +394,22 @@
             <label>Search ID</label>
             <input type="text" id="q-uid" placeholder="e.g. SRCH-0018" spellcheck="false" onkeydown="if(event.key==='Enter'){event.preventDefault();runRecall();}">
           </div>
+
+          <div class="field-group">
+            <label>Searched from</label>
+            <input type="date" id="q-from">
+          </div>
+
+          <div class="field-group">
+            <label>Searched to</label>
+            <input type="date" id="q-to">
+          </div>
         </div>
+        <div class="field-hint date-hint">Leave both empty for any date. Range is inclusive and goes back ten years.</div>
 
         <div class="scope-block">
           <div class="scope-label">Where should we look <span class="req">*</span></div>
+          <div class="field-hint" style="margin:-5px 0 11px;">Leave every field above empty to list everything here &mdash; the 100 most recent.</div>
           <label class="scope-opt"><input type="radio" name="scope" value="database" onchange="scopeChanged()"><span><strong>Database</strong> &mdash; every search in the Ishwa log, whoever ran it</span></label>
           <label class="scope-opt"><input type="radio" name="scope" value="consultant" onchange="scopeChanged()"><span><strong>By consultant</strong> &mdash; only the people you pick</span></label>
           <div class="scope-chosen" id="scope-chosen" style="display:none;"></div>
@@ -377,15 +420,23 @@
         </div>
       </div>
     </div>
+
+    <div class="form-section new-search-card">
+      <div class="section-header plain">
+        <div class="section-title">Nothing to recall?</div>
+        <span class="section-hint">Start from scratch</span>
+      </div>
+      <div class="section-body new-search-body">
+        <p class="new-search-copy">If this mandate has not been searched before, build it from the beginning. You will land on the mandate brief &mdash; fill it in, generate, and save it with a label so the next person finds it here instead of starting over.</p>
+        <button class="btn-new-search" type="button" onclick="startNewSearch()">Start a new search &#8594;</button>
+      </div>
+    </div>
+
+    </div><!-- /recall-grid -->
   </div>
 
   <!-- ══ PAGE 2 — MATCHES ══ -->
   <div class="page-pane" id="page-results">
-    <div class="page-title-block">
-      <div class="form-eyebrow">Search Memory</div>
-      <h1 class="form-title">Matches</h1>
-      <p class="form-subtitle" id="results-summary">&mdash;</p>
-    </div>
     <div class="results-head" id="results-head" style="display:none;">
       <span>Label</span><span>Client</span><span>Position</span><span>Consultant</span><span>Saved on</span><span>Search ID</span>
     </div>
@@ -435,17 +486,6 @@
 </div>
 
   <div class="page-pane" id="page-generator">
-
-  <div class="page-title-block">
-    <div class="form-eyebrow">Sourcing Assistant</div>
-    <h1 class="form-title">Target Companies &amp; Search String</h1>
-    <p class="form-subtitle">Fill in the mandate brief and generate a segmented target company list and a Resdex-ready boolean search string.</p>
-    <div class="form-meta-row">
-      <div class="form-meta-item"><div class="meta-dot"></div> Fill key mandate fields — 2 minutes</div>
-      <div class="form-meta-item"><div class="meta-dot"></div> AI generates segmented target list + Resdex string</div>
-      <div class="form-meta-item"><div class="meta-dot"></div> Edit the string before pasting into Resdex</div>
-    </div>
-  </div>
 
   <div class="two-col">
 
@@ -523,13 +563,13 @@
               <label>Company Stage <span class="opt">optional</span></label>
               <select id="company-stage">
                 <option value="All" selected>All / Any stage</option>
-                <option>Listed — Large Cap (5000+ Cr)</option>
-                <option>Listed — Mid Cap (1000–5000 Cr)</option>
-                <option>Unlisted — Large (1000+ Cr)</option>
-                <option>Unlisted — Mid (200–1000 Cr)</option>
-                <option>Unlisted — Small (&lt;200 Cr)</option>
-                <option>Growth Stage — Series B/C</option>
-                <option>Early Stage — Seed/Series A</option>
+                <option>Listed &mdash; Large Cap (5000+ Cr)</option>
+                <option>Listed &mdash; Mid Cap (1000&ndash;5000 Cr)</option>
+                <option>Unlisted &mdash; Large (1000+ Cr)</option>
+                <option>Unlisted &mdash; Mid (200&ndash;1000 Cr)</option>
+                <option>Unlisted &mdash; Small (&lt;200 Cr)</option>
+                <option>Growth Stage &mdash; Series B/C</option>
+                <option>Early Stage &mdash; Seed/Series A</option>
                 <option>Family Business / Conglomerate</option>
                 <option>PE / VC Backed</option>
               </select>
@@ -619,6 +659,7 @@
       </div>
 
       <div class="generate-row">
+        <button class="btn-reset-inline" type="button" onclick="confirmReset()">&#10005; Reset page</button>
         <button class="btn-generate" id="generate-btn" onclick="generate()">
           Generate Target List &amp; Search String &#8594;
         </button>
@@ -690,6 +731,7 @@
       <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
       <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
       <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+      <button class="btn-export btn-reset" onclick="confirmReset()">&#10005; Reset page</button>
       <button class="btn-save-good save-good-sync" onclick="saveGoodSearch()">Save Search?</button>
     </div>
 
@@ -1186,6 +1228,26 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     try{ exportDownload(); } finally { XLSX.writeFile = origWriteFile; }
   }
 
+  function startNewSearch(){
+    var dirty = getTags('roletitle-wrap').length
+      || document.getElementById('client-name').value.trim()
+      || document.getElementById('target-profile').value.trim()
+      || lastParsedData;
+    if(dirty && !window.confirm('Start a new search? The mandate currently open will be cleared.')) return;
+    if(dirty) resetSearchPage();
+    goPage('generator');
+  }
+
+  function confirmReset(){
+    var dirty = getTags('roletitle-wrap').length
+      || document.getElementById('client-name').value.trim()
+      || document.getElementById('target-profile').value.trim()
+      || lastParsedData;
+    if(dirty && !window.confirm('Clear this page and start fresh? Anything you have not saved will be lost.')) return;
+    resetSearchPage();
+    showToast('Page cleared \u2014 ready for a new search.');
+  }
+
   function resetSearchPage(){
     ['roletitle-wrap','seniority-wrap','keyskills-wrap','musthave-wrap','avoid-wrap'].forEach(w=>{
       document.querySelectorAll('#'+w+' .tag').forEach(t=>t.remove());
@@ -1281,11 +1343,53 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
   var currentPage = 'search';
   var pickedConsultants = [];
   var lastResults = [];
+  var resultsSummary = '';
+
+  // Date bounds — ten years back, nothing in the future
+  (function initDateBounds(){
+    var today = new Date();
+    var max = today.toISOString().slice(0,10);
+    var min = new Date(today.getFullYear()-10, today.getMonth(), today.getDate()).toISOString().slice(0,10);
+    ['q-from','q-to'].forEach(function(id){
+      var el = document.getElementById(id);
+      el.min = min; el.max = max;
+    });
+  })();
+
+  var PAGE_META = {
+    search: {
+      eyebrow: 'Search Memory',
+      title: 'Find a search',
+      subtitle: "Look up a search that has already been run \u2014 yours or a colleague's. Fill in whatever you remember. Every field you add narrows the result.",
+      meta: false
+    },
+    results: {
+      eyebrow: 'Search Memory',
+      title: 'Matches',
+      subtitle: '',
+      meta: false
+    },
+    generator: {
+      eyebrow: 'Sourcing Assistant',
+      title: 'Target Companies & Search String',
+      subtitle: 'Fill in the mandate brief and generate a segmented target company list and a Resdex-ready boolean search string.',
+      meta: true
+    }
+  };
+
+  function paintTitle(name){
+    var m = PAGE_META[name];
+    document.getElementById('pt-eyebrow').textContent = m.eyebrow;
+    document.getElementById('pt-title').textContent = m.title;
+    document.getElementById('pt-subtitle').textContent = (name==='results') ? resultsSummary : m.subtitle;
+    document.getElementById('pt-meta').style.display = m.meta ? '' : 'none';
+  }
 
   function goPage(name){
     if(name==='results' && !lastResults.length && !document.getElementById('results-list').children.length) return;
     currentPage = name;
     document.body.setAttribute('data-page', name);
+    paintTitle(name);
     ['search','results','generator'].forEach(function(n){
       document.getElementById('page-'+n).classList.toggle('active', n===name);
     });
@@ -1344,11 +1448,14 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     var client = document.getElementById('q-client').value.trim();
     var position = document.getElementById('q-position').value.trim();
     var label = document.getElementById('q-label').value.trim();
+    var from = document.getElementById('q-from').value;
+    var to = document.getElementById('q-to').value;
 
-    if(!uid && !client && !position && !label){
-      showToast('Add something to recall — a client, a position, a label or a search ID. Nothing to go on means this is a new search.', true);
+    if(from && to && from > to){
+      showToast('The "from" date is after the "to" date — swap them and try again.', true);
       return;
     }
+
     var scope = document.querySelector('input[name="scope"]:checked');
     if(!scope){ showToast('Choose where to look — Database, or by consultant.', true); return; }
     if(scope.value==='consultant' && !pickedConsultants.length){ openPicker(); return; }
@@ -1361,12 +1468,15 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
         + '&client='+encodeURIComponent(client)
         + '&position='+encodeURIComponent(position)
         + '&label='+encodeURIComponent(label)
+        + '&from='+encodeURIComponent(from)
+        + '&to='+encodeURIComponent(to)
         + '&consultants='+encodeURIComponent(scope.value==='consultant' ? pickedConsultants.join('|') : 'ALL');
       var res = await fetch(q);
       var out = await res.json();
       if(out.error) throw new Error(out.error);
       lastResults = out.results||[];
-      renderResults(lastResults, {client:client, position:position, label:label, uid:uid, scope:scope.value});
+      renderResults(lastResults, {client:client, position:position, label:label, uid:uid, from:from, to:to,
+                                  scope:scope.value, truncated:!!out.truncated, total:out.total});
       document.getElementById('step-2').disabled = false;
       goPage('results');
     }catch(err){
@@ -1376,32 +1486,52 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     }
   }
 
+  function fmtDay(iso){
+    var d = new Date(iso+'T00:00:00');
+    if(isNaN(d)) return iso;
+    return d.getDate()+' '+['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]+' '+d.getFullYear();
+  }
+
   function esc(v){ return String(v==null?'':v).replace(/[&<>"]/g, function(c){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]; }); }
 
   function renderResults(rows, q){
     var list = document.getElementById('results-list');
     var head = document.getElementById('results-head');
-    var summary = document.getElementById('results-summary');
     var where = q.scope==='consultant' ? pickedConsultants.join(', ') : 'the whole log';
     var crit = [];
     if(q.client) crit.push('client "'+q.client+'"');
     if(q.position) crit.push('position "'+q.position+'"');
     if(q.label) crit.push('label "'+q.label+'"');
     if(q.uid) crit.push('ID "'+q.uid+'"');
+    if(q.from && q.to) crit.push('saved between '+fmtDay(q.from)+' and '+fmtDay(q.to));
+    else if(q.from) crit.push('saved on or after '+fmtDay(q.from));
+    else if(q.to) crit.push('saved on or before '+fmtDay(q.to));
+    var browsing = !crit.length;   // nothing specified at all — list everything in scope
 
     list.innerHTML='';
     if(!rows.length){
       head.style.display='none';
-      summary.textContent = 'No searches in '+where+' match '+crit.join(' and ')+'.';
+      resultsSummary = browsing
+        ? 'Nothing saved in '+where+' yet.'
+        : 'No searches in '+where+' match '+crit.join(' and ')+'.';
       list.innerHTML = '<div class="results-empty"><div class="empty-title">Nothing matches yet</div>'
         + '<div class="empty-sub">Try fewer fields, or a shorter fragment — partial matches work. '
-        + 'If nobody has run this search before, start it on step 3.</div></div>';
+        + 'If nobody has run this search before, use Start a new search below.</div></div>';
       document.getElementById('step-2-sub').textContent = 'No matches';
       return;
     }
     head.style.display='';
-    summary.textContent = rows.length+(rows.length===1?' search':' searches')+' in '+where+' match '+crit.join(' and ')+'. Open one to load it.';
-    document.getElementById('step-2-sub').textContent = rows.length+(rows.length===1?' match':' matches');
+    if(browsing && q.truncated){
+      resultsSummary = 'Showing the '+rows.length+' most recent of '+q.total+' searches in '+where
+        + '. Add a client, position or label above to see the rest.';
+    } else if(browsing){
+      resultsSummary = 'Everything in '+where+' \u2014 '+rows.length+(rows.length===1?' search':' searches')+', newest first. Open one to load it.';
+    } else {
+      resultsSummary = rows.length+(rows.length===1?' search':' searches')+' in '+where+' match '+crit.join(' and ')+'. Open one to load it.';
+    }
+    document.getElementById('step-2-sub').textContent = (browsing && q.truncated)
+      ? 'Showing '+rows.length+' of '+q.total
+      : rows.length+(rows.length===1?' match':' matches');
 
     rows.forEach(function(r){
       var b = document.createElement('button');
