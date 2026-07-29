@@ -260,6 +260,9 @@
   .results-empty{background:#fff;border:2px dashed var(--g4);border-radius:2px;padding:56px 40px;text-align:center;}
   .results-empty .empty-title{font-size:19px;margin-bottom:8px;}
   #label-input{margin-top:4px;}
+  .btn-reset:hover{border-color:var(--rust);color:var(--rust);}
+  .btn-reset-inline{display:block;margin:0 0 10px auto;background:none;border:none;font-family:var(--sans);font-size:11.5px;font-weight:600;color:#A8A29C;cursor:pointer;padding:2px 0;transition:color .15s;}
+  .btn-reset-inline:hover{color:var(--rust);}
   @media(max-width:900px){
     .results-head{display:none;}
     .result-row{grid-template-columns:1fr;gap:5px;}
@@ -287,6 +290,34 @@
 
 <div class="page-body">
 
+  <!-- Shared page title — content set per step by goPage() -->
+  <div class="page-title-block" id="page-title-block">
+    <div class="form-eyebrow" id="pt-eyebrow">Sourcing Assistant</div>
+    <h1 class="form-title" id="pt-title">Target Companies &amp; Search String</h1>
+    <p class="form-subtitle" id="pt-subtitle">Fill in the mandate brief and generate a segmented target company list and a Resdex-ready boolean search string.</p>
+    <div class="form-meta-row" id="pt-meta">
+      <div class="form-meta-item"><div class="meta-dot"></div> Fill key mandate fields — 2 minutes</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> AI generates segmented target list + Resdex string</div>
+      <div class="form-meta-item"><div class="meta-dot"></div> Edit the string before pasting into Resdex</div>
+    </div>
+  </div>
+
+  <!-- ══ STEP NAVIGATION — also the way between pages ══ -->
+  <nav class="stepper" id="stepper" aria-label="Where you are">
+    <button class="step" id="step-1" type="button" onclick="goPage('search')">
+      <span class="step-num">1</span>
+      <span>Recall a search<span class="step-sub">Find what has already been run</span></span>
+    </button>
+    <button class="step" id="step-2" type="button" onclick="goPage('results')" disabled>
+      <span class="step-num">2</span>
+      <span>Matches<span class="step-sub" id="step-2-sub">Nothing searched yet</span></span>
+    </button>
+    <button class="step" id="step-3" type="button" onclick="goPage('generator')">
+      <span class="step-num">3</span>
+      <span>Build a search<span class="step-sub">Generate targets and search strings</span></span>
+    </button>
+  </nav>
+
   <!-- Consultant gate -->
 <div class="consultant-bar" id="consultant-bar">
   <div class="consultant-left">
@@ -305,6 +336,7 @@
     <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
     <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
     <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+    <button class="btn-export btn-reset" onclick="confirmReset()">&#10005; Reset page</button>
     <button class="btn-save-good save-good-sync" id="save-good-btn" onclick="saveGoodSearch()">Save Search?</button>
   </div>
 </div>
@@ -316,30 +348,10 @@
   </div>
 </div>
 
-  <!-- ══ STEP NAVIGATION — also the way between pages ══ -->
-  <nav class="stepper" id="stepper" aria-label="Where you are">
-    <button class="step" id="step-1" type="button" onclick="goPage('search')">
-      <span class="step-num">1</span>
-      <span>Recall a search<span class="step-sub">Find what has already been run</span></span>
-    </button>
-    <button class="step" id="step-2" type="button" onclick="goPage('results')" disabled>
-      <span class="step-num">2</span>
-      <span>Matches<span class="step-sub" id="step-2-sub">Nothing searched yet</span></span>
-    </button>
-    <button class="step" id="step-3" type="button" onclick="goPage('generator')">
-      <span class="step-num">3</span>
-      <span>Build a search<span class="step-sub">Generate targets and search strings</span></span>
-    </button>
-  </nav>
+
 
   <!-- ══ PAGE 1 — RECALL ══ -->
   <div class="page-pane" id="page-search">
-    <div class="page-title-block">
-      <div class="form-eyebrow">Search Memory</div>
-      <h1 class="form-title">Find a search</h1>
-      <p class="form-subtitle">Look up a search that has already been run — yours or a colleague's. Fill in whatever you remember. Every field you add narrows the result.</p>
-    </div>
-
     <div class="form-section recall-card">
       <div class="section-header plain">
         <div class="section-title">What are you looking for</div>
@@ -381,11 +393,6 @@
 
   <!-- ══ PAGE 2 — MATCHES ══ -->
   <div class="page-pane" id="page-results">
-    <div class="page-title-block">
-      <div class="form-eyebrow">Search Memory</div>
-      <h1 class="form-title">Matches</h1>
-      <p class="form-subtitle" id="results-summary">&mdash;</p>
-    </div>
     <div class="results-head" id="results-head" style="display:none;">
       <span>Label</span><span>Client</span><span>Position</span><span>Consultant</span><span>Saved on</span><span>Search ID</span>
     </div>
@@ -435,17 +442,6 @@
 </div>
 
   <div class="page-pane" id="page-generator">
-
-  <div class="page-title-block">
-    <div class="form-eyebrow">Sourcing Assistant</div>
-    <h1 class="form-title">Target Companies &amp; Search String</h1>
-    <p class="form-subtitle">Fill in the mandate brief and generate a segmented target company list and a Resdex-ready boolean search string.</p>
-    <div class="form-meta-row">
-      <div class="form-meta-item"><div class="meta-dot"></div> Fill key mandate fields — 2 minutes</div>
-      <div class="form-meta-item"><div class="meta-dot"></div> AI generates segmented target list + Resdex string</div>
-      <div class="form-meta-item"><div class="meta-dot"></div> Edit the string before pasting into Resdex</div>
-    </div>
-  </div>
 
   <div class="two-col">
 
@@ -632,6 +628,7 @@
       </div>
 
       <div class="generate-row">
+        <button class="btn-reset-inline" type="button" onclick="confirmReset()">&#10005; Reset page</button>
         <button class="btn-generate" id="generate-btn" onclick="generate()">
           Generate Target List &amp; Search String &#8594;
         </button>
@@ -703,6 +700,7 @@
       <button class="btn-export" onclick="generate()">&#8634; Regenerate</button>
       <button class="btn-export" onclick="exportCopy()">&#128203; Copy All</button>
       <button class="btn-export" onclick="exportDownload()">&#8615; Download</button>
+      <button class="btn-export btn-reset" onclick="confirmReset()">&#10005; Reset page</button>
       <button class="btn-save-good save-good-sync" onclick="saveGoodSearch()">Save Search?</button>
     </div>
 
@@ -1202,6 +1200,16 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     try{ exportDownload(); } finally { XLSX.writeFile = origWriteFile; }
   }
 
+  function confirmReset(){
+    var dirty = getTags('roletitle-wrap').length
+      || document.getElementById('client-name').value.trim()
+      || document.getElementById('target-profile').value.trim()
+      || lastParsedData;
+    if(dirty && !window.confirm('Clear this page and start fresh? Anything you have not saved will be lost.')) return;
+    resetSearchPage();
+    showToast('Page cleared \u2014 ready for a new search.');
+  }
+
   function resetSearchPage(){
     ['roletitle-wrap','seniority-wrap','keyskills-wrap','musthave-wrap','avoid-wrap'].forEach(w=>{
       document.querySelectorAll('#'+w+' .tag').forEach(t=>t.remove());
@@ -1298,11 +1306,42 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
   var currentPage = 'search';
   var pickedConsultants = [];
   var lastResults = [];
+  var resultsSummary = '';
+
+  var PAGE_META = {
+    search: {
+      eyebrow: 'Search Memory',
+      title: 'Find a search',
+      subtitle: "Look up a search that has already been run \u2014 yours or a colleague's. Fill in whatever you remember. Every field you add narrows the result.",
+      meta: false
+    },
+    results: {
+      eyebrow: 'Search Memory',
+      title: 'Matches',
+      subtitle: '',
+      meta: false
+    },
+    generator: {
+      eyebrow: 'Sourcing Assistant',
+      title: 'Target Companies & Search String',
+      subtitle: 'Fill in the mandate brief and generate a segmented target company list and a Resdex-ready boolean search string.',
+      meta: true
+    }
+  };
+
+  function paintTitle(name){
+    var m = PAGE_META[name];
+    document.getElementById('pt-eyebrow').textContent = m.eyebrow;
+    document.getElementById('pt-title').textContent = m.title;
+    document.getElementById('pt-subtitle').textContent = (name==='results') ? resultsSummary : m.subtitle;
+    document.getElementById('pt-meta').style.display = m.meta ? '' : 'none';
+  }
 
   function goPage(name){
     if(name==='results' && !lastResults.length && !document.getElementById('results-list').children.length) return;
     currentPage = name;
     document.body.setAttribute('data-page', name);
+    paintTitle(name);
     ['search','results','generator'].forEach(function(n){
       document.getElementById('page-'+n).classList.toggle('active', n===name);
     });
@@ -1398,7 +1437,6 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
   function renderResults(rows, q){
     var list = document.getElementById('results-list');
     var head = document.getElementById('results-head');
-    var summary = document.getElementById('results-summary');
     var where = q.scope==='consultant' ? pickedConsultants.join(', ') : 'the whole log';
     var crit = [];
     if(q.client) crit.push('client "'+q.client+'"');
@@ -1409,7 +1447,7 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
     list.innerHTML='';
     if(!rows.length){
       head.style.display='none';
-      summary.textContent = 'No searches in '+where+' match '+crit.join(' and ')+'.';
+      resultsSummary = 'No searches in '+where+' match '+crit.join(' and ')+'.';
       list.innerHTML = '<div class="results-empty"><div class="empty-title">Nothing matches yet</div>'
         + '<div class="empty-sub">Try fewer fields, or a shorter fragment — partial matches work. '
         + 'If nobody has run this search before, start it on step 3.</div></div>';
@@ -1417,7 +1455,7 @@ Return ONLY valid JSON — no preamble, no markdown fences, no explanation:
       return;
     }
     head.style.display='';
-    summary.textContent = rows.length+(rows.length===1?' search':' searches')+' in '+where+' match '+crit.join(' and ')+'. Open one to load it.';
+    resultsSummary = rows.length+(rows.length===1?' search':' searches')+' in '+where+' match '+crit.join(' and ')+'. Open one to load it.';
     document.getElementById('step-2-sub').textContent = rows.length+(rows.length===1?' match':' matches');
 
     rows.forEach(function(r){
