@@ -1,0 +1,1280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mandate Record — Ishwa Consulting</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600;700&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rust:#B5451B; --rust-lt:#F0D5CB; --rust-dk:#8B3315;
+    --black:#1A1A1A; --g1:#4A4A4A; --g2:#F5F3F1; --g3:#E8E4E0; --g4:#DDDDDD;
+    --white:#FFFFFF; --amber:#FFF8EE;
+    --green:#EAF3EC; --green2:#2E6B4F; --green-br:#C6E0CE; --green-tint:#F3F9F4;
+    --red:#FBECE8; --red2:#B0301B; --red-br:#EFC9C0; --red-tint:#FDF5F3;
+    --serif:'Playfair Display',Georgia,serif;
+    --sans:'DM Sans',Arial,system-ui,sans-serif;
+    --mono:'DM Mono',monospace;
+    --w3:1160px;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:#F2EFEB;font-family:var(--sans);color:var(--black);min-height:100vh;}
+  @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+
+  .toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--black);color:#fff;padding:13px 26px;border-radius:2px;border-left:4px solid var(--green2);font-size:13px;font-weight:500;z-index:600;transition:transform .32s cubic-bezier(.34,1.56,.64,1),opacity .32s;opacity:0;}
+  .toast.show{transform:translateX(-50%) translateY(0);opacity:1;}
+  .toast.error{border-left-color:var(--rust);}
+
+  .node{font-family:var(--mono);font-size:9.5px;color:#B8B2AC;letter-spacing:.04em;border:1px solid var(--g4);border-radius:2px;padding:1px 5px;background:#fff;white-space:nowrap;}
+  .section-header .node{margin-left:auto;}
+  .field-group{position:relative;}
+  .field-group>.node{position:absolute;top:0;right:0;}
+  label{padding-right:64px;}
+
+  .page-header{background:var(--black);position:sticky;top:0;z-index:120;border-bottom:3px solid var(--rust);}
+  .header-inner{max-width:1400px;margin:0 auto;padding:14px 40px;display:flex;align-items:center;justify-content:space-between;gap:18px;}
+  .header-brand{display:flex;align-items:baseline;gap:14px;}
+  .brand-firm{font-family:var(--serif);font-size:17px;color:#fff;font-weight:600;}
+  .brand-div{width:1px;height:13px;background:var(--rust);}
+  .brand-pip{font-size:10.5px;color:var(--rust);font-weight:600;letter-spacing:.12em;text-transform:uppercase;}
+  .header-right{display:flex;align-items:center;gap:16px;}
+  .header-tag{font-family:var(--mono);font-size:10.5px;color:#666;letter-spacing:.08em;text-transform:uppercase;}
+  .uid-chip{display:none;align-items:center;gap:8px;background:#2A2A2A;border:1px solid #3D3D3D;border-left:3px solid var(--rust);border-radius:2px;padding:5px 12px;}
+  .uid-chip.visible{display:flex;}
+  .uid-chip-label{font-size:9px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#8A8A8A;}
+  .uid-chip-val{font-family:var(--mono);font-size:12px;color:#fff;}
+
+  .stepper-wrap{position:sticky;top:55px;z-index:110;background:#F2EFEB;padding:14px 40px 0;}
+  .stepper{max-width:1320px;margin:0 auto;display:flex;border:1px solid var(--g4);border-radius:2px;background:#fff;overflow:hidden;}
+  .step{flex:1;display:flex;align-items:center;gap:10px;padding:11px 18px;background:#fff;border:none;border-right:1px solid var(--g4);font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--g1);cursor:pointer;text-align:left;transition:background .15s,color .15s;}
+  .step:last-child{border-right:none;}
+  .step:hover:not(:disabled){background:var(--g2);color:var(--rust);}
+  .step:disabled{opacity:.4;cursor:not-allowed;}
+  .step:focus-visible{outline:2px solid var(--rust);outline-offset:-3px;}
+  .step.current{background:var(--g2);color:var(--rust);box-shadow:inset 0 -3px 0 var(--rust);}
+  .step-num{width:20px;height:20px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;flex-shrink:0;}
+  .step.current .step-num{background:var(--rust);color:#fff;border-color:var(--rust);}
+  .step-sub{display:block;font-size:10.5px;font-weight:400;color:#A8A29C;margin-top:1px;}
+
+  .page-body{max-width:1400px;margin:0 auto;padding:22px 40px 80px;}
+  .page-pane{display:none;}
+  .page-pane.active{display:block;}
+  #page-find,#page-record{max-width:var(--w3);margin-left:auto;margin-right:auto;}
+
+  .page-title-block{margin-bottom:26px;padding-bottom:20px;border-bottom:1px solid var(--g4);}
+  .form-eyebrow{font-size:10.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);margin-bottom:8px;}
+  .form-title{font-family:var(--serif);font-size:36px;font-weight:700;line-height:1.05;margin-bottom:8px;}
+  .form-subtitle{font-size:14.5px;color:var(--g1);line-height:1.6;max-width:640px;}
+
+  .form-section{margin-bottom:18px;background:#fff;border-radius:2px;border:1px solid var(--g4);overflow:hidden;}
+  .section-header{display:flex;align-items:center;gap:11px;padding:12px 18px;background:var(--g2);border-bottom:1px solid var(--g4);}
+  .section-num{width:24px;height:24px;background:var(--rust);color:#fff;border-radius:2px;display:flex;align-items:center;justify-content:center;font-family:var(--serif);font-size:12px;font-weight:600;flex-shrink:0;}
+  .section-title{font-family:var(--serif);font-size:15.5px;font-weight:600;}
+  .section-hint{font-size:11px;color:#999;font-style:italic;margin-left:14px;}
+  .section-body{padding:18px;}
+  .field-grid{display:grid;grid-template-columns:1fr 1fr;gap:15px 20px;}
+  .field-grid.single{grid-template-columns:1fr;}
+  .field-grid.three{grid-template-columns:1fr 1fr 1fr;}
+  .field-group{display:flex;flex-direction:column;gap:5px;}
+  .field-group.full{grid-column:1/-1;}
+  label{font-size:10px;font-weight:600;letter-spacing:.10em;text-transform:uppercase;color:var(--g1);}
+  label .req{color:var(--rust);margin-left:2px;}
+  label .opt{color:#AAA;font-weight:400;letter-spacing:0;text-transform:none;font-size:10px;margin-left:4px;}
+  .field-hint{font-size:11px;color:#AAA;line-height:1.4;}
+
+  input[type=text],input[type=number],input[type=date],select,textarea{
+    font-family:var(--sans);font-size:13px;color:var(--black);background:#fff;
+    border:1.5px solid var(--g4);border-radius:2px;padding:9px 11px;outline:none;
+    transition:border-color .15s,box-shadow .15s;width:100%;appearance:none;-webkit-appearance:none;}
+  input:focus,select:focus,textarea:focus{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,.08);}
+  input::placeholder,textarea::placeholder{color:#C0BAB4;}
+  textarea{resize:vertical;line-height:1.55;}
+  select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%234A4A4A' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;cursor:pointer;}
+  input[type=date]{cursor:pointer;min-height:39px;}
+
+  .callout{background:var(--amber);border-left:3px solid var(--rust);padding:12px 15px;font-size:12.5px;color:var(--g1);line-height:1.6;margin-bottom:16px;}
+  .callout strong{color:var(--black);}
+
+  .tag-input-wrap{border:1.5px solid var(--g4);border-radius:2px;padding:6px 8px;min-height:42px;display:flex;flex-wrap:wrap;gap:5px;cursor:text;background:#fff;}
+  .tag-input-wrap:focus-within{border-color:var(--rust);box-shadow:0 0 0 3px rgba(181,69,27,.08);}
+  .tag{display:inline-flex;align-items:center;gap:4px;background:var(--rust-lt);color:var(--rust-dk);border-radius:2px;padding:3px 7px;font-size:11px;font-weight:500;}
+  .tag.dealbreaker{background:#F5D7D0;color:#8A2A16;}
+  .tag-remove{background:none;border:none;cursor:pointer;color:inherit;font-size:12px;padding:0;opacity:.6;}
+  .tag-input-field{border:none;outline:none;font-family:var(--sans);font-size:13px;flex:1;min-width:110px;background:transparent;padding:3px 0;}
+
+  .btn{font-family:var(--sans);border-radius:2px;cursor:pointer;transition:all .15s;border:none;}
+  .btn-primary{padding:12px 24px;background:var(--rust);color:#fff;font-size:13.5px;font-weight:600;}
+  .btn-primary:hover{background:var(--rust-dk);}
+  .btn-primary:disabled{background:var(--g3);color:#AAA;cursor:not-allowed;}
+  .btn-ghost{padding:11px 20px;background:#fff;border:1.5px solid var(--g4);color:var(--g1);font-size:13px;font-weight:600;}
+  .btn-ghost:hover{border-color:var(--rust);color:var(--rust);}
+  .btn-save{padding:12px 24px;background:var(--green2);color:#fff;font-size:13.5px;font-weight:700;}
+  .btn-save:hover{background:#245540;}
+  .btn:focus-visible{outline:2px solid var(--rust);outline-offset:2px;}
+
+  /* ══ PAGE 2 ══ */
+  .p2-top{display:grid;grid-template-columns:1fr auto auto;gap:22px;align-items:center;background:#fff;border:1px solid var(--g4);border-left:3px solid var(--rust);border-radius:2px;padding:12px 18px;margin-bottom:8px;}
+  .p2-identity{display:flex;flex-wrap:wrap;gap:4px 24px;}
+  .idn{display:flex;flex-direction:column;gap:2px;}
+  .idn-l{font-size:8.5px;font-weight:700;letter-spacing:.13em;text-transform:uppercase;color:#B8B2AC;}
+  .idn-v{font-size:12.5px;font-weight:600;}
+  .idn-v.mono{font-family:var(--mono);font-size:12px;font-weight:500;color:var(--rust);}
+  .p2-count{display:flex;align-items:center;gap:11px;padding-left:20px;border-left:1px solid var(--g4);}
+  .cnt-big{font-family:var(--serif);font-size:26px;font-weight:700;color:var(--rust);line-height:1;}
+  .cnt-lab{font-size:10.5px;color:#A8A29C;line-height:1.3;}
+  .p2-line{font-size:12.5px;color:#A8A29C;margin-bottom:16px;padding-left:2px;}
+
+  .p2-grid{display:grid;grid-template-columns:1fr 1fr 268px;gap:18px;align-items:start;}
+
+  .bucket{border-radius:2px;overflow:hidden;border:1px solid var(--g4);background:#fff;}
+  .bucket.acc{border-top:3px solid var(--green2);}
+  .bucket.rej{border-top:3px solid var(--red2);}
+  .bucket-head{display:flex;align-items:center;gap:9px;padding:10px 14px;border-bottom:1px solid var(--g4);}
+  .bucket.acc .bucket-head{background:var(--green);}
+  .bucket.rej .bucket-head{background:var(--red);}
+  .bucket-badge{font-size:9.5px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:#fff;border:1px solid;}
+  .bucket.acc .bucket-badge{color:var(--green2);border-color:var(--green-br);}
+  .bucket.rej .bucket-badge{color:var(--red2);border-color:var(--red-br);}
+  .btn-nextcv{margin-left:auto;padding:7px 16px;border:none;border-radius:2px;color:#fff;font-family:var(--sans);font-size:12px;font-weight:700;cursor:pointer;}
+  .bucket.acc .btn-nextcv{background:var(--green2);}
+  .bucket.acc .btn-nextcv:hover{background:#245540;}
+  .bucket.rej .btn-nextcv{background:var(--red2);}
+  .bucket.rej .btn-nextcv:hover{background:#8C2515;}
+  .bucket-body{padding:14px;display:flex;flex-direction:column;gap:12px;}
+
+  .attach-row{display:flex;align-items:center;gap:10px;}
+  .btn-attach{display:inline-flex;align-items:center;gap:7px;padding:8px 14px;border:1.5px dashed var(--g4);border-radius:2px;background:var(--g2);font-family:var(--sans);font-size:12px;font-weight:600;color:var(--g1);cursor:pointer;white-space:nowrap;}
+  .btn-attach:hover{border-color:var(--rust);color:var(--rust);background:#FFFCFA;}
+  .attach-name{font-family:var(--mono);font-size:11px;color:#A8A29C;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex:1;}
+  .attach-name.has{color:var(--green2);}
+  .attach-clear{background:none;border:none;cursor:pointer;color:#A8A29C;font-size:15px;padding:0 3px;}
+  .attach-clear:hover{color:var(--rust);}
+
+  .cloud{display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start;padding:12px;border-radius:2px;min-height:132px;max-height:240px;overflow-y:auto;}
+  .bucket.acc .cloud{background:var(--green-tint);}
+  .bucket.rej .cloud{background:var(--red-tint);}
+  .cloud::-webkit-scrollbar{width:4px;}
+  .cloud::-webkit-scrollbar-thumb{background:var(--g4);border-radius:2px;}
+  .pill{background:#fff;border:1px solid var(--g4);border-radius:3px;padding:3px 9px;font-family:var(--sans);color:var(--g1);cursor:pointer;transition:all .12s;line-height:1.3;}
+  .pill:hover{border-color:var(--rust);color:var(--rust);}
+  .pill:focus-visible{outline:2px solid var(--rust);outline-offset:1px;}
+  .pill.s1{font-size:10px;font-weight:400;}
+  .pill.s2{font-size:11.5px;font-weight:500;}
+  .pill.s3{font-size:13px;font-weight:600;}
+  .pill.s4{font-size:15px;font-weight:700;}
+  .pill.hard::before{content:'\25AA';color:var(--rust);margin-right:4px;font-size:8px;vertical-align:middle;}
+  .bucket.acc .pill.on{background:var(--green2);border-color:var(--green2);color:#fff;}
+  .bucket.rej .pill.on{background:var(--red2);border-color:var(--red2);color:#fff;}
+  .p3-cloud .pill.on{background:var(--rust);border-color:var(--rust);color:#fff;}
+
+  .cloud-foot{display:flex;align-items:center;gap:10px;}
+  .cloud-count{font-size:11px;color:#A8A29C;}
+  .cloud-count b{color:var(--black);}
+  .cloud-count.short b{color:var(--rust);}
+  .btn-add{margin-left:auto;background:#fff;border:1.5px solid var(--rust);color:var(--rust);border-radius:2px;padding:4px 12px;font-size:10.5px;font-weight:700;letter-spacing:.06em;cursor:pointer;font-family:var(--sans);}
+  .btn-add:hover{background:var(--rust);color:#fff;}
+  .add-panel{display:none;flex-direction:column;gap:10px;padding:12px;background:#FFFCFA;border:1px solid var(--rust-lt);border-radius:2px;}
+  .add-panel.open{display:flex;}
+  .add-actions{display:flex;gap:8px;justify-content:flex-end;}
+  .btn-mini{padding:6px 13px;font-size:11.5px;font-weight:600;border-radius:2px;cursor:pointer;font-family:var(--sans);}
+  .btn-mini.go{background:var(--rust);color:#fff;border:none;}
+  .btn-mini.no{background:#fff;color:var(--g1);border:1.5px solid var(--g4);}
+  .row-err{display:none;font-size:11.5px;color:var(--red2);background:var(--red);border-left:3px solid var(--red2);padding:8px 12px;line-height:1.5;}
+  .row-err.show{display:block;}
+
+  .rail{background:#fff;border:1px solid var(--g4);border-radius:2px;position:sticky;top:132px;}
+  .rail-head{display:flex;align-items:center;gap:9px;padding:10px 14px;background:var(--g2);border-bottom:1px solid var(--g4);}
+  .rail-title{font-family:var(--serif);font-size:14px;font-weight:600;}
+  .rail-n{margin-left:auto;font-size:10.5px;color:#A8A29C;}
+  .rail-body{max-height:520px;overflow-y:auto;}
+  .rail-body::-webkit-scrollbar{width:4px;}
+  .rail-body::-webkit-scrollbar-thumb{background:var(--g4);border-radius:2px;}
+  .rail-item{display:grid;grid-template-columns:6px 1fr;gap:9px;padding:9px 13px;border-bottom:1px solid var(--g3);align-items:start;}
+  .rail-item:last-child{border-bottom:none;}
+  .rail-dot{width:6px;height:6px;border-radius:50%;margin-top:6px;}
+  .rail-dot.acc{background:var(--green2);}
+  .rail-dot.rej{background:var(--red2);}
+  .rail-name{font-size:12px;font-weight:600;line-height:1.35;display:block;}
+  .rail-id{font-family:var(--mono);font-size:9.5px;color:#B8B2AC;display:block;margin-top:2px;}
+  .rail-pills{font-size:10.5px;color:#A8A29C;line-height:1.4;display:block;margin-top:3px;}
+  .rail-empty{padding:30px 18px;text-align:center;font-size:11.5px;color:#B8B2AC;line-height:1.6;}
+
+  .closure-divider{position:relative;margin:52px 0 30px;text-align:center;}
+  .closure-divider span{font-family:var(--serif);font-size:70px;font-weight:700;color:#D6D1CB;line-height:1;position:relative;z-index:1;padding:0 24px;background:#F2EFEB;}
+  .closure-divider::after{content:'';position:absolute;left:0;right:0;top:50%;height:2px;background:var(--rust);}
+
+  .cand{border:1px solid var(--g4);border-radius:2px;margin-bottom:12px;background:#fff;overflow:hidden;}
+  .cand-banner{display:grid;grid-template-columns:26px 1fr auto auto;gap:12px;align-items:center;padding:11px 15px;border-bottom:1px solid var(--g4);}
+  .cand.unset .cand-banner{background:var(--g2);}
+  .cand.shared .cand-banner{background:var(--green);border-bottom-color:var(--green-br);}
+  .cand.held .cand-banner{background:var(--rust-lt);border-bottom-color:#E4C3B7;}
+  .cand.shared{border-left:3px solid var(--green2);}
+  .cand.held{border-left:3px solid var(--rust);}
+  .cand-idx{width:24px;height:24px;border-radius:50%;background:#fff;border:1px solid var(--g4);display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:var(--g1);}
+  .cand-name{font-size:13.5px;font-weight:700;display:block;}
+  .cand.shared .cand-name{color:var(--green2);}
+  .cand.held .cand-name{color:var(--rust-dk);}
+  .cand-file{font-family:var(--mono);font-size:10px;color:#A8A29C;display:block;margin-top:2px;}
+  .cand-state{font-size:9.5px;font-weight:700;letter-spacing:.11em;text-transform:uppercase;padding:3px 10px;border-radius:20px;background:#fff;border:1px solid var(--g4);color:#A8A29C;}
+  .cand.shared .cand-state{color:var(--green2);border-color:var(--green-br);}
+  .cand.held .cand-state{color:var(--rust-dk);border-color:#E4C3B7;}
+  .btn-collapse{background:#fff;border:1.5px solid var(--g4);border-radius:2px;padding:5px 14px;font-family:var(--sans);font-size:11.5px;font-weight:700;color:var(--g1);cursor:pointer;}
+  .btn-collapse:hover{border-color:var(--rust);color:var(--rust);}
+  .cand-body{display:none;padding:16px 15px 18px;}
+  .cand-body.open{display:block;}
+
+  .radio-pair{display:flex;gap:10px;margin-bottom:16px;}
+  .radio-opt{flex:1;display:flex;align-items:flex-start;gap:9px;padding:11px 14px;border:1.5px solid var(--g4);border-radius:2px;cursor:pointer;background:#fff;transition:all .15s;}
+  .radio-opt:hover{border-color:var(--rust);}
+  .radio-opt input{width:15px;height:15px;margin-top:1px;accent-color:var(--rust);cursor:pointer;flex-shrink:0;}
+  .radio-opt.on.share{border-color:var(--green2);background:var(--green-tint);}
+  .radio-opt.on.share input{accent-color:var(--green2);}
+  .radio-opt.on.hold{border-color:var(--rust);background:#FFFCFA;}
+  .radio-txt{font-size:12.5px;font-weight:600;line-height:1.35;text-transform:none;letter-spacing:0;padding-right:0;color:var(--black);}
+  .radio-sub{display:block;font-size:11px;color:#A8A29C;font-weight:400;margin-top:2px;}
+
+  .accept-box{display:flex;align-items:center;gap:10px;padding:11px 14px;background:var(--green-tint);border:1px solid var(--green-br);border-radius:2px;grid-column:1/-1;}
+  .accept-box input{width:16px;height:16px;accent-color:var(--green2);cursor:pointer;}
+  .accept-box label{text-transform:none;letter-spacing:0;font-size:12.5px;font-weight:600;color:var(--green2);padding-right:0;}
+
+  .metric-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .metric-box{background:var(--g2);border:1px solid var(--g4);border-radius:2px;padding:14px;position:relative;}
+  .metric-box.calc{background:#fff;text-align:center;}
+  .metric-lab{font-size:9.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--g1);margin-bottom:7px;padding-right:58px;}
+  .metric-box>.node{position:absolute;top:12px;right:12px;}
+  .metric-val{font-family:var(--serif);font-size:30px;font-weight:700;color:var(--rust);line-height:1;}
+  .metric-derived{font-family:var(--serif);font-size:24px;font-weight:700;}
+  .metric-sub{font-size:10.5px;color:#AAA;margin-top:5px;}
+  .bucket-pips{display:flex;gap:9px;flex-wrap:wrap;margin-top:16px;}
+  .bpip{font-size:10.5px;font-weight:700;letter-spacing:.04em;padding:4px 12px;border-radius:20px;border:1px solid;}
+  .bpip.g{background:var(--green);color:var(--green2);border-color:var(--green-br);}
+  .bpip.r{background:var(--rust-lt);color:var(--rust-dk);border-color:#E4C3B7;}
+  .bpip.d{background:#F7D6CE;color:#8C2515;border-color:#E5AC9C;}
+
+  .outcome-toggle{display:grid;grid-template-columns:1fr 1fr 1fr;gap:11px;}
+  .outcome-btn{background:#fff;border:1.5px solid var(--g4);border-radius:2px;padding:14px 12px;cursor:pointer;font-family:var(--sans);text-align:center;display:flex;flex-direction:column;gap:4px;align-items:center;transition:all .15s;}
+  .outcome-btn:hover{border-color:var(--rust);}
+  .outcome-btn.on{border-color:var(--rust);background:#FFFCFA;}
+  .outcome-icon{font-size:17px;color:var(--rust);}
+  .outcome-label{font-size:13px;font-weight:600;}
+  .outcome-sub{font-size:10.5px;color:#AAA;line-height:1.4;}
+  .reason-grid,.engagement-grid{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+  .reason-option,.engagement-option{background:#fff;border:1.5px solid var(--g4);border-radius:2px;padding:11px 13px;cursor:pointer;transition:all .15s;}
+  .reason-option:hover,.engagement-option:hover{border-color:var(--rust);}
+  .reason-option.on,.engagement-option.on{border-color:var(--rust);background:#FFFCFA;}
+  .reason-label,.engagement-label{font-size:12.5px;font-weight:600;margin-bottom:2px;}
+  .reason-sub,.engagement-sub{font-size:11px;color:#AAA;line-height:1.45;}
+  .dead-section{display:none;margin-top:18px;padding-top:18px;border-top:1px solid var(--g4);}
+  .dead-section.open{display:block;}
+
+  .weight-row{display:grid;grid-template-columns:1fr 190px 44px;gap:14px;align-items:center;padding:10px 0;border-bottom:1px solid var(--g3);}
+  .weight-label{font-size:12.5px;font-weight:600;}
+  .weight-label span{display:block;font-size:10.5px;color:#AAA;font-weight:400;margin-top:1px;}
+  .weight-row input[type=range]{width:100%;accent-color:var(--rust);cursor:pointer;}
+  .weight-val{font-family:var(--serif);font-size:17px;font-weight:700;color:var(--rust);text-align:right;}
+  .weights-total-row{display:flex;align-items:baseline;gap:8px;justify-content:flex-end;padding-top:12px;}
+  .weights-total-label{font-size:9.5px;font-weight:600;letter-spacing:.11em;text-transform:uppercase;color:var(--g1);}
+  .weights-total-val{font-family:var(--serif);font-size:20px;font-weight:700;}
+  .weights-total-val.bad{color:var(--red2);}
+
+  .drop{display:flex;flex-direction:column;align-items:center;gap:5px;width:100%;padding:16px;border:2px dashed var(--g4);border-radius:2px;background:var(--g2);cursor:pointer;font-family:var(--sans);font-size:12.5px;font-weight:600;color:var(--g1);}
+  .drop:hover{border-color:var(--rust);color:var(--rust);background:#FFFCFA;}
+  .drop-sub{font-size:10.5px;color:#AAA;font-weight:400;}
+  .cv-chip{display:flex;align-items:center;gap:8px;background:var(--g2);border:1px solid var(--g4);border-radius:2px;padding:8px 11px;font-family:var(--mono);font-size:11px;}
+  .cv-chip .ok{color:var(--green2);font-weight:600;font-family:var(--sans);font-size:10.5px;margin-left:auto;}
+  .cv-chip button{background:none;border:none;cursor:pointer;color:var(--g1);font-size:14px;padding:0 2px;}
+
+  .empty-card{border:2px dashed var(--g4);border-radius:2px;padding:34px 26px;text-align:center;}
+  .empty-card .e-title{font-family:var(--serif);font-size:17px;font-weight:600;color:var(--g1);margin-bottom:6px;}
+  .empty-card .e-sub{font-size:12px;color:#AAA;line-height:1.6;max-width:380px;margin:0 auto;}
+
+  .match-row{display:grid;grid-template-columns:1fr auto;gap:14px;padding:13px 15px;background:#fff;border:1px solid var(--g4);border-radius:2px;cursor:pointer;text-align:left;font-family:var(--sans);align-items:center;margin-bottom:8px;width:100%;}
+  .match-row:hover{border-color:var(--rust);}
+  .match-title{font-size:13px;font-weight:600;display:block;}
+  .match-meta{font-size:11.5px;color:var(--g1);display:block;margin-top:2px;}
+  .match-uid{font-family:var(--mono);font-size:11px;color:var(--rust);}
+
+  .foot-bar{display:flex;justify-content:space-between;align-items:center;gap:18px;margin-top:24px;padding-top:20px;border-top:2px solid var(--g4);}
+  .foot-note{font-size:11.5px;color:#A8A29C;line-height:1.5;max-width:540px;}
+
+  .modal-overlay{position:fixed;inset:0;background:rgba(26,26,26,.5);display:flex;align-items:center;justify-content:center;z-index:400;padding:24px;}
+  .modal-overlay.hidden{display:none;}
+  .modal-box{background:#fff;border-radius:2px;border-top:3px solid var(--rust);padding:28px 32px;max-width:560px;width:100%;max-height:84vh;overflow-y:auto;}
+  .modal-title{font-family:var(--serif);font-size:20px;font-weight:700;margin-bottom:9px;}
+  .modal-body{font-size:13px;color:var(--g1);line-height:1.65;margin-bottom:16px;}
+  .modal-list{background:var(--g2);border:1px solid var(--g4);border-radius:2px;padding:11px 15px;margin-bottom:16px;font-size:12.5px;line-height:1.85;}
+  .modal-actions{display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;}
+
+  .page-footer{max-width:1400px;margin:0 auto;padding:0 40px 34px;font-size:10.5px;color:#BBB;display:flex;justify-content:space-between;}
+
+  @media(max-width:1200px){.p2-grid{grid-template-columns:1fr 1fr;}.rail{grid-column:1/-1;position:static;}}
+  @media(max-width:1024px){
+    .p2-grid,.field-grid,.metric-grid,.outcome-toggle,.reason-grid,.engagement-grid,.radio-pair{grid-template-columns:1fr;}
+    .radio-pair{flex-direction:column;}
+    .page-body,.header-inner,.page-footer,.stepper-wrap{padding-left:20px;padding-right:20px;}
+    .stepper{flex-direction:column;}
+    .step{border-right:none;border-bottom:1px solid var(--g4);}
+    .p2-top{grid-template-columns:1fr;}
+    .p2-count{padding-left:0;border-left:none;border-top:1px solid var(--g4);padding-top:12px;}
+  }
+  @media(max-width:600px){
+    .field-grid.three{grid-template-columns:1fr;}
+    .form-title{font-size:27px;}
+    .closure-divider span{font-size:38px;}
+    .weight-row{grid-template-columns:1fr;}
+    .cand-banner{grid-template-columns:26px 1fr;}
+  }
+</style>
+</head>
+<body>
+
+<div class="toast" id="toast"></div>
+
+<header class="page-header">
+  <div class="header-inner">
+    <div class="header-brand">
+      <span class="brand-firm">Ishwa Consulting</span>
+      <span class="brand-div"></span>
+      <span class="brand-pip">PiP_AGI</span>
+    </div>
+    <div class="header-right">
+      <div class="uid-chip" id="uid-chip">
+        <span class="uid-chip-label">Mandate</span>
+        <span class="uid-chip-val" id="uid-chip-val">&mdash;</span>
+      </div>
+      <span class="header-tag">Mandate Record &mdash; v3.1</span>
+    </div>
+  </div>
+</header>
+
+<div class="stepper-wrap">
+  <div class="stepper">
+    <button class="step current" id="step-1" type="button" onclick="goPage('find')">
+      <span class="step-num">1</span><span>Find the mandate<span class="step-sub" id="step-1-sub">Who is asking, and about what</span></span></button>
+    <button class="step" id="step-2" type="button" onclick="goPage('filter')" disabled>
+      <span class="step-num">2</span><span>Stage 1 filtration<span class="step-sub" id="step-2-sub">Nothing screened yet</span></span></button>
+    <button class="step" id="step-3" type="button" onclick="goPage('record')" disabled>
+      <span class="step-num">3</span><span>The record<span class="step-sub">Mandate details and closure</span></span></button>
+  </div>
+</div>
+
+<div class="page-body">
+
+<!-- ══════════ PAGE 1 ══════════ -->
+<div class="page-pane active" id="page-find">
+  <div class="page-title-block">
+    <div class="form-eyebrow">Step One</div>
+    <h1 class="form-title">Find the mandate</h1>
+    <p class="form-subtitle">Pull up a mandate already running here, or bring one across from Zoho. Every record starts from a Zoho ID.</p>
+  </div>
+
+  <div class="form-section" data-node="P1-S1">
+    <div class="section-header"><div class="section-num">1</div><div class="section-title">Mandate lookup</div>
+      <span class="section-hint">The more you give, the tighter the match</span><span class="node">P1-S1</span></div>
+    <div class="section-body">
+      <div class="field-grid">
+        <div class="field-group">
+          <label>Consultant <span class="req">*</span></label>
+          <select id="f-consultant"></select>
+          <div class="field-hint">Whoever is working this record right now.</div>
+        </div>
+        <div class="field-group">
+          <label>Zoho mandate ID <span class="req">*</span></label>
+          <input type="text" id="f-zoho" placeholder="17-digit Zoho reference" style="font-family:var(--mono);">
+          <div class="field-hint">Nothing enters this tool without an existing Zoho record.</div>
+        </div>
+        <div class="field-group">
+          <label>Client name</label>
+          <input type="text" id="f-client" placeholder="e.g. Bajaj Finance Limited">
+        </div>
+        <div class="field-group">
+          <label>Role title</label>
+          <input type="text" id="f-role" placeholder="e.g. Chief Financial Officer">
+        </div>
+        <div class="field-group full">
+          <label>Ishwa mandate ID <span class="opt">optional &mdash; skips straight through if you have it</span></label>
+          <input type="text" id="f-uid" placeholder="ISH-202607-0042" style="font-family:var(--mono);text-transform:uppercase;">
+        </div>
+      </div>
+      <div style="margin-top:18px;">
+        <button class="btn btn-primary" style="width:100%;" id="btn-find" onclick="findMandate()">Open mandate</button>
+        <p class="field-hint" style="margin-top:9px;text-align:center;">If no record exists here yet, one is created and linked to the Zoho ID.</p>
+      </div>
+    </div>
+  </div>
+
+  <div id="find-results"></div>
+</div>
+
+<!-- ══════════ PAGE 2 ══════════ -->
+<div class="page-pane" id="page-filter">
+  <div class="p2-top">
+    <div class="p2-identity">
+      <div class="idn"><span class="idn-l">Client</span><span class="idn-v" id="p2-client">&mdash;</span></div>
+      <div class="idn"><span class="idn-l">Role</span><span class="idn-v" id="p2-role">&mdash;</span></div>
+      <div class="idn"><span class="idn-l">Consultant</span><span class="idn-v" id="p2-consultant">&mdash;</span></div>
+      <div class="idn"><span class="idn-l">Mandate</span><span class="idn-v mono" id="p2-uid">&mdash;</span></div>
+    </div>
+    <div class="p2-count">
+      <span class="cnt-big" id="cnt-total">0</span>
+      <span class="cnt-lab">tagged<br>so far</span>
+    </div>
+    <button class="btn btn-primary" id="btn-p2-next" onclick="leaveFilter()">Skip page &mdash; no CVs screened</button>
+  </div>
+  <p class="p2-line">One CV at a time. Attach it, say why, move on &mdash; each one writes as you go.</p>
+
+  <div class="p2-grid">
+
+    <div class="bucket acc" id="bucket-acc" data-node="P2-S1">
+      <div class="bucket-head">
+        <span class="bucket-badge">Shortlisted</span>
+        <span class="node">P2-S1</span>
+        <button class="btn-nextcv" onclick="commitCV('acc')">Next CV &rarr;</button>
+      </div>
+      <div class="bucket-body">
+        <input type="file" id="file-acc" accept=".pdf,.doc,.docx" style="display:none" onchange="pickCV('acc',this)">
+        <div class="attach-row">
+          <button class="btn-attach" onclick="document.getElementById('file-acc').click()">&#128206; Attach CV</button>
+          <span class="attach-name" id="attach-acc">No file yet</span>
+          <button class="attach-clear" id="clear-acc" style="display:none" onclick="clearCV('acc')" aria-label="Remove">&times;</button>
+        </div>
+        <div class="field-group">
+          <label>Candidate name <span class="req">*</span></label>
+          <input type="text" id="name-acc" placeholder="Full name">
+        </div>
+        <div class="field-group">
+          <label>Why this one stays <span class="req">*</span></label>
+          <div class="cloud" id="cloud-acc"></div>
+        </div>
+        <div class="cloud-foot">
+          <span class="cloud-count" id="count-acc"><b>0</b> selected &middot; minimum 1</span>
+          <button class="btn-add" onclick="toggleAdd('acc')">ADD +</button>
+        </div>
+        <div class="add-panel" id="add-acc">
+          <div class="field-group"><label>Word or phrase</label><input type="text" id="addw-acc" placeholder="e.g. Turnaround experience"></div>
+          <div class="field-group"><label>Statement <span class="opt">optional</span></label><input type="text" id="adds-acc" placeholder="e.g. Led a two-year turnaround of a loss-making division"></div>
+          <div class="add-actions"><button class="btn-mini no" onclick="toggleAdd('acc')">Cancel</button>
+            <button class="btn-mini go" onclick="addPill('acc')">Add to library</button></div>
+        </div>
+        <div class="field-group">
+          <label>Anything else <span class="opt">optional</span></label>
+          <textarea id="why-acc" rows="2" placeholder="One line if the pills don't cover it"></textarea>
+        </div>
+        <div class="row-err" id="err-acc"></div>
+      </div>
+    </div>
+
+    <div class="bucket rej" id="bucket-rej" data-node="P2-S2">
+      <div class="bucket-head">
+        <span class="bucket-badge">Reject</span>
+        <span class="node">P2-S2</span>
+        <button class="btn-nextcv" onclick="commitCV('rej')">Next CV &rarr;</button>
+      </div>
+      <div class="bucket-body">
+        <input type="file" id="file-rej" accept=".pdf,.doc,.docx" style="display:none" onchange="pickCV('rej',this)">
+        <div class="attach-row">
+          <button class="btn-attach" onclick="document.getElementById('file-rej').click()">&#128206; Attach CV</button>
+          <span class="attach-name" id="attach-rej">No file yet</span>
+          <button class="attach-clear" id="clear-rej" style="display:none" onclick="clearCV('rej')" aria-label="Remove">&times;</button>
+        </div>
+        <div class="field-group">
+          <label>Candidate name <span class="req">*</span></label>
+          <input type="text" id="name-rej" placeholder="Full name">
+        </div>
+        <div class="field-group">
+          <label>Why this one goes <span class="req">*</span></label>
+          <div class="cloud" id="cloud-rej"></div>
+        </div>
+        <div class="cloud-foot">
+          <span class="cloud-count" id="count-rej"><b>0</b> selected</span>
+          <button class="btn-add" onclick="toggleAdd('rej')">ADD +</button>
+        </div>
+        <div class="add-panel" id="add-rej">
+          <div class="field-group"><label>Word or phrase</label><input type="text" id="addw-rej" placeholder="e.g. No board exposure"></div>
+          <div class="field-group"><label>Statement <span class="opt">optional</span></label><input type="text" id="adds-rej" placeholder="e.g. Has never presented to or sat on a board"></div>
+          <div class="add-actions"><button class="btn-mini no" onclick="toggleAdd('rej')">Cancel</button>
+            <button class="btn-mini go" onclick="addPill('rej')">Add to library</button></div>
+        </div>
+        <div class="field-group">
+          <label>Anything else <span class="opt">optional</span></label>
+          <textarea id="why-rej" rows="2" placeholder="One line if the pills don't cover it"></textarea>
+        </div>
+        <div class="row-err" id="err-rej"></div>
+      </div>
+    </div>
+
+    <div class="rail" data-node="P2-S3">
+      <div class="rail-head">
+        <span class="rail-title">This session</span>
+        <span class="node">P2-S3</span>
+        <span class="rail-n" id="rail-n">0</span>
+      </div>
+      <div class="rail-body" id="rail-body">
+        <div class="rail-empty">CVs appear here as you tag them.</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════ PAGE 3 ══════════ -->
+<div class="page-pane" id="page-record">
+  <div class="page-title-block">
+    <div class="form-eyebrow">Step Three</div>
+    <h1 class="form-title">The mandate record</h1>
+    <p class="form-subtitle">This record lives for as long as the search does. Fill what you know, save, and come back &mdash; nothing already saved is lost when you return.</p>
+  </div>
+
+  <div class="form-section" data-node="P3-S1">
+    <div class="section-header"><div class="section-num">1</div><div class="section-title">Mandate identity</div><span class="node">P3-S1</span></div>
+    <div class="section-body"><div class="field-grid">
+      <div class="field-group"><label>Date opened <span class="req">*</span></label><input type="date" id="date-opened"></div>
+      <div class="field-group"><label>Target closure date <span class="opt">optional</span></label><input type="date" id="date-target"></div>
+      <div class="field-group"><label>BD owner <span class="req">*</span></label><select id="bd-owner"></select></div>
+      <div class="field-group"><label>Execution owner <span class="req">*</span></label><select id="exec-owner"></select></div>
+      <div class="field-group"><label>Ishwa EDGE mandate? <span class="req">*</span></label>
+        <select id="edge"><option value="" disabled selected>Select</option><option value="yes">Yes &mdash; EDGE process applies</option><option value="no">No &mdash; standard search</option></select></div>
+      <div class="field-group"><label>Zoho mandate ID</label><input type="text" id="r-zoho" readonly style="background:var(--g2);font-family:var(--mono);"></div>
+    </div></div>
+  </div>
+
+  <div class="form-section" data-node="P3-S2">
+    <div class="section-header"><div class="section-num">2</div><div class="section-title">Role &amp; client</div><span class="node">P3-S2</span></div>
+    <div class="section-body"><div class="field-grid">
+      <div class="field-group"><label>Role title <span class="req">*</span></label><input type="text" id="role-title" placeholder="e.g. Chief Financial Officer"></div>
+      <div class="field-group"><label>Client name <span class="req">*</span></label><input type="text" id="client-name" placeholder="e.g. Bajaj Finance Limited"></div>
+      <div class="field-group"><label>Sector <span class="req">*</span></label>
+        <select id="sector"><option value="" disabled selected>Select sector</option>
+          <option>BFSI</option><option>Consumer / FMCG</option><option>Healthcare / Pharma</option>
+          <option>Technology / IT Services</option><option>Infrastructure / Real Estate</option><option>Education</option>
+          <option>Manufacturing / Industrial</option><option>Logistics / Transportation</option>
+          <option>Media / Entertainment</option><option>Energy / Oil &amp; Gas</option><option>Other</option></select></div>
+      <div class="field-group"><label>Geography <span class="req">*</span></label>
+        <select id="geography"><option value="" disabled selected>Select location</option>
+          <option>Bangalore</option><option>Gurgaon / Delhi NCR</option><option>Mumbai</option><option>Pune</option>
+          <option>Hyderabad</option><option>Chennai</option><option>Dubai / Middle East</option>
+          <option>International</option><option>Remote / Flexible</option></select></div>
+      <div class="field-group"><label>Reports to <span class="req">*</span></label><input type="text" id="reports-to" placeholder="e.g. CEO &amp; Board"></div>
+      <div class="field-group"><label>Company stage <span class="req">*</span></label>
+        <select id="company-stage"><option value="" disabled selected>Select stage</option>
+          <option>Listed &mdash; Large Cap (5000+ headcount)</option><option>Listed &mdash; Mid Cap (1000&ndash;5000 headcount)</option>
+          <option>Unlisted &mdash; Large (1000+ headcount)</option><option>Unlisted &mdash; Mid (200&ndash;1000 headcount)</option>
+          <option>Growth Stage &mdash; Series B/C (50&ndash;200)</option><option>Early Stage &mdash; Seed/Series A (&lt;50)</option>
+          <option>Family Business / Conglomerate</option><option>PE / VC Backed</option></select></div>
+      <div class="field-group full"><label>Mandate context <span class="req">*</span></label>
+        <textarea id="context" rows="3" placeholder="What is the business context for this hire? Why now?"></textarea></div>
+    </div></div>
+  </div>
+
+  <div class="form-section" data-node="P3-S3">
+    <div class="section-header"><div class="section-num">3</div><div class="section-title">Search strategy</div><span class="node">P3-S3</span></div>
+    <div class="section-body"><div class="field-grid single">
+      <div class="field-group"><label>Target profile <span class="req">*</span></label>
+        <textarea id="target-profile" rows="3" placeholder="Who are you going after and why?"></textarea></div>
+      <div class="field-group"><label>Channels &amp; sources <span class="opt">optional</span></label>
+        <textarea id="channels" rows="2" placeholder="e.g. LinkedIn deep search, database, companies to map, referrals"></textarea></div>
+      <div class="field-group"><label>Known complications <span class="opt">optional</span></label>
+        <textarea id="complications" rows="2" placeholder="Anything that makes this search non-standard"></textarea></div>
+    </div></div>
+  </div>
+
+  <div class="form-section" data-node="P3-S4">
+    <div class="section-header"><div class="section-num">4</div><div class="section-title">Evaluation criteria</div><span class="node">P3-S4</span></div>
+    <div class="section-body">
+      <div class="field-grid single">
+        <div class="field-group"><label>Must-have criteria <span class="req">*</span></label>
+          <div class="tag-input-wrap" id="wrap-musthave" onclick="document.getElementById('in-musthave').focus()">
+            <input class="tag-input-field" id="in-musthave" placeholder="Type a criterion and press Enter&hellip;"></div></div>
+        <div class="field-group"><label>Dealbreakers <span class="req">*</span></label>
+          <div class="tag-input-wrap" id="wrap-dealbreaker" onclick="document.getElementById('in-dealbreaker').focus()">
+            <input class="tag-input-field" id="in-dealbreaker" placeholder="Type a dealbreaker and press Enter&hellip;"></div></div>
+        <div class="field-group"><label>Nice-to-haves <span class="opt">optional</span></label>
+          <div class="tag-input-wrap" id="wrap-nicetohave" onclick="document.getElementById('in-nicetohave').focus()">
+            <input class="tag-input-field" id="in-nicetohave" placeholder="Type a preference and press Enter&hellip;"></div></div>
+      </div>
+      <div class="field-grid three" style="margin-top:15px;">
+        <div class="field-group"><label>Experience &mdash; min years <span class="req">*</span></label><input type="number" id="exp-min" min="0" max="40" placeholder="Min"></div>
+        <div class="field-group"><label>Experience &mdash; max years <span class="req">*</span></label><input type="number" id="exp-max" min="0" max="40" placeholder="Max"></div>
+        <div class="field-group"><label>Pedigree requirement</label>
+          <select id="pedigree"><option value="" disabled selected>Select</option><option>MBA preferred</option>
+            <option>MBA required</option><option>Tier-1 MBA required</option><option>CA required</option><option>Not required</option></select></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section" data-node="P3-S5">
+    <div class="section-header"><div class="section-num">5</div><div class="section-title">Commercials</div><span class="node">P3-S5</span></div>
+    <div class="section-body"><div class="field-grid three">
+      <div class="field-group"><label>CTC budget &mdash; min (&#8377;)</label><input type="number" id="ctc-min" placeholder="e.g. 12000000"></div>
+      <div class="field-group"><label>CTC budget &mdash; max (&#8377;)</label><input type="number" id="ctc-max" placeholder="e.g. 18000000"></div>
+      <div class="field-group"><label>Number of positions</label><input type="number" id="num-positions" min="1" placeholder="1"></div>
+      <div class="field-group"><label>Fees percentage</label><input type="number" id="fees-pct" min="0" max="100" placeholder="e.g. 16"></div>
+      <div class="field-group"><label>Retainer (&#8377;)</label><input type="number" id="retainer" placeholder="e.g. 350000"></div>
+      <div class="field-group"><label>Client contact</label><input type="text" id="client-contact" placeholder="Primary contact at client"></div>
+    </div></div>
+  </div>
+
+  <div class="form-section" data-node="P3-S6">
+    <div class="section-header"><div class="section-num">6</div><div class="section-title">Scoring weights</div>
+      <span class="section-hint">Must total 100</span><span class="node">P3-S6</span></div>
+    <div class="section-body">
+      <div class="weight-row"><div class="weight-label">Sector fit<span>Relevance of the candidate's industry background</span></div>
+        <input type="range" min="5" max="60" value="35" id="w-sector" oninput="updateWeights()"><div class="weight-val" id="wv-sector">35</div></div>
+      <div class="weight-row"><div class="weight-label">Seniority level<span>Career trajectory and current level match</span></div>
+        <input type="range" min="5" max="60" value="25" id="w-seniority" oninput="updateWeights()"><div class="weight-val" id="wv-seniority">25</div></div>
+      <div class="weight-row"><div class="weight-label">Tenure pattern<span>Stability, progression and longevity signals</span></div>
+        <input type="range" min="5" max="50" value="20" id="w-tenure" oninput="updateWeights()"><div class="weight-val" id="wv-tenure">20</div></div>
+      <div class="weight-row"><div class="weight-label">Compensation band<span>Current versus offered CTC alignment</span></div>
+        <input type="range" min="5" max="50" value="20" id="w-comp" oninput="updateWeights()"><div class="weight-val" id="wv-comp">20</div></div>
+      <div class="weights-total-row"><span class="weights-total-label">Total</span>
+        <span class="weights-total-val" id="w-total">100</span><span style="font-size:11.5px;color:#AAA;">/ 100</span></div>
+    </div>
+  </div>
+
+  <div class="form-section" data-node="P3-S7">
+    <div class="section-header"><div class="section-num">7</div><div class="section-title">Client engagement history</div>
+      <span class="section-hint">Internal only &mdash; never shared with the client</span><span class="node">P3-S7</span></div>
+    <div class="section-body">
+      <div class="engagement-grid" id="engagement-grid">
+        <div class="engagement-option" onclick="pickEngagement(this,'No prior history')">
+          <div class="engagement-label">No prior history</div><div class="engagement-sub">First-time client</div></div>
+        <div class="engagement-option" onclick="pickEngagement(this,'Previous searches — mostly successful')">
+          <div class="engagement-label">Mostly successful</div><div class="engagement-sub">Mandates typically closed</div></div>
+        <div class="engagement-option" onclick="pickEngagement(this,'Previous searches — mixed outcomes')">
+          <div class="engagement-label">Mixed outcomes</div><div class="engagement-sub">Some closed, some stalled</div></div>
+        <div class="engagement-option" onclick="pickEngagement(this,'Previous searches — mostly stalled')">
+          <div class="engagement-label">Mostly stalled</div><div class="engagement-sub">Extra qualification needed upfront</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section" data-node="P3-S8">
+    <div class="section-header"><div class="section-num">8</div><div class="section-title">Mandate documents</div><span class="node">P3-S8</span></div>
+    <div class="section-body">
+      <input type="file" id="mandate-docs" multiple style="display:none" onchange="stageDocs(this)">
+      <button class="drop" onclick="document.getElementById('mandate-docs').click()">&#128193; Attach mandate documents
+        <span class="drop-sub">Job description, brief, org chart, client email &mdash; candidate CVs belong in stage 1</span></button>
+      <div id="doc-list" style="margin-top:11px;display:flex;flex-direction:column;gap:7px;"></div>
+    </div>
+  </div>
+
+  <div class="closure-divider"><span>Closure</span></div>
+
+  <div class="form-section" data-node="P3-C1">
+    <div class="section-header"><div class="section-num">1</div><div class="section-title">Search outcome</div><span class="node">P3-C1</span></div>
+    <div class="section-body">
+      <div class="outcome-toggle">
+        <button class="outcome-btn" onclick="pickOutcome('won',this)"><span class="outcome-icon">&#10003;</span>
+          <span class="outcome-label">Closed won</span><span class="outcome-sub">Candidate placed, joining confirmed</span></button>
+        <button class="outcome-btn" onclick="pickOutcome('dead',this)"><span class="outcome-icon">&#10005;</span>
+          <span class="outcome-label">Dead</span><span class="outcome-sub">Abandoned or client withdrew</span></button>
+        <button class="outcome-btn" onclick="pickOutcome('hold',this)"><span class="outcome-icon">&#9208;</span>
+          <span class="outcome-label">On hold</span><span class="outcome-sub">Paused &mdash; may resume</span></button>
+      </div>
+      <div class="dead-section" id="dead-section">
+        <label style="display:block;margin-bottom:11px;padding-right:0;">Primary reason <span class="req">*</span></label>
+        <div class="reason-grid" id="reason-grid">
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">Client withdrew</div><div class="reason-sub">Cancelled or deprioritised</div></div>
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">Hired internally</div><div class="reason-sub">Filled from within</div></div>
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">Budget constraint</div><div class="reason-sub">Terms could not be agreed</div></div>
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">No suitable candidates</div><div class="reason-sub">Longlist exhausted</div></div>
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">Client unresponsive</div><div class="reason-sub">Went silent</div></div>
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">Brief changed</div><div class="reason-sub">Role evolved mid-search</div></div>
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">Candidate declined</div><div class="reason-sub">Offer made, candidate withdrew</div></div>
+          <div class="reason-option" onclick="pickReason(this)"><div class="reason-label">Other</div><div class="reason-sub">See notes below</div></div>
+        </div>
+        <div class="field-group" style="margin-top:15px;"><label>Additional context <span class="opt">optional</span></label>
+          <textarea id="dead-notes" rows="2" placeholder="Any context that would help identify a pattern"></textarea></div>
+      </div>
+      <div class="field-grid" style="margin-top:16px;">
+        <div class="field-group"><label>Date closed</label><input type="date" id="date-closed"></div>
+        <div class="field-group"><label>Closed / updated by</label><select id="closed-by"></select></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section" data-node="P3-C2">
+    <div class="section-header"><div class="section-num">2</div><div class="section-title">Candidate outcomes</div>
+      <span class="section-hint">Carried from stage 1 &mdash; no re-uploading</span><span class="node">P3-C2</span></div>
+    <div class="section-body">
+      <div class="callout"><strong>These are the CVs you shortlisted in stage 1.</strong> Mark each one as shared with the client or held back. Held back asks for a reason &mdash; that is data too.</div>
+      <div id="cand-list"></div>
+    </div>
+  </div>
+
+  <div class="form-section" data-node="P3-C3">
+    <div class="section-header"><div class="section-num">3</div><div class="section-title">Shortlist metrics</div>
+      <span class="section-hint">Derived from the candidates above</span><span class="node">P3-C3</span></div>
+    <div class="section-body">
+      <div class="metric-grid">
+        <div class="metric-box"><div class="metric-lab">CVs shared</div><span class="node">P3-C3-01</span>
+          <div class="metric-derived" id="m-shared">0</div><div class="metric-sub">Counted from section 2</div></div>
+        <div class="metric-box"><div class="metric-lab">Client shortlisted <span class="req">*</span></div><span class="node">P3-C3-02</span>
+          <input type="number" id="m-clientshort" min="0" placeholder="&mdash;" oninput="recalcMetrics()"><div class="metric-sub">Client agreed to interview</div></div>
+        <div class="metric-box calc"><div class="metric-lab">Shortlist rate</div><span class="node">P3-C3-03</span>
+          <div class="metric-val" id="m-rate">&mdash;</div><div class="metric-sub">Target: 75% or above</div></div>
+        <div class="metric-box"><div class="metric-lab">Offers made</div><span class="node">P3-C3-04</span>
+          <div class="metric-derived" id="m-offers">0</div><div class="metric-sub">Counted from section 2</div></div>
+        <div class="metric-box"><div class="metric-lab">Offer accepted date</div><span class="node">P3-C3-05</span><input type="date" id="m-acceptdate"></div>
+        <div class="metric-box"><div class="metric-lab">Candidate joining date</div><span class="node">P3-C3-06</span><input type="date" id="m-joindate"></div>
+      </div>
+      <div class="bucket-pips">
+        <span class="bpip g" id="bk-green">Offers 0</span>
+        <span class="bpip r" id="bk-rust">Interviewed, no offer 0</span>
+        <span class="bpip d" id="bk-red">Not shortlisted 0</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-section" data-node="P3-C4">
+    <div class="section-header"><div class="section-num">4</div><div class="section-title">Commercials &amp; learnings</div>
+      <span class="section-hint">All optional</span><span class="node">P3-C4</span></div>
+    <div class="section-body"><div class="field-grid">
+      <div class="field-group"><label>Total revenue (&#8377;) <span class="opt">optional</span></label><input type="number" id="total-revenue" placeholder="Fees + retainer"></div>
+      <div class="field-group"><label>Final CTC accepted (&#8377;)</label><input type="text" id="final-ctc" readonly style="background:var(--g2);" placeholder="Derived from the accepted candidate"></div>
+      <div class="field-group full"><label>Anything else the AI should know <span class="opt">optional</span></label>
+        <input type="text" id="learning" placeholder="e.g. Client quietly prioritised pedigree over everything stated in the brief"></div>
+    </div></div>
+  </div>
+
+  <div class="foot-bar">
+    <p class="foot-note">Saving merges into the existing record. Blank fields leave whatever is already stored untouched.</p>
+    <button class="btn btn-save" onclick="saveRecord()">Save record</button>
+  </div>
+</div>
+
+</div>
+
+<footer class="page-footer">
+  <span>Amit Gupta &mdash; AI Strategy Consultant | PiP_AGI</span>
+  <span>Mandate Record v3.1 &middot; July 2026</span>
+</footer>
+
+<div class="modal-overlay hidden" id="modal">
+  <div class="modal-box">
+    <div class="modal-title" id="modal-title">Confirm</div>
+    <div class="modal-body" id="modal-body"></div>
+    <div class="modal-list" id="modal-list" style="display:none;"></div>
+    <div class="modal-actions" id="modal-actions"></div>
+  </div>
+</div>
+
+<script>
+var APPS_SCRIPT_URL="https://script.google.com/macros/s/AKfycbz9-_XQFGEJuRGamKuKoYzfDQGhCQVqADFcRdFCe2F1ad9HvllfKvSAMAhrsCCBKQWB/exec";
+var READ_ENABLED=false;   /* flip to true once the Apps Script doGet is deployed */
+var REJECT_MIN=3;
+
+var CONSULTANTS=["Aparna Janakiraman","Chhaya Arora","Mohit Sethi","Rashmi Lamba",
+  "Shashidhar D S","Sapna Khatri","Varsha Karthik","Amit Gupta (TEST)"];
+
+var SEED={
+  rej:[
+    {t:"Location mismatch, no relocation signal",hard:1,w:22},{t:"Compensation too high",hard:1,w:20},
+    {t:"Compensation too low",hard:1,w:14},{t:"Seniority below mandate level",hard:1,w:19},
+    {t:"Overqualified for the role",hard:1,w:13},{t:"Notice period too long",hard:1,w:12},
+    {t:"No listed entity experience",hard:1,w:9},{t:"No international exposure",hard:1,w:7},
+    {t:"Sector mismatch",w:24},{t:"Adjacent sector, ramp-up too steep",w:11},
+    {t:"No capital-intensive business experience",w:6},{t:"No fundraising or debt exposure",w:8},
+    {t:"Profit and loss scale below mandate",w:16},{t:"Team size below mandate",w:10},
+    {t:"No board exposure",w:9},{t:"Never reported to Chief Executive Officer",w:7},
+    {t:"Functional depth missing",w:12},{t:"Generalist where specialist needed",w:8},
+    {t:"Specialist where generalist needed",w:5},{t:"Frequent job changes",w:17},
+    {t:"Too long in one organisation",w:8},{t:"Career plateau",w:9},
+    {t:"Unexplained employment gap",w:7},{t:"Downward move in last role",w:6},
+    {t:"Regional scope, national needed",w:7},{t:"Single company career",w:6},
+    {t:"Only multinational, promoter-led needed",w:8},{t:"Only promoter-led, multinational needed",w:6},
+    {t:"Startup background, corporate mandate",w:7},{t:"Corporate background, startup mandate",w:6},
+    {t:"Consulting background, no line role",w:9},{t:"Pedigree below client expectation",w:11},
+    {t:"Dealbreaker present in brief",w:13},{t:"Profile outdated",w:5},
+    {t:"Insufficient information in resume",w:6}
+  ],
+  acc:[
+    {t:"Direct sector match",w:26},{t:"Adjacent sector, transferable context",w:12},
+    {t:"Exact functional match",w:22},{t:"Profit and loss scale matches mandate",w:16},
+    {t:"Team size matches mandate",w:9},{t:"Board exposure",w:13},
+    {t:"Reported to Chief Executive Officer",w:11},{t:"Fundraising experience",w:12},
+    {t:"Debt issuance experience",w:7},{t:"Merger and acquisition experience",w:10},
+    {t:"Turnaround experience",w:9},{t:"Scale-up experience",w:11},
+    {t:"Listed entity experience",w:14},{t:"Promoter-led environment experience",w:8},
+    {t:"Multinational environment experience",w:10},{t:"International exposure",w:8},
+    {t:"Location match",w:18},{t:"Open to relocation",w:9},
+    {t:"Compensation band aligned",w:17},{t:"Clear step-up for candidate",w:12},
+    {t:"Stable tenure pattern",w:15},{t:"Consistent upward trajectory",w:16},
+    {t:"Strong pedigree",w:13},{t:"Known to consultant",w:7},
+    {t:"Referred by trusted source",w:6},{t:"Competitor company profile",w:11},
+    {t:"Client wishlist company",w:8},{t:"Diversity requirement met",w:6},
+    {t:"Immediate availability",w:7},{t:"Culture read matches client",w:9}
+  ],
+  s2:[
+    {t:"Better options available",w:14},{t:"Client cap on profiles shared",w:11},
+    {t:"Candidate not ready to move yet",w:12},{t:"Awaiting candidate confirmation",w:9},
+    {t:"Kept in reserve",w:8},{t:"Counter-offer accepted",w:13},
+    {t:"Candidate went cold",w:15},{t:"Candidate withdrew",w:12},
+    {t:"Not open to relocation after all",w:9},{t:"Compensation expectation increased",w:11},
+    {t:"Accepted another offer",w:10},{t:"Family constraint",w:6},
+    {t:"Health or personal reason",w:4},{t:"Notice period unacceptable to client",w:8},
+    {t:"Joining date too far out",w:6},{t:"Reference check concern",w:5},
+    {t:"Background verification concern",w:4},{t:"Salary negotiation failed",w:7},
+    {t:"Interview performance weak",w:12},{t:"Communication below expectation",w:8},
+    {t:"Culture mismatch",w:11},{t:"Wanted more sector depth",w:10},
+    {t:"Wanted larger scale exposure",w:8},{t:"Client changed specification",w:7},
+    {t:"Role put on hold",w:9},{t:"Closed internally",w:12},
+    {t:"Client unresponsive",w:11},{t:"Offer revoked",w:3}
+  ]
+};
+var LIB={acc:SEED.acc.slice(),rej:SEED.rej.slice(),s2:SEED.s2.slice()};
+
+var S={consultant:"",uid:"",zoho:"",client:"",role:"",candidates:[],
+  pending:{acc:null,rej:null},sel:{acc:[],rej:[]},docs:[],engagement:"",
+  outcome:"",deadReason:"",tags:{musthave:[],dealbreaker:[],nicetohave:[]},open:-1};
+
+function $(i){return document.getElementById(i);}
+function toast(m,e){var t=$("toast");t.textContent=m;t.className="toast show"+(e?" error":"");
+  setTimeout(function(){t.className="toast";},2500);}
+function esc(s){return String(s==null?"":s).replace(/[&<>"']/g,function(c){
+  return{"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];});}
+
+var PAGES=["find","filter","record"];
+function goPage(p){
+  if(p!=="find"&&!S.uid){toast("Open a mandate first",1);return;}
+  PAGES.forEach(function(x){$("page-"+x).classList.remove("active");});
+  $("page-"+p).classList.add("active");
+  for(var i=1;i<=3;i++)$("step-"+i).classList.toggle("current",PAGES[i-1]===p);
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+function unlockMandate(){
+  $("step-2").disabled=false;$("step-3").disabled=false;
+  $("uid-chip").classList.add("visible");$("uid-chip-val").textContent=S.uid;
+  $("p2-client").textContent=S.client||"\u2014";$("p2-role").textContent=S.role||"\u2014";
+  $("p2-consultant").textContent=S.consultant||"\u2014";$("p2-uid").textContent=S.uid;
+  $("step-1-sub").textContent=S.client?(S.client+" \u00b7 "+(S.role||"role not set")):"Mandate loaded";
+  $("client-name").value=S.client||"";$("role-title").value=S.role||"";$("r-zoho").value=S.zoho||"";
+}
+function newUid(){var d=new Date();
+  return "ISH-"+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+"-"+String(Math.floor(1000+Math.random()*8999));}
+
+function openNew(uid){
+  S.uid=uid||newUid();
+  postJSON({action:"openMandate",uid:S.uid,zoho_id:S.zoho,client_name:S.client,
+    role_title:S.role,consultant:S.consultant,opened_at:new Date().toISOString()});
+  unlockMandate();goPage("filter");
+}
+function findMandate(){
+  S.consultant=$("f-consultant").value;
+  if(!S.consultant){toast("Select who is working this record",1);return;}
+  var z=$("f-zoho").value.trim();
+  if(!z){toast("Zoho mandate ID is required",1);return;}
+  S.zoho=z;S.client=$("f-client").value.trim();S.role=$("f-role").value.trim();
+  var uid=$("f-uid").value.trim().toUpperCase();
+
+  if(!READ_ENABLED){
+    $("find-results").innerHTML='<div class="empty-card" style="margin-top:20px;">'+
+      '<div class="e-title">Lookup is not live yet</div><div class="e-sub">The read function on the backend is not deployed, '+
+      'so nothing can be pulled back. A record has been created and linked to this Zoho ID \u2014 everything you enter writes correctly.</div></div>';
+    openNew(uid);toast("Mandate "+S.uid+" open");return;
+  }
+  var q=APPS_SCRIPT_URL+"?action=findMandate&uid="+encodeURIComponent(uid)+
+    "&zoho="+encodeURIComponent(z)+"&client="+encodeURIComponent(S.client)+"&role="+encodeURIComponent(S.role);
+  $("btn-find").disabled=true;$("btn-find").textContent="Searching\u2026";
+  fetch(q).then(function(r){return r.json();}).then(function(d){
+    $("btn-find").disabled=false;$("btn-find").textContent="Open mandate";
+    if(d.pills)mergePills(d.pills);
+    if(d.mandates&&d.mandates.length)renderMatches(d.mandates);
+    else{openNew(uid);toast("New record "+S.uid+" created");}
+  }).catch(function(){
+    $("btn-find").disabled=false;$("btn-find").textContent="Open mandate";
+    toast("Could not reach the record store",1);});
+}
+function mergePills(rows){
+  ["acc","rej","s2"].forEach(function(k){
+    var stage=k==="acc"?"stage1_accept":k==="rej"?"stage1_reject":"stage2";
+    var incoming=rows.filter(function(r){return r.stage===stage&&r.active!==false;});
+    if(!incoming.length)return;
+    incoming.forEach(function(r){
+      var ex=LIB[k].filter(function(p){return p.t===r.pill;})[0];
+      if(ex){ex.w=r.weight||ex.w;}
+      else LIB[k].push({t:r.pill,w:r.weight||1,hard:r.hard?1:0,statement:r.statement||""});});});
+  renderCloud("acc");renderCloud("rej");
+}
+function renderMatches(list){
+  window._m=list;
+  var h='<div class="form-section" style="margin-top:20px;" data-node="P1-S2"><div class="section-header">'+
+    '<div class="section-num">2</div><div class="section-title">'+list.length+' match'+(list.length>1?"es":"")+
+    '</div><span class="node">P1-S2</span></div><div class="section-body">';
+  list.forEach(function(m,i){
+    h+='<button class="match-row" onclick="loadMandate('+i+')"><span>'+
+      '<span class="match-title">'+esc(m.client_name)+' \u2014 '+esc(m.role_title)+'</span>'+
+      '<span class="match-meta">Opened '+esc(m.date_opened||"\u2014")+'</span></span>'+
+      '<span class="match-uid">'+esc(m.uid)+'</span></button>';});
+  h+='<button class="btn btn-ghost" style="width:100%;margin-top:6px;" onclick="openNew()">None of these \u2014 create a new record</button>';
+  $("find-results").innerHTML=h+'</div></div>';
+}
+function loadMandate(i){
+  var m=window._m[i];
+  S.uid=m.uid;S.zoho=m.zoho_id||S.zoho;S.client=m.client_name||"";S.role=m.role_title||"";
+  Object.keys(m).forEach(function(k){
+    var el=$(k.replace(/_/g,"-"));
+    if(el&&m[k]!==""&&m[k]!=null&&el.tagName!=="BUTTON")el.value=m[k];});
+  if(m.candidates&&m.candidates.length)S.candidates=m.candidates;
+  if(m.engagement_history)S.engagement=m.engagement_history;
+  unlockMandate();updateCounter();renderRail();renderCandidates();
+  toast("Mandate loaded");goPage("filter");
+}
+
+/* ── clouds ── */
+function sizeClass(w){return w>=18?"s4":w>=12?"s3":w>=7?"s2":"s1";}
+function renderCloud(k){
+  var el=$("cloud-"+k);if(!el)return;el.innerHTML="";
+  LIB[k].slice().sort(function(a,b){return b.w-a.w;}).forEach(function(p){
+    var b=document.createElement("button");b.type="button";
+    b.className="pill "+sizeClass(p.w)+(p.hard?" hard":"")+(S.sel[k].indexOf(p.t)>-1?" on":"");
+    b.textContent=p.t;if(p.statement)b.title=p.statement;
+    b.onclick=function(){togglePill(k,p.t);};el.appendChild(b);});
+  updateCloudCount(k);
+}
+function togglePill(k,t){var i=S.sel[k].indexOf(t);
+  if(i>-1)S.sel[k].splice(i,1);else S.sel[k].push(t);renderCloud(k);}
+function isHard(k,t){var p=LIB[k].filter(function(x){return x.t===t;})[0];return !!(p&&p.hard);}
+function minMet(k){
+  if(k==="acc")return S.sel.acc.length>=1;
+  if(S.sel.rej.some(function(t){return isHard("rej",t);}))return true;
+  return S.sel.rej.length>=REJECT_MIN;}
+function updateCloudCount(k){
+  var el=$("count-"+k);if(!el)return;
+  el.className="cloud-count"+(minMet(k)?"":" short");
+  el.innerHTML="<b>"+S.sel[k].length+"</b> selected \u00b7 "+
+    (k==="acc"?"minimum 1, no upper limit"
+      :"minimum "+REJECT_MIN+", or one <span style=\"color:var(--rust);\">\u25AA</span> hard filter");}
+function toggleAdd(k){$("add-"+k).classList.toggle("open");}
+function addPill(k){
+  var w=$("addw-"+k).value.trim(),st=$("adds-"+k).value.trim();
+  if(!w){toast("Enter a word or phrase",1);return;}
+  if(LIB[k].some(function(p){return p.t.toLowerCase()===w.toLowerCase();})){toast("That pill already exists",1);return;}
+  LIB[k].push({t:w,w:1,statement:st});S.sel[k].push(w);
+  postJSON({action:"addPill",stage:(k==="acc"?"stage1_accept":"stage1_reject"),pill:w,statement:st,
+    added_by:S.consultant,role_family:$("sector").value,added_at:new Date().toISOString()});
+  $("addw-"+k).value="";$("adds-"+k).value="";toggleAdd(k);renderCloud(k);
+  toast("Added \u2014 visible to everyone");}
+
+/* ── page 2 ── */
+function pickCV(k,input){
+  var f=input.files[0];if(!f)return;S.pending[k]=f;
+  $("attach-"+k).textContent=f.name;$("attach-"+k).className="attach-name has";
+  $("clear-"+k).style.display="block";}
+function clearCV(k){S.pending[k]=null;$("file-"+k).value="";
+  $("attach-"+k).textContent="No file yet";$("attach-"+k).className="attach-name";
+  $("clear-"+k).style.display="none";}
+function candidateId(k){
+  var n=S.candidates.filter(function(c){return c.stage1_verdict===(k==="acc"?"shortlisted":"reject");}).length+1;
+  return S.uid+"-"+(k==="acc"?"S":"R")+String(n).padStart(2,"0");}
+function validateRow(k){
+  var e=$("err-"+k),m=[];
+  if(!S.pending[k])m.push("Attach the CV.");
+  if(!$("name-"+k).value.trim())m.push("Enter the candidate name.");
+  if(!minMet(k))m.push(k==="acc"?"Select at least one reason this candidate stays."
+    :"Select at least "+REJECT_MIN+" reasons, or one hard filter on its own.");
+  if(m.length){e.className="row-err show";e.textContent=m.join(" ");return false;}
+  e.className="row-err";return true;}
+function commitCV(k,silent){
+  if(!validateRow(k))return false;
+  var f=S.pending[k],id=candidateId(k);
+  var row={candidate_id:id,mandate_uid:S.uid,zoho_id:S.zoho,
+    candidate_name:$("name-"+k).value.trim(),original_filename:f.name,
+    stored_filename:id+"."+(f.name.split(".").pop()||"pdf"),
+    stage1_verdict:(k==="acc"?"shortlisted":"reject"),stage1_pills:S.sel[k].slice(),
+    stage1_why:$("why-"+k).value.trim(),stage2_verdict:"",stage2_pills:[],
+    client_outcome:"",outcome_stage:"",outcome_why:"",client_words:"",source:"",
+    ctc_offered:"",accepted_flag:false,joining_date:"",
+    consultant:S.consultant,tagged_at:new Date().toISOString(),_file:f};
+  S.candidates.push(row);
+  fileToB64(f).then(function(b){var p=JSON.parse(JSON.stringify(row));delete p._file;
+    p.action="tagCandidate";p.file_b64=b;postJSON(p);});
+  clearCV(k);$("name-"+k).value="";$("why-"+k).value="";S.sel[k]=[];renderCloud(k);
+  updateCounter();renderRail();renderCandidates();
+  if(!silent)toast("Saved \u2014 "+id);
+  return true;}
+function fileToB64(f){return new Promise(function(res,rej){var r=new FileReader();
+  r.onload=function(){res(r.result.split(",")[1]);};r.onerror=rej;r.readAsDataURL(f);});}
+function counts(){
+  var a=S.candidates.filter(function(c){return c.stage1_verdict==="shortlisted";}).length;
+  var r=S.candidates.filter(function(c){return c.stage1_verdict==="reject";}).length;
+  return{acc:a,rej:r,total:a+r};}
+function updateCounter(){
+  var c=counts();
+  $("cnt-total").textContent=c.total;
+  $("step-2-sub").textContent=c.total?(c.acc+" shortlisted \u00b7 "+c.rej+" rejected"):"Nothing screened yet";
+  $("btn-p2-next").textContent=c.total?"Next page":"Skip page \u2014 no CVs screened";
+  $("rail-n").textContent=c.total;
+  recalcMetrics();}
+function renderRail(){
+  var el=$("rail-body");
+  if(!S.candidates.length){el.innerHTML='<div class="rail-empty">CVs appear here as you tag them.</div>';return;}
+  el.innerHTML=S.candidates.slice().reverse().map(function(c){
+    var k=c.stage1_verdict==="shortlisted"?"acc":"rej";
+    return '<div class="rail-item"><span class="rail-dot '+k+'"></span><span>'+
+      '<span class="rail-name">'+esc(c.candidate_name)+'</span>'+
+      '<span class="rail-id">'+esc(c.candidate_id)+'</span>'+
+      '<span class="rail-pills">'+esc(c.stage1_pills.slice(0,3).join(" \u00b7 "))+
+      (c.stage1_pills.length>3?" +"+(c.stage1_pills.length-3):"")+'</span></span></div>';}).join("");}
+function leaveFilter(){
+  var blocked=false;
+  ["acc","rej"].forEach(function(k){
+    if(S.pending[k]||$("name-"+k).value.trim()||S.sel[k].length){
+      if(!commitCV(k,true))blocked=true;}});
+  if(blocked){toast("Finish the CV in progress first",1);return;}
+  goPage("record");}
+
+/* ── page 3 candidates ── */
+function shortlisted(){return S.candidates.filter(function(c){return c.stage1_verdict==="shortlisted";});}
+function renderCandidates(){
+  var list=shortlisted(),el=$("cand-list");
+  if(!list.length){
+    el.innerHTML='<div class="empty-card"><div class="e-title">No shortlisted candidates yet</div>'+
+      '<div class="e-sub">Shortlist CVs in stage 1 and they appear here automatically, with the file already attached.</div></div>';
+    recalcMetrics();return;}
+  el.innerHTML=list.map(function(c,i){
+    var st=c.stage2_verdict==="shared"?"shared":c.stage2_verdict==="held"?"held":"unset";
+    var open=(S.open===i);
+    return '<div class="cand '+st+'" data-node="P3-C2-'+String(i+1).padStart(2,"0")+'">'+
+      '<div class="cand-banner">'+
+        '<span class="cand-idx">'+(i+1)+'</span>'+
+        '<span><span class="cand-name">'+esc(c.candidate_name)+'</span>'+
+        '<span class="cand-file">'+esc(c.stored_filename)+' \u2190 '+esc(c.original_filename)+'</span></span>'+
+        '<span class="cand-state">'+(st==="shared"?"Shared":st==="held"?"Held back":"Not set")+'</span>'+
+        '<button class="btn-collapse" onclick="toggleCand('+i+')">'+(open?"Next \u2192":"Open")+'</button>'+
+      '</div>'+
+      '<div class="cand-body'+(open?" open":"")+'" id="cb-'+i+'">'+(open?candBody(c,i):"")+'</div></div>';
+  }).join("");
+  if(S.open>-1&&list[S.open]&&list[S.open].stage2_verdict==="held")renderS2Cloud(S.open);
+  recalcMetrics();}
+function toggleCand(i){
+  if(S.open===i){
+    var list=shortlisted(),c=list[i];
+    if(c&&!c.stage2_verdict){toast("Mark this candidate shared or held back first",1);return;}
+    if(c&&c.stage2_verdict==="held"&&!c.stage2_pills.length){toast("Select at least one reason it was held back",1);return;}
+    S.open=(i+1<list.length)?i+1:-1;
+  } else S.open=i;
+  renderCandidates();}
+function candBody(c,i){
+  var h='<div class="radio-pair">'+
+    '<label class="radio-opt share'+(c.stage2_verdict==="shared"?" on":"")+'">'+
+      '<input type="radio" name="v'+i+'" '+(c.stage2_verdict==="shared"?"checked":"")+
+      ' onchange="setVerdict('+i+',\'shared\')">'+
+      '<span class="radio-txt">Shared with client<span class="radio-sub">This CV went out</span></span></label>'+
+    '<label class="radio-opt hold'+(c.stage2_verdict==="held"?" on":"")+'">'+
+      '<input type="radio" name="v'+i+'" '+(c.stage2_verdict==="held"?"checked":"")+
+      ' onchange="setVerdict('+i+',\'held\')">'+
+      '<span class="radio-txt">Held back<span class="radio-sub">Never went to the client</span></span></label></div>';
+  if(c.stage2_verdict==="shared"){
+    h+='<div class="field-grid">'+
+      '<div class="field-group"><label>Client outcome <span class="req">*</span></label>'+
+        '<select onchange="setC('+i+',\'client_outcome\',this.value);recalcMetrics();">'+
+        opt(["","Offer made","Interviewed, no offer","Not shortlisted by client","Withdrew"],c.client_outcome)+'</select></div>'+
+      '<div class="field-group"><label>Stage reached</label>'+
+        '<select onchange="setC('+i+',\'outcome_stage\',this.value)">'+
+        opt(["","Client screen","Client interview","Offer stage"],c.outcome_stage)+'</select></div>'+
+      '<div class="field-group"><label>Source <span class="opt">optional</span></label>'+
+        '<select onchange="setC('+i+',\'source\',this.value)">'+
+        opt(["","Naukri","LinkedIn","Referral","Database","Mapped directly"],c.source)+'</select></div>'+
+      '<div class="field-group"><label>CTC offered (&#8377;) <span class="opt">if an offer was made</span></label>'+
+        '<input type="number" value="'+esc(c.ctc_offered)+'" oninput="setC('+i+',\'ctc_offered\',this.value);recalcMetrics();"></div>'+
+      '<div class="field-group"><label>Client\u2019s words <span class="opt">verbatim if you have it</span></label>'+
+        '<input type="text" value="'+esc(c.client_words)+'" oninput="setC('+i+',\'client_words\',this.value)" placeholder="e.g. Too operator, not enough strategist"></div>'+
+      '<div class="field-group"><label>Why <span class="opt">one line is enough</span></label>'+
+        '<input type="text" value="'+esc(c.outcome_why)+'" oninput="setC('+i+',\'outcome_why\',this.value)" placeholder="e.g. Notice period six months, client needed thirty days"></div>'+
+      '<div class="accept-box"><input type="checkbox" id="acc-'+i+'" '+(c.accepted_flag?"checked":"")+
+        ' onchange="setAccepted('+i+',this.checked)"><label for="acc-'+i+'">This candidate accepted the offer</label></div>'+
+      (c.accepted_flag?'<div class="field-group"><label>Joining date</label><input type="date" value="'+esc(c.joining_date)+
+        '" onchange="setC('+i+',\'joining_date\',this.value)"></div>':"")+
+      '</div>';
+  } else if(c.stage2_verdict==="held"){
+    h+='<div class="field-group"><label>Why it never went out <span class="req">*</span></label>'+
+      '<div class="cloud p3-cloud" id="s2cloud-'+i+'" style="background:var(--g2);"></div></div>'+
+      '<div class="cloud-foot" style="margin-top:9px;"><span class="cloud-count" id="s2count-'+i+'"><b>0</b> selected</span></div>';
+  }
+  return h;}
+function opt(a,cur){return a.map(function(v){
+  return '<option value="'+esc(v)+'"'+(v===cur?" selected":"")+'>'+(v||"Select")+'</option>';}).join("");}
+function candAt(i){return shortlisted()[i];}
+function setC(i,k,v){candAt(i)[k]=v;}
+function setVerdict(i,v){
+  var c=candAt(i);c.stage2_verdict=v;
+  if(v==="held"){c.client_outcome="";c.accepted_flag=false;c.ctc_offered="";}
+  else c.stage2_pills=[];
+  renderCandidates();}
+function setAccepted(i,v){S.candidates.forEach(function(c){c.accepted_flag=false;});
+  candAt(i).accepted_flag=v;renderCandidates();}
+function renderS2Cloud(i){
+  var c=candAt(i),el=$("s2cloud-"+i);if(!el)return;el.innerHTML="";
+  LIB.s2.slice().sort(function(a,b){return b.w-a.w;}).forEach(function(p){
+    var b=document.createElement("button");b.type="button";
+    b.className="pill "+sizeClass(p.w)+(c.stage2_pills.indexOf(p.t)>-1?" on":"");
+    b.textContent=p.t;
+    b.onclick=function(){var k=c.stage2_pills.indexOf(p.t);
+      if(k>-1)c.stage2_pills.splice(k,1);else c.stage2_pills.push(p.t);renderS2Cloud(i);};
+    el.appendChild(b);});
+  $("s2count-"+i).innerHTML="<b>"+c.stage2_pills.length+"</b> selected";}
+
+/* ── metrics ── */
+function recalcMetrics(){
+  var sl=shortlisted();
+  var shared=sl.filter(function(c){return c.stage2_verdict==="shared";});
+  var offers=shared.filter(function(c){return c.client_outcome==="Offer made";}).length;
+  $("m-shared").textContent=shared.length;
+  $("m-offers").textContent=offers;
+  var cs=parseInt($("m-clientshort").value,10);
+  if(!isNaN(cs)&&shared.length>0){var r=Math.round(cs/shared.length*100);
+    $("m-rate").textContent=r+"%";$("m-rate").style.color=r>=75?"var(--green2)":"var(--rust)";}
+  else{$("m-rate").textContent="\u2014";$("m-rate").style.color="var(--rust)";}
+  var rust=!isNaN(cs)?Math.max(0,cs-offers):0;
+  var red=!isNaN(cs)?Math.max(0,shared.length-cs):0;
+  $("bk-green").textContent="Offers "+offers;
+  $("bk-rust").textContent="Interviewed, no offer "+rust;
+  $("bk-red").textContent="Not shortlisted "+red;
+  var a=sl.filter(function(c){return c.accepted_flag;})[0];
+  $("final-ctc").value=a&&a.ctc_offered?a.ctc_offered:"";}
+
+/* ── misc ── */
+function updateWeights(){
+  var t=0;["sector","seniority","tenure","comp"].forEach(function(k){
+    var v=+$("w-"+k).value;$("wv-"+k).textContent=v;t+=v;});
+  var el=$("w-total");el.textContent=t;el.className="weights-total-val"+(t!==100?" bad":"");}
+function pickEngagement(el,v){
+  document.querySelectorAll("#engagement-grid .engagement-option").forEach(function(x){x.classList.remove("on");});
+  el.classList.add("on");S.engagement=v;}
+function pickOutcome(v,el){
+  document.querySelectorAll(".outcome-btn").forEach(function(x){x.classList.remove("on");});
+  el.classList.add("on");S.outcome=v;$("dead-section").classList.toggle("open",v==="dead");}
+function pickReason(el){
+  document.querySelectorAll("#reason-grid .reason-option").forEach(function(x){x.classList.remove("on");});
+  el.classList.add("on");S.deadReason=el.querySelector(".reason-label").textContent;}
+function stageDocs(input){
+  if(input&&input.files)Array.prototype.forEach.call(input.files,function(f){S.docs.push(f);});
+  $("doc-list").innerHTML=S.docs.map(function(f,i){
+    return '<div class="cv-chip"><span>&#128196;</span><span>'+esc(f.name)+'</span>'+
+      '<span class="ok">uploads on save</span><button onclick="dropDoc('+i+')" aria-label="Remove">&times;</button></div>';}).join("");}
+function dropDoc(i){S.docs.splice(i,1);stageDocs(null);}
+function initTags(key){
+  var input=$("in-"+key),wrap=$("wrap-"+key);
+  input.addEventListener("keydown",function(e){
+    if((e.key==="Enter"||e.key===",")&&input.value.trim()){
+      e.preventDefault();var v=input.value.trim();S.tags[key].push(v);
+      var t=document.createElement("span");t.className="tag"+(key==="dealbreaker"?" dealbreaker":"");
+      t.innerHTML=esc(v)+'<button class="tag-remove" aria-label="Remove">&times;</button>';
+      t.querySelector("button").onclick=function(){
+        S.tags[key].splice(S.tags[key].indexOf(v),1);t.remove();};
+      wrap.insertBefore(t,input);input.value="";
+    }else if(e.key==="Backspace"&&!input.value){
+      var tags=wrap.querySelectorAll(".tag");
+      if(tags.length){S.tags[key].pop();tags[tags.length-1].remove();}}});}
+
+/* ── save ── */
+function postJSON(p){
+  return fetch(APPS_SCRIPT_URL,{method:"POST",
+    headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(p)})
+    .catch(function(){toast("Network hiccup \u2014 retry when you can",1);});}
+function modal(t,b,l,acts){
+  $("modal-title").textContent=t;$("modal-body").innerHTML=b;
+  var el=$("modal-list");
+  if(l){el.style.display="block";el.innerHTML=l;}else el.style.display="none";
+  $("modal-actions").innerHTML="";
+  acts.forEach(function(a){var btn=document.createElement("button");
+    btn.className="btn "+(a.kind==="go"?"btn-save":"btn-ghost");
+    btn.textContent=a.label;btn.onclick=a.fn;$("modal-actions").appendChild(btn);});
+  $("modal").classList.remove("hidden");}
+function closeModal(){$("modal").classList.add("hidden");}
+
+function saveRecord(){
+  var sl=shortlisted();
+  var unset=sl.filter(function(c){return !c.stage2_verdict;});
+  var held=sl.filter(function(c){return c.stage2_verdict==="held";});
+  var noReason=held.filter(function(c){return !c.stage2_pills.length;});
+  if(unset.length){
+    modal("Some candidates are unaccounted for",
+      "These shortlisted candidates are not yet marked as shared or held back.",
+      unset.map(function(c){return "\u00b7 "+esc(c.candidate_name);}).join("<br>"),
+      [{label:"Go back and set them",kind:"no",fn:closeModal}]);return;}
+  if(noReason.length){
+    modal("Held-back candidates need a reason",
+      "These were shortlisted but never went to the client, and no reason is recorded.",
+      noReason.map(function(c){return "\u00b7 "+esc(c.candidate_name);}).join("<br>"),
+      [{label:"Go back",kind:"no",fn:closeModal}]);return;}
+  /* held-back flagging is silent — written to the sheet, never surfaced here */
+  commitRecord(held.length>0);}
+
+function commitRecord(flag){
+  var shared=S.candidates.filter(function(c){return c.stage2_verdict==="shared";});
+  var p={action:"saveMandate",merge:true,uid:S.uid,zoho_id:S.zoho,consultant:S.consultant,
+    flagged_for_review:!!flag,
+    held_back_count:S.candidates.filter(function(c){return c.stage2_verdict==="held";}).length,
+    date_opened:$("date-opened").value,date_target:$("date-target").value,
+    bd_owner:$("bd-owner").value,exec_owner:$("exec-owner").value,edge:$("edge").value,
+    role_title:$("role-title").value,client_name:$("client-name").value,
+    sector:$("sector").value,geography:$("geography").value,
+    reports_to:$("reports-to").value,company_stage:$("company-stage").value,
+    context:$("context").value,target_profile:$("target-profile").value,
+    channels:$("channels").value,complications:$("complications").value,
+    must_have:S.tags.musthave,dealbreakers:S.tags.dealbreaker,nice_to_have:S.tags.nicetohave,
+    exp_min:$("exp-min").value,exp_max:$("exp-max").value,pedigree:$("pedigree").value,
+    ctc_min:$("ctc-min").value,ctc_max:$("ctc-max").value,num_positions:$("num-positions").value,
+    fees_pct:$("fees-pct").value,retainer:$("retainer").value,client_contact:$("client-contact").value,
+    weights:{sector:+$("w-sector").value,seniority:+$("w-seniority").value,
+      tenure:+$("w-tenure").value,compensation:+$("w-comp").value},
+    engagement_history:S.engagement,outcome:S.outcome,dead_reason:S.deadReason,
+    dead_notes:$("dead-notes").value,date_closed:$("date-closed").value,closed_by:$("closed-by").value,
+    cvs_shared:shared.length,client_shortlisted:$("m-clientshort").value,
+    offers_made:shared.filter(function(c){return c.client_outcome==="Offer made";}).length,
+    offer_accepted_date:$("m-acceptdate").value,joining_date:$("m-joindate").value,
+    total_revenue:$("total-revenue").value,final_ctc:$("final-ctc").value,
+    learning:$("learning").value,
+    candidates:S.candidates.map(function(c){var o=JSON.parse(JSON.stringify(c));delete o._file;return o;}),
+    saved_at:new Date().toISOString()};
+  Promise.all(S.docs.map(function(f){
+    return fileToB64(f).then(function(b){return{name:f.name,b64:b};});
+  })).then(function(d){p.mandate_docs=d;return postJSON(p);}).then(function(){
+    modal("Record saved",
+      "Merged into the store. Blank fields left whatever was already saved untouched.",null,
+      [{label:"Stay on this page",kind:"no",fn:closeModal},
+       {label:"Finish and start a new mandate",kind:"go",fn:function(){closeModal();resetAll();}}]);});}
+
+function resetAll(){
+  var keep=S.consultant;
+  S={consultant:keep,uid:"",zoho:"",client:"",role:"",candidates:[],
+    pending:{acc:null,rej:null},sel:{acc:[],rej:[]},docs:[],engagement:"",
+    outcome:"",deadReason:"",tags:{musthave:[],dealbreaker:[],nicetohave:[]},open:-1};
+  document.querySelectorAll("#page-record input,#page-record textarea,#page-record select").forEach(function(el){
+    if(el.type==="checkbox"||el.type==="radio")el.checked=false;
+    else if(el.type!=="range")el.value="";});
+  document.querySelectorAll(".tag").forEach(function(t){t.remove();});
+  document.querySelectorAll(".outcome-btn,.reason-option,.engagement-option").forEach(function(x){x.classList.remove("on");});
+  $("dead-section").classList.remove("open");$("doc-list").innerHTML="";$("find-results").innerHTML="";
+  ["f-client","f-role","f-uid","f-zoho"].forEach(function(k){$(k).value="";});
+  $("uid-chip").classList.remove("visible");
+  $("step-2").disabled=true;$("step-3").disabled=true;
+  $("step-1-sub").textContent="Who is asking, and about what";
+  $("f-consultant").value=keep;
+  ["acc","rej"].forEach(function(k){clearCV(k);$("name-"+k).value="";$("why-"+k).value="";renderCloud(k);});
+  updateCounter();renderRail();renderCandidates();goPage("find");
+  toast("Ready for the next mandate");}
+
+/* ── auto node codes ── */
+function stampNodes(){
+  document.querySelectorAll("[data-node]").forEach(function(sec){
+    var base=sec.getAttribute("data-node"),n=0;
+    sec.querySelectorAll(".field-group").forEach(function(fg){
+      if(fg.querySelector(".node"))return;
+      n++;var s=document.createElement("span");
+      s.className="node";s.textContent=base+"-"+String(n).padStart(2,"0");
+      fg.appendChild(s);});});}
+
+(function init(){
+  var o='<option value="" disabled selected>Select consultant</option>'+
+    CONSULTANTS.map(function(c){return "<option>"+c+"</option>";}).join("");
+  ["f-consultant","bd-owner","exec-owner","closed-by"].forEach(function(id){$(id).innerHTML=o;});
+  ["musthave","dealbreaker","nicetohave"].forEach(initTags);
+  renderCloud("acc");renderCloud("rej");
+  updateWeights();updateCounter();renderRail();renderCandidates();stampNodes();
+})();
+</script>
+</body>
+</html>
