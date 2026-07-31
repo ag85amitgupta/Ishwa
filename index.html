@@ -103,22 +103,7 @@
   .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); transform: translateY(-2px); border-color: var(--g3); }
   .card:hover::before { background: var(--rust); }
 
-  .card-tag {
-    font-size: 12px; font-weight: 700; letter-spacing: 0.11em;
-    text-transform: uppercase; color: var(--rust);
-    padding-left: 9px; border-left: 3px solid var(--rust); line-height: 1.15;
-  }
-
-  /* Not yet live: recessed, never disabled. Full colour returns on hover. */
-  .card-pending { background: var(--g2); }
-  .card-pending .card-tag, .card-pending .card-title, .card-pending .card-desc,
-  .card-pending .card-time, .card-pending .card-arrow { opacity: .55; }
-  .card-pending .card-tag { border-left-color: #9A9A9A; color: #7A7A7A; }
-  .card-pending:hover { background: #fff; }
-  .card-pending:hover .card-tag, .card-pending:hover .card-title, .card-pending:hover .card-desc,
-  .card-pending:hover .card-time, .card-pending:hover .card-arrow { opacity: 1; }
-  .card-pending:hover .card-tag { border-left-color: var(--rust); color: var(--rust); }
-  .badge-pending { background: #EAEAEA; color: #6E6E6E; }
+  .card-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--rust); }
   .card-title { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--black); line-height: 1.25; }
   .card-desc { font-size: 13px; color: var(--g1); line-height: 1.6; flex: 1; }
   .card-footer {
@@ -178,15 +163,15 @@
 </header>
 
 <div class="hero">
-  <div class="hero-eyebrow">Engagement in Progress</div>
+  <div class="hero-eyebrow">Engagement Complete</div>
   <h1 class="hero-title">AI-Powered Executive Search Engine</h1>
-  <p class="hero-sub">Everything built for this engagement lives here — the project tracker, operational templates, and the AI tools for the delivery team.</p>
+  <p class="hero-sub">The AI Sourcing Assistant is the delivered product of this engagement. It stays live for the delivery team. The tracker and roadmap note are here for reference.</p>
   <div class="hero-meta">
     <span>PiP_AGI × Ishwa Consulting</span>
     <div class="hero-meta-dot"></div>
     <span>Started March 2026</span>
     <div class="hero-meta-dot"></div>
-    <span id="last-updated">Last updated 18 July 2026</span>
+    <span id="last-updated">Closed 31 July 2026</span>
   </div>
 </div>
 
@@ -194,12 +179,11 @@
   <div class="phase-pip done"    title="Phase 1 — Scoping"></div>
   <div class="phase-pip done"    title="Phase 2 — Data Audit"></div>
   <div class="phase-pip done"    title="Phase 3 — Client Inputs"></div>
-  <div class="phase-pip active"  title="Phase 4 — Rubric Build"></div>
-  <div class="phase-pip active"  title="Phase 5 — Sourcing Layer"></div>
-  <div class="phase-pip blocked" title="Phase 6 — Matching Engine (held pending form data)"></div>
-  <div class="phase-pip active"  title="Phase 7 — Data Capture"></div>
-  <div class="phase-pip blocked" title="Phase 8 — BD Analytics"></div>
-  <span class="status-label"><strong>Phases 4 · 5 · 7 active</strong> — Rubric · Sourcing · Data Capture</span>
+  <div class="phase-pip done"    title="Phase 5 — Sourcing Layer — delivered"></div>
+  <div class="phase-pip blocked" title="Phase 6 — Matching Engine — suspended"></div>
+  <div class="phase-pip done"    title="Phase 7 — Data Capture — handed to Ishwa"></div>
+  <div class="phase-pip blocked" title="Phase 8 — BD Analytics — not taken up"></div>
+  <span class="status-label"><strong>Engagement closed</strong> — Sourcing Assistant delivered and live</span>
 </div>
 
 <div class="page-body">
@@ -212,51 +196,23 @@
         <span class="badge badge-live">Live</span>
       </div>
       <div class="card-title">Project Tracker — 8-Phase Engagement View</div>
-      <div class="card-desc">A phase-by-phase view of the full engagement — what has been completed, what is in progress, what is blocked, and what comes next. Updated as the project moves forward.</div>
+      <div class="card-desc">A phase-by-phase view of the full engagement — what was delivered, what was suspended, and what was not taken up. Final state as at close.</div>
       <div class="card-footer">
-        <span class="card-time">3 of 8 phases complete</span>
+        <span class="card-time">Engagement closed — 31 July 2026</span>
         <span class="card-arrow">→</span>
       </div>
     </a>
   </div>
 
-  <div class="section-label">Data Entry</div>
-  <div class="cards-grid">
-    <a class="card accent-data" href="15.2_Ishwa_Combined_Data_Entry_Form.html" target="_blank" rel="noopener">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div class="card-tag">Mandate Data Entry</div>
-        <span class="badge badge-form">Intake + Closure</span>
-      </div>
-      <div class="card-title">New Mandate Brief & Closure Record</div>
-      <div class="card-desc">Single form for live mandate capture. Complete the intake brief at the top — the closure record unlocks automatically below. Mandate ID carries over. Both records write to the data sheets in one session.</div>
-      <div class="card-footer">
-        <span class="card-time">~12–18 min per mandate</span>
-        <span class="card-arrow">→</span>
-      </div>
-    </a>
-    <a class="card card-pending accent-data" href="23_Ishwa_User_Manual.html" target="_blank" rel="noopener">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div class="card-tag">User Manual for Mandate Records</div>
-        <span class="badge badge-pending">Not yet live</span>
-      </div>
-      <div class="card-title">Mandate Record — How to Use It</div>
-      <div class="card-desc">Step by step through the Mandate Record: finding the mandate, screening the longlist one CV at a time with reasons attached, and closing the file. The form itself is not in use yet — this is here to read ahead of it.</div>
-      <div class="card-footer">
-        <span class="card-time">2 min read</span>
-        <span class="card-arrow">→</span>
-      </div>
-    </a>
-  </div>
-
-  <div class="section-label">AI Tools</div>
+  <div class="section-label">Delivered Product</div>
   <div class="cards-grid">
     <a class="card accent-ai" href="16.3_Ishwa_Sourcing_Assistant.html" target="_blank" rel="noopener">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="card-tag">Sourcing Assistant</div>
-        <span class="badge badge-new">New</span>
+        <span class="badge badge-live">Live</span>
       </div>
       <div class="card-title">Target Companies & Search String</div>
-      <div class="card-desc">Fill in the mandate brief and generate a segmented target company list (Direct / Adjacent / Stretch) and a Resdex-ready boolean search string. Replaces the manual ChatGPT universe-building step. Before you start, check whether the search already exists &mdash; look it up by client, position or label, across your own work or the whole team&rsquo;s.</div>
+      <div class="card-desc">Fill in the mandate brief and generate a segmented target company list (Direct / Adjacent / Stretch) and a Resdex-ready boolean search string. Replaces the manual ChatGPT universe-building step. Before you start, check whether the search already exists &mdash; look it up by client and position, or by search ID.</div>
       <div class="card-footer">
         <span class="card-time">~2 min to fill · 20 sec to generate</span>
         <span class="card-arrow">→</span>
@@ -281,7 +237,7 @@
 
 <footer class="site-footer">
   <span>Amit Gupta — AI Strategy Consultant | PiP_AGI</span>
-  <span>Ishwa Consulting Engagement Hub · April 2026</span>
+  <span>Ishwa Consulting Engagement · March&ndash;July 2026 · Closed</span>
 </footer>
 
 
