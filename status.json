@@ -1,13 +1,14 @@
 {
-  "last_updated": "30 July 2026 (evening)",
-  "current_phase": 7,
-  "you_are_here": "30 Jul evening: backend for the Mandate Record is LIVE. Sheet 24 created; script 22 deployed as a BOUND Apps Script on hand-declared narrow scopes (spreadsheets.currentonly + drive.file + script.scriptapp) after a first consent screen asking for all-of-Drive was cancelled and the cause fixed. Five tabs built, 93 pills seeded, 07:00/13:00 weight triggers installed, web app deployed. 15.3 uploaded and live-tested by Amit — reads confirmed working end to end; WRITES NOT YET TESTED. Hub still points at 15.2, repoint deliberately held. LATE CORRECTION (decision 120): Ishwa never mints a Zoho ID — Zoho IDs arrive in a datasheet that will pre-populate the mandate, and an Ishwa UID is minted alongside whatever is traced. The 17-digit creation gate shipped earlier the same evening is wrong and comes out of 15.3 and 22 next session. Documents 23 (consultant guide) and 25 (31 Jul agenda) written.",
+  "last_updated": "31 July 2026 — ENGAGEMENT CLOSED",
+  "current_phase": "Closed",
+  "you_are_here": "ENGAGEMENT CLOSED 31 July 2026. The Sourcing Assistant is the final product — validated unprompted by Shalini on the closing call (80-CV screen down to ~30, plus lateral targets a consultant would not reach alone). The Mandate Record stack was built, deployed and live-tested, then suspended by mutual agreement: the blocker is CV ingestion, not data volume, and no path into the tool exists while consultants source and download inside their own database. Data hygiene passes to Ishwa — mandatory Zoho fields from 1 Aug, weekly audit, owned by Somanshu. The Rubric Build was never taken up and has been removed from the deliverable set. Cadence is email only. The engagement is unbilled.",
   "summary": {
-    "phases_complete": "3 / 8",
-    "deliverables_built": "40",
-    "client_inputs_pending": "2",
-    "build_time": "Sheet 24 + script 22 deployed bound and contained; 93-pill library seeded; twice-daily weight recompute live; 15.3 live-tested. Post-test fixes: validation made visible from the control that triggers it, P1/P3 width matched to 15.2, pill sizes raised with weights deliberately left flat, P1 search made permissive and split from record creation. 23 consultant guide and 25 agenda written.",
-    "new_mandate_id_from": "ISH-202603-0411"
+    "phases_complete": "4 / 7",
+    "deliverables_built": 40,
+    "client_inputs_pending": 0,
+    "build_time": "Engagement closed. Final product: AI Sourcing Assistant (16.3) + Search Log script (20.3).",
+    "new_mandate_id_from": "ISH-202603-0411",
+    "phase_numbering_note": "Phase 4 (Rubric Build) removed 31 Jul — never taken up. Remaining phases keep their original numbers so historical references in 98 and 00 stay valid. There is no Phase 4."
   },
   "naming_note": {
     "convention": "Two-digit sequential for NEW documents; decimal bumps (15.2, 16.2, 17.4) for MAJOR updates — dotted decimals only. Filename bumps are never Claude's default: propose, Amit decides; same-day iterations stay inside the existing filename. Last new-document number used: 25. Script-internal versions (v3.1, v4) are separate lineage.",
@@ -132,88 +133,50 @@
       }
     },
     {
-      "num": "Phase 4",
-      "name": "Rubric Build",
-      "tag": "ACTIVE",
-      "status": "active",
-      "title": "Rubric calibration — externalise consultant judgement",
-      "desc": "13A superseded by master-sheet validation path. Rubric feeds the matching engine in Phase 6. Zoho ID canonicality question folds into this phase. New input for later: search_fingerprint convergence (same search shape across consultants) is rubric-relevant evidence.",
-      "deliverables": [
-        {
-          "label": "Rubric walkthrough session (Varsha as participant)",
-          "status": "pending"
-        },
-        {
-          "label": "Rubric v1 signed off",
-          "status": "pending"
-        },
-        {
-          "label": "Zoho ID integration + canonicality decision (Zoho vs ISH-format)",
-          "status": "pending"
-        }
-      ],
-      "milestone": {
-        "label": "Evaluation rubric v1 signed off by Ishwa",
-        "status": "pending"
-      }
-    },
-    {
       "num": "Phase 5",
       "name": "Sourcing Layer",
-      "tag": "ACTIVE",
-      "status": "active",
-      "title": "Sourcing compression — 16.3 v4 built, 20.3 deployed, recall layer complete",
-      "desc": "All four builds from the 29 Jul call delivered. 20.3 deployed and sheet migrated. 16.3 and 16.2.2 built and verified but not yet uploaded — held until night, consultants live on 16.2 during the day. Recall is now six fields plus mandatory scope; 7-day history dropped in favour of a Saved on column and from/to date filters. Client Name is inside the fingerprint, so duplicate detection restarts from 29 Jul. Revenue/growth picklist values are a draft pending Somanshu. Descriptor CONTENT still open with Shalini. Decision-45 correction sentence still undelivered.",
+      "tag": "COMPLETE — FINAL PRODUCT",
+      "status": "done",
+      "title": "AI Sourcing Assistant — delivered, live, the engagement deliverable",
+      "desc": "The product the engagement closes on. 16.3 (v4) live on the hub, 20.3 deployed against the Sourcing_Search_Log sheet, recall over a logged search history. Validated unprompted by Shalini on the 31 Jul call. Recall simplification agreed on that call — Label, database/scope selector, consultant multi-select and date range out; client name + position OR search ID in. Revenue and growth picklists accepted as drafted; geography stays mandatory as is.",
       "deliverables": [
         {
-          "label": "20.3 — Search Log script v4 — DEPLOYED, sheet migrated, 30 rows preserved",
+          "label": "16.3 — AI Sourcing Assistant v4 — LIVE, final product",
           "status": "done"
         },
         {
-          "label": "16.3 — Sourcing Assistant v4 — built and verified",
+          "label": "20.3 — Search Log script v4 — deployed, sheet migrated, rows preserved",
           "status": "done"
         },
         {
-          "label": "16.2.2 — single-stage fallback — built and verified",
+          "label": "16.2.2 — single-stage fallback — built, unlinked",
           "status": "done"
         },
         {
-          "label": "Upload 16.3 + 16.2.2 + index.html to GitHub",
+          "label": "21 — Learning roadmap one-pager — delivered",
+          "status": "done"
+        },
+        {
+          "label": "Recall simplification — last agreed change",
           "status": "pending"
         },
         {
-          "label": "Hand-fill Client Name on SRCH-0016 to 0030 (15 rows)",
-          "status": "pending"
-        },
-        {
-          "label": "Delete 16.2 from repo once 16.3 is live",
-          "status": "pending"
-        },
-        {
-          "label": "Swap revenue/growth picklist values when Somanshu’s list lands",
-          "status": "pending"
-        },
-        {
-          "label": "Descriptor content decision — still open with Shalini",
-          "status": "pending"
-        },
-        {
-          "label": "Share Sourcing_Search_Log view-only with Shalini",
+          "label": "Repo cleanup — delete 16.2; hand-fill Client Name SRCH-0016 to 0030",
           "status": "pending"
         }
       ],
       "milestone": {
-        "label": "Recall layer built and deployed; front end awaiting upload",
-        "status": "partial"
+        "label": "Sourcing Assistant delivered and validated by the client",
+        "status": "done"
       }
     },
     {
       "num": "Phase 6",
       "name": "Matching Engine",
-      "tag": "BLOCKED",
+      "tag": "SUSPENDED — NOT DELIVERED",
       "status": "blocked",
-      "title": "Matching engine — fresh-build pivot; calibrates on live-captured data",
-      "desc": "Fresh-build pivot confirmed 17 Jul: no legacy back-fill. Live capture over ~6 months builds the training set — candidate-level verdicts are the training unit. Calibration begins ~Q4 2026. At calibration: group Search Log by search_fingerprint — recurring shapes = mandate archetypes / template candidates.",
+      "title": "Matching engine — SUSPENDED 31 Jul, revival trigger is CV ingestion",
+      "desc": "Suspended by mutual agreement 31 Jul. The capture mechanism (15.3) is complete and deployed but cannot be fed: consultants download CVs inside their own database, so there is no route into the tool. Three months of clean Zoho data does NOT on its own unblock this — the trigger is CV ingestion, not row count (decision 128). Note the client's own meeting notes attribute the suspension to data quality; that is the wrong cause.",
       "deliverables": [
         {
           "label": "System prompt architecture",
@@ -240,19 +203,19 @@
           "status": "blocked"
         }
       ],
-      "blocker": "Awaiting live-capture dataset. Calibration begins ~Q4 2026 when meaningful candidate-verdict volume exists.",
+      "blocker": "CV ingestion path. Not data volume.",
       "milestone": {
-        "label": "Prototype validated against live mandates",
+        "label": "Closed unbuilt. Revival trigger: CV ingestion, not row count.",
         "status": "blocked"
       }
     },
     {
       "num": "Phase 7",
       "name": "Live Data Capture",
-      "tag": "ACTIVE",
+      "tag": "HANDED TO CLIENT",
       "status": "active",
-      "title": "Pipeline live-tested working — distribution UNPARKED 24 Jul, ownership handed to Shalini",
-      "desc": "Pipeline (15.2 → contained 17.4 → Sheet 19 + Drive folders per mandate) live-tested by Amit 18 Jul — works. Ishwa context call held 24 Jul: distribution track unparked, sourcing assistant handed to Shalini to drive team adoption directly. Team demo held 27 Jul. Usage remains near-zero as of 29 Jul (5 log entries since 24 Jul). 15.2's resume-by-mandate behaviour (told to Shalini as 'built in' on 24 Jul) is UNVERIFIED against source — flagged for check before the 31 Jul re-demo. Formal E2E sign-off pass, consultant SOP, and joint Zoom walkthrough remain not-yet-done but are no longer blocked — sequencing is now Amit's call.",
+      "title": "Live data capture — moved into Zoho, client-owned, 3 months from 1 Aug",
+      "desc": "Pivoted 31 Jul. Capture no longer happens in a PiP tool. Shalini: 'Why create it in a different tool? That's the bulb.' Somanshu makes fields mandatory in Zoho with validation gates from 1 Aug, weekly audit cadence, existing consultant workflow otherwise unchanged. Positioned internally as IT hygiene with no AI objective attached — that framing is what unlocked agreement. Somanshu to map 15.3's field set into Zoho Recruit.",
       "deliverables": [
         {
           "label": "19 — Live Capture Sheet — live store",
@@ -292,17 +255,17 @@
         }
       ],
       "milestone": {
-        "label": "Distribution unparked; consultant adoption still near-zero as of 29 Jul",
-        "status": "partial"
+        "label": "Capture responsibility transferred to Ishwa, 1 Aug 2026",
+        "status": "done"
       }
     },
     {
       "num": "Phase 8",
       "name": "BD Analytics",
-      "tag": "UPCOMING",
+      "tag": "NOT TAKEN UP",
       "status": "upcoming",
       "title": "BD pattern analysis — strategic intelligence layer",
-      "desc": "Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership.",
+      "desc": "Pattern analysis across 3+ years of mandate data. Close rates by sector, average search duration by mandate type, ghost client signals, BD pipeline conversion. Delivered as a strategic insight report for leadership. Closed unstarted at engagement close, 31 Jul 2026.",
       "deliverables": [
         {
           "label": "Industry label standardisation",
@@ -318,7 +281,7 @@
         }
       ],
       "milestone": {
-        "label": "BD analytics report delivered to Ishwa leadership",
+        "label": "Closed unstarted",
         "status": "blocked"
       }
     }
@@ -333,67 +296,64 @@
       "label": "Full Zoho database integration — PAUSED 29 Jul",
       "scope": "Flagged as disproportionate complexity for current PoC stage. Lightweight weekly-export fallback noted, not committed.",
       "note": "Independent mandate ID scaffold (client+position) proceeds regardless — see Phase 4/6 notes."
+    },
+    {
+      "label": "Mandate Record stack (15.3 / 22 / 23 / 24) — SUSPENDED 31 Jul",
+      "scope": "Built, deployed, live-tested end to end. Amit: 'I'm suspending it because there is nothing to be had from there.' Shalini concurred. Leave deployed, do not delete.",
+      "note": "Revival trigger: CV ingestion without a manual download-and-upload step. NOT row count."
     }
   ],
   "open_actions": [
     {
-      "action": "Rebuild P1 to the Zoho-datasheet model (decision 120)",
-      "note": "FIRST ITEM NEXT SESSION. Remove the 17-digit creation gate and the client/role creation requirement from 15.3 and 22. Blocked on Amit clarifying the datasheet structure."
+      "action": "Simplify 16.3 recall",
+      "note": "The only build owed. Remove Label, database/scope selector, consultant multi-select, date range. Leave client name + position, OR search ID. Promised on the closing call."
     },
     {
-      "action": "Get the Zoho datasheet structure and field list",
-      "note": "Client dependency, critical path. Largest available reduction in consultant typing."
+      "action": "PRICING — never raised across five calls",
+      "note": "Shalini asked to be charged and anchored ~Rs 50,000/year on 29 Jul. No model, no invoice. The engagement closes unbilled. This is the last open commercial item."
     },
     {
-      "action": "Smoke-test the WRITE path on 15.3",
-      "note": "Reads proven, writes not. Tag a CV through to Drive and the Candidates tab."
+      "action": "Repo cleanup",
+      "note": "Delete 16.2 (writes blank Label/Client_Name). Hand-fill Client Name SRCH-0016 to 0030. Delete test row ISH-202607-3158 and the empty Sheet1 tab in Sheet 24."
     },
     {
-      "action": "Decide the hub repoint 15.2 to 15.3",
-      "note": "Held pending demo positioning. Consultants still land on 15.2."
+      "action": "Three unclaimed client asks — future scope, not this engagement",
+      "note": "(a) rank sourcing results on Ishwa's own search history — her actual want; (b) candidate pitch generation from CV+JD+company pitch, done manually today, called 'huge'; (c) tenure tracking at ~2 years for proactive outreach. See 98 row 136."
     },
     {
-      "action": "Delete test row ISH-202607-3158 and the empty Sheet1 tab",
-      "note": "Created with Zoho '23' during testing."
-    },
-    {
-      "action": "Upload 23 user manual and add it to index.html",
-      "note": "Manual only. 15.3 card NOT to be added this pass."
-    },
-    {
-      "action": "Hand-fill Client Name, SRCH-0016 to 0030",
-      "note": "15 rows. Until done, client recall returns nothing for pre-29-Jul work."
-    },
-    {
-      "action": "Delete 16.2 from the repo",
-      "note": "Writes blank Label/Client_Name. Deleting makes stale bookmarks fail loudly."
-    },
-    {
-      "action": "Chase Somanshu — revenue/stage list + active mandate list",
-      "note": "Picklist values in 16.3 are drafts until this lands."
-    },
-    {
-      "action": "Resolve sheet access model",
-      "note": "Weekly report vs direct access vs no-manual-involvement — unresolved (row 56)."
-    },
-    {
-      "action": "Share Sourcing_Search_Log view-only with Shalini",
-      "note": "Open since 18 Jul."
-    },
-    {
-      "action": "Deliver decision-45 correction sentence",
-      "note": "Undelivered at 24 and 29 Jul. Written into agenda 25 as a spoken item."
-    },
-    {
-      "action": "One-pager — secondary product line",
-      "note": "Owed to Shalini/Arvind conversation. No date set."
-    },
-    {
-      "action": "Cost/pricing model",
-      "note": "Shalini has asked to be charged. She anchored Rs 50,000/year."
+      "action": "Client-side, off PiP infrastructure",
+      "note": "Somanshu: Zoho mandatory fields live 1 Aug, weekly audit, field mapping, strategy email. Shalini: team adoption interviews."
     }
   ],
   "key_decisions": [
+    {
+      "decision": "Engagement closed on the Sourcing Assistant (31 Jul)",
+      "rationale": "16.3 is the delivered product. Validated unprompted by the client on the closing call."
+    },
+    {
+      "decision": "Rubric Build removed as a deliverable (31 Jul)",
+      "rationale": "Phase 4 never taken up — walkthrough session never ran, rubric v1 never signed off. Removed rather than carried as permanently pending. 13A and 13B remain in Phase 3 as documents that were written and delivered."
+    },
+    {
+      "decision": "Mandate Record suspended (31 Jul, decisions 126-128)",
+      "rationale": "Workflow blocker, not data volume. No path to getting CVs into the tool. Revival trigger is CV ingestion."
+    },
+    {
+      "decision": "Data hygiene moves into Zoho, not a PiP tool (31 Jul, decisions 129-130)",
+      "rationale": "Shalini: 'Why create it in a different tool? That's the bulb.' Three months, mandatory fields from 1 Aug, weekly audit. Framed as IT hygiene with no AI objective attached."
+    },
+    {
+      "decision": "Sourcing Assistant recall simplified to two routes (31 Jul, decisions 131-132)",
+      "rationale": "Client name + position, OR search ID. Reverses decisions 62, 64, 65. Cause is choice load, not function — every removed field worked as specified."
+    },
+    {
+      "decision": "Revenue/growth picklists accepted; geography stays mandatory as is (31 Jul, decisions 133-134)",
+      "rationale": "Closes rows 52 and 70. Geography kept because headquarters-in-location is the signal Shalini wants; relocation resistance is the real constraint."
+    },
+    {
+      "decision": "Cadence changed to email, not meetings (31 Jul, decision 138)",
+      "rationale": "Amit: 'put it in an email to me with sharp points.' Efficient, and also distance — recorded as a decision rather than a drift."
+    },
     {
       "decision": "Ishwa never mints a Zoho ID (30 Jul, decision 120)",
       "rationale": "Zoho IDs arrive in a datasheet that pre-populates the mandate. When one is traced, an Ishwa UID is minted alongside it; both columns already exist. No Zoho ID means an Ishwa record is created and work proceeds. Supersedes the 17-digit creation gate shipped hours earlier."
@@ -409,78 +369,8 @@
     {
       "decision": "Fresh-build pivot — live capture over ~6 months, no retrospective back-fill",
       "rationale": "Confirmed with Shalini/Somanshu 17 Jul. Six-month horizon accepted. Queue form retired."
-    },
-    {
-      "decision": "Training unit = candidate-level verdicts, not mandate count",
-      "rationale": "Rejects define thresholds — the engine's 200→10 job is rejecting well."
-    },
-    {
-      "decision": "Containment is the project standard for all scripts",
-      "rationale": "Multi-client account. Narrowest OAuth scopes; broad Drive grants revoked. Search Log script has zero Drive access."
-    },
-    {
-      "decision": "GitHub is form hosting only — never record-keeping (18 Jul)",
-      "rationale": "Deployed-state record lives in the decisions log (98) and the 00 context file. Repo sanitisation at Amit's convenience, not an action item."
-    },
-    {
-      "decision": "Distribution track parked behind Ishwa context call (18 Jul)",
-      "rationale": "E2E sign-off, SOP, Zoom walkthrough all pause. Pipeline itself verified working. Client-paced — no push."
-    },
-    {
-      "decision": "search_fingerprint + soft duplicate detection (18 Jul, rows 42-43)",
-      "rationale": "Consultant-agnostic content key on every record. Same consultant repeat → flagged, row still written with duplicate_of (flat mapping to earliest parent). Cross-consultant identical → clean save, linked silently — convergence mined later by grouping on fingerprint. Driven by Amit's 'across 3 consultants' question."
-    },
-    {
-      "decision": "Filename bumps never Claude's default (18 Jul, row 37)",
-      "rationale": "Propose, Amit decides. Same-day iterations stay inside existing filename — avoids hub/repo/URL re-sync churn."
-    },
-    {
-      "decision": "Verification discipline (18 Jul, row 44)",
-      "rationale": "Behavioural claims about deployed code verified against source before stated. Lesson from duplicate-row bug."
-    },
-    {
-      "decision": "Slice-2 learning-layer pitch = deliberate hold, not a gap (decision 45)",
-      "rationale": "Client ingestion lethargic; pitching an improvement layer pre-adoption compounds the 'too much' perception. Doc 21 built and quietly hosted; circulated only when Amit points to it."
-    },
-    {
-      "decision": "Ishwa context call held 24 Jul — distribution unparked, sourcing ownership handed to Shalini",
-      "rationale": "Client-paced rollout; Shalini drives team adoption directly rather than Amit pushing."
-    },
-    {
-      "decision": "Recall redesign: client name + role title replaces UID-only recall (29 Jul)",
-      "rationale": "UID recall required memorising a number; client+role matches how consultants actually think about past searches, and lets a different consultant find prior work without knowing it existed."
-    },
-    {
-      "decision": "Commercial track opened — Shalini initiated pricing unprompted (29 Jul)",
-      "rationale": "First time compensation has been named by the client. Distinct track from sourcing/rubric build work."
-    },
-    {
-      "decision": "Columns resolved by header name, not position (29 Jul) — overrides decision 35",
-      "rationale": "Adding, moving or renaming a column no longer needs a code change. Removes the recurring migration cost rather than paying it again each time."
-    },
-    {
-      "decision": "Sheet rebuilt in place, self-migrating and idempotent (29 Jul)",
-      "rationale": "Sheet ID constant unchanged — no re-authorisation, no 99 edit, no copy-paste of 30 JSON blobs. All rows and UIDs preserved; verified before deployment."
-    },
-    {
-      "decision": "Scope alone is a complete query; browse capped at 100 (29 Jul)",
-      "rationale": "\"Show me everything I have run\" is legitimate. Any criterion including a date range lifts the cap. At 50-100 searches/year the cap is only ever hit on a completely empty form."
-    },
-    {
-      "decision": "7-day history dropped in favour of date filters (29 Jul)",
-      "rationale": "Saved on column plus Searched from/to covers the same need without a separate view. Range bounded to ten years back, no future dates."
-    },
-    {
-      "decision": "Label prompt fires before the write, and is optional (29 Jul)",
-      "rationale": "A dialog after the row is written cannot label it. Optional per Amit despite the six-month-lookback use case. Blank on every save, including re-saves."
-    },
-    {
-      "decision": "Client Name is mandatory, stored not prompted (29 Jul)",
-      "rationale": "Feeding the hiring company to the AI would nudge output toward its competitors. Client Name sits inside the fingerprint; label sits outside it."
-    },
-    {
-      "decision": "Company Stage split shipped as 16.3, inference parked, 16.2.2 kept as fallback (29 Jul)",
-      "rationale": "The legacy 8-value list mixes size, lifecycle and ownership and cannot be inferred from two inputs. 16.2.2 preserves the AI logic Ishwa praises. Hub points at 16.3 only — Amit: \"No one needs to know.\""
     }
-  ]
+  ],
+  "engagement_status": "COMPLETE",
+  "final_product": "AI Sourcing Assistant (16.3, v4) — target-company search generation with recall over a logged search history. Backed by the Search Log script (20.3) writing to the Sourcing_Search_Log sheet. This is the delivered product. Everything else is either suspended, client-owned, or was not taken up."
 }
