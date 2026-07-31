@@ -15,7 +15,7 @@
     --serif:'Playfair Display',Georgia,serif;
     --sans:'DM Sans',Arial,system-ui,sans-serif;
     --mono:'DM Mono',monospace;
-    --w3:1160px;
+    --w3:900px;
   }
   *{box-sizing:border-box;margin:0;padding:0;}
   body{background:#F2EFEB;font-family:var(--sans);color:var(--black);min-height:100vh;}
@@ -150,18 +150,19 @@
   .attach-clear{background:none;border:none;cursor:pointer;color:#A8A29C;font-size:15px;padding:0 3px;}
   .attach-clear:hover{color:var(--rust);}
 
-  .cloud{display:flex;flex-wrap:wrap;gap:5px;align-content:flex-start;padding:12px;border-radius:2px;min-height:132px;max-height:240px;overflow-y:auto;}
+  .cloud{display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;padding:14px;border-radius:2px;min-height:132px;}
+  .cloud.flash{outline:2px solid var(--rust);outline-offset:2px;}
   .bucket.acc .cloud{background:var(--green-tint);}
   .bucket.rej .cloud{background:var(--red-tint);}
   .cloud::-webkit-scrollbar{width:4px;}
   .cloud::-webkit-scrollbar-thumb{background:var(--g4);border-radius:2px;}
-  .pill{background:#fff;border:1px solid var(--g4);border-radius:3px;padding:3px 9px;font-family:var(--sans);color:var(--g1);cursor:pointer;transition:all .12s;line-height:1.3;}
+  .pill{background:#fff;border:1px solid var(--g4);border-radius:3px;padding:5px 11px;font-family:var(--sans);color:var(--g1);cursor:pointer;transition:all .12s;line-height:1.3;}
   .pill:hover{border-color:var(--rust);color:var(--rust);}
   .pill:focus-visible{outline:2px solid var(--rust);outline-offset:1px;}
-  .pill.s1{font-size:10px;font-weight:400;}
-  .pill.s2{font-size:11.5px;font-weight:500;}
-  .pill.s3{font-size:13px;font-weight:600;}
-  .pill.s4{font-size:15px;font-weight:700;}
+  .pill.s1{font-size:12px;font-weight:400;}
+  .pill.s2{font-size:13.5px;font-weight:500;}
+  .pill.s3{font-size:15.5px;font-weight:600;}
+  .pill.s4{font-size:18px;font-weight:700;}
   .pill.hard::before{content:'\25AA';color:var(--rust);margin-right:4px;font-size:8px;vertical-align:middle;}
   .bucket.acc .pill.on{background:var(--green2);border-color:var(--green2);color:#fff;}
   .bucket.rej .pill.on{background:var(--red2);border-color:var(--red2);color:#fff;}
@@ -342,7 +343,7 @@
         <span class="uid-chip-label">Mandate</span>
         <span class="uid-chip-val" id="uid-chip-val">&mdash;</span>
       </div>
-      <span class="header-tag">Mandate Record &mdash; v3.1</span>
+      <span class="header-tag">Mandate Record &mdash; v3.2</span>
     </div>
   </div>
 </header>
@@ -365,12 +366,12 @@
   <div class="page-title-block">
     <div class="form-eyebrow">Step One</div>
     <h1 class="form-title">Find the mandate</h1>
-    <p class="form-subtitle">Pull up a mandate already running here, or bring one across from Zoho. Every record starts from a Zoho ID.</p>
+    <p class="form-subtitle">Pull up a mandate already running here, or start a new one. Any single field will find it &mdash; a Zoho ID is useful when you have it, and never required.</p>
   </div>
 
   <div class="form-section" data-node="P1-S1">
     <div class="section-header"><div class="section-num">1</div><div class="section-title">Mandate lookup</div>
-      <span class="section-hint">The more you give, the tighter the match</span><span class="node">P1-S1</span></div>
+      <span class="section-hint">Any one field is enough &mdash; the more you give, the tighter the match</span><span class="node">P1-S1</span></div>
     <div class="section-body">
       <div class="field-grid">
         <div class="field-group">
@@ -379,9 +380,9 @@
           <div class="field-hint">Whoever is working this record right now.</div>
         </div>
         <div class="field-group">
-          <label>Zoho mandate ID <span class="req">*</span></label>
-          <input type="text" id="f-zoho" placeholder="17-digit Zoho reference" style="font-family:var(--mono);">
-          <div class="field-hint">Nothing enters this tool without an existing Zoho record.</div>
+          <label>Zoho mandate ID</label>
+          <input type="text" id="f-zoho" placeholder="Zoho reference, if you have one" style="font-family:var(--mono);">
+          <div class="field-hint">Optional throughout. Partial is fine when searching; leave it blank if the mandate has no Zoho record.</div>
         </div>
         <div class="field-group">
           <label>Client name</label>
@@ -397,8 +398,8 @@
         </div>
       </div>
       <div style="margin-top:18px;">
-        <button class="btn btn-primary" style="width:100%;" id="btn-find" onclick="findMandate()">Open mandate</button>
-        <p class="field-hint" style="margin-top:9px;text-align:center;">If no record exists here yet, one is created and linked to the Zoho ID.</p>
+        <button class="btn btn-primary" style="width:100%;" id="btn-find" onclick="findMandate()">Find mandate</button>
+        <p class="field-hint" style="margin-top:9px;text-align:center;">Any one field is enough to find a mandate &mdash; leave them all blank to browse the most recent.<br>Creating a new record needs the client name and role title as well.</p>
       </div>
     </div>
   </div>
@@ -747,7 +748,7 @@
 
 <footer class="page-footer">
   <span>Amit Gupta &mdash; AI Strategy Consultant | PiP_AGI</span>
-  <span>Mandate Record v3.1 &middot; July 2026</span>
+  <span>Mandate Record v3.2 &middot; July 2026</span>
 </footer>
 
 <div class="modal-overlay hidden" id="modal">
@@ -853,6 +854,37 @@ function unlockMandate(){
 function newUid(){var d=new Date();
   return "ISH-"+d.getFullYear()+String(d.getMonth()+1).padStart(2,"0")+"-"+String(Math.floor(1000+Math.random()*8999));}
 
+function renderNoMatch(){
+  $("find-results").innerHTML='<div class="form-section" style="margin-top:20px;" data-node="P1-S2">'+
+    '<div class="section-header"><div class="section-num">2</div>'+
+    '<div class="section-title">No match</div><span class="node">P1-S2</span></div>'+
+    '<div class="section-body"><div class="empty-card"><div class="e-title">Nothing on file matches that</div>'+
+    '<div class="e-sub">Widen the search, or create the record here. A new record needs the client name, '+
+    'the role title and your name &mdash; nothing else.</div></div>'+
+    '<button class="btn btn-ghost" style="width:100%;margin-top:12px;" onclick="requestNew()">'+
+    'Create a new record</button></div></div>';}
+
+/* Decision 120 — Ishwa never mints a Zoho ID. Zoho IDs ARRIVE; they are captured
+   here when the consultant happens to have one and left blank when they do not.
+   Creation is gated on the three fields that make a record findable: client,
+   role, consultant. Search stays loose; creation is deliberate, not strict. */
+function requestNew(){
+  if(!S.consultant){
+    toast("Select who is working this record",1);
+    $("f-consultant").focus();
+    try{$("f-consultant").scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}
+    return;}
+  S.zoho=$("f-zoho").value.trim();
+  S.client=$("f-client").value.trim();S.role=$("f-role").value.trim();
+  if(!S.client||!S.role){
+    var miss=S.client?"f-role":"f-client";
+    toast("A new record needs both the client name and the role title",1);
+    $(miss).focus();
+    try{$(miss).scrollIntoView({behavior:"smooth",block:"center"});}catch(e){}
+    return;}
+  openNew($("f-uid").value.trim().toUpperCase());
+  toast("New record "+S.uid+" created");}
+
 function openNew(uid){
   S.uid=uid||newUid();
   postJSON({action:"openMandate",uid:S.uid,zoho_id:S.zoho,client_name:S.client,
@@ -863,26 +895,26 @@ function findMandate(){
   S.consultant=$("f-consultant").value;
   if(!S.consultant){toast("Select who is working this record",1);return;}
   var z=$("f-zoho").value.trim();
-  if(!z){toast("Zoho mandate ID is required",1);return;}
   S.zoho=z;S.client=$("f-client").value.trim();S.role=$("f-role").value.trim();
   var uid=$("f-uid").value.trim().toUpperCase();
 
   if(!READ_ENABLED){
     $("find-results").innerHTML='<div class="empty-card" style="margin-top:20px;">'+
       '<div class="e-title">Lookup is not live yet</div><div class="e-sub">The read function on the backend is not deployed, '+
-      'so nothing can be pulled back. A record has been created and linked to this Zoho ID \u2014 everything you enter writes correctly.</div></div>';
-    openNew(uid);toast("Mandate "+S.uid+" open");return;
+      'so nothing can be pulled back. Create the record below \u2014 everything you enter writes correctly.</div></div>'+
+      '<button class="btn btn-ghost" style="width:100%;margin-top:12px;" onclick="requestNew()">Create a new record</button>';
+    return;
   }
   var q=APPS_SCRIPT_URL+"?action=findMandate&uid="+encodeURIComponent(uid)+
     "&zoho="+encodeURIComponent(z)+"&client="+encodeURIComponent(S.client)+"&role="+encodeURIComponent(S.role);
   $("btn-find").disabled=true;$("btn-find").textContent="Searching\u2026";
   fetch(q).then(function(r){return r.json();}).then(function(d){
-    $("btn-find").disabled=false;$("btn-find").textContent="Open mandate";
+    $("btn-find").disabled=false;$("btn-find").textContent="Find mandate";
     if(d.pills)mergePills(d.pills);
-    if(d.mandates&&d.mandates.length)renderMatches(d.mandates);
-    else{openNew(uid);toast("New record "+S.uid+" created");}
+    if(d.mandates&&d.mandates.length)renderMatches(d.mandates,d);
+    else renderNoMatch();
   }).catch(function(){
-    $("btn-find").disabled=false;$("btn-find").textContent="Open mandate";
+    $("btn-find").disabled=false;$("btn-find").textContent="Find mandate";
     toast("Could not reach the record store",1);});
 }
 function mergePills(rows){
@@ -896,17 +928,17 @@ function mergePills(rows){
       else LIB[k].push({t:r.pill,w:r.weight||1,hard:r.hard?1:0,statement:r.statement||""});});});
   renderCloud("acc");renderCloud("rej");
 }
-function renderMatches(list){
+function renderMatches(list,meta){
   window._m=list;
   var h='<div class="form-section" style="margin-top:20px;" data-node="P1-S2"><div class="section-header">'+
     '<div class="section-num">2</div><div class="section-title">'+list.length+' match'+(list.length>1?"es":"")+
-    '</div><span class="node">P1-S2</span></div><div class="section-body">';
+    (meta&&meta.browse?' \u2014 most recent':'')+(meta&&meta.truncated?' of '+meta.total:'')+'</div><span class="node">P1-S2</span></div><div class="section-body">';
   list.forEach(function(m,i){
     h+='<button class="match-row" onclick="loadMandate('+i+')"><span>'+
       '<span class="match-title">'+esc(m.client_name)+' \u2014 '+esc(m.role_title)+'</span>'+
       '<span class="match-meta">Opened '+esc(m.date_opened||"\u2014")+'</span></span>'+
       '<span class="match-uid">'+esc(m.uid)+'</span></button>';});
-  h+='<button class="btn btn-ghost" style="width:100%;margin-top:6px;" onclick="openNew()">None of these \u2014 create a new record</button>';
+  h+='<button class="btn btn-ghost" style="width:100%;margin-top:6px;" onclick="requestNew()">None of these \u2014 create a new record</button>';
   $("find-results").innerHTML=h+'</div></div>';
 }
 function loadMandate(i){
@@ -973,7 +1005,13 @@ function validateRow(k){
   if(!$("name-"+k).value.trim())m.push("Enter the candidate name.");
   if(!minMet(k))m.push(k==="acc"?"Select at least one reason this candidate stays."
     :"Select at least "+REJECT_MIN+" reasons, or one hard filter on its own.");
-  if(m.length){e.className="row-err show";e.textContent=m.join(" ");return false;}
+  if(m.length){
+    e.className="row-err show";e.textContent=m.join(" ");
+    toast(m.join(" "),1);
+    if(!minMet(k)){var cl=$("cloud-"+k);
+      if(cl){cl.classList.add("flash");setTimeout(function(){cl.classList.remove("flash");},1200);}}
+    try{e.scrollIntoView({behavior:"smooth",block:"center"});}catch(err){}
+    return false;}
   e.className="row-err";return true;}
 function commitCV(k,silent){
   if(!validateRow(k))return false;
