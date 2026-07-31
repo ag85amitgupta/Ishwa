@@ -103,7 +103,22 @@
   .card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.07); transform: translateY(-2px); border-color: var(--g3); }
   .card:hover::before { background: var(--rust); }
 
-  .card-tag { font-size: 10px; font-weight: 600; letter-spacing: 0.10em; text-transform: uppercase; color: var(--rust); }
+  .card-tag {
+    font-size: 12px; font-weight: 700; letter-spacing: 0.11em;
+    text-transform: uppercase; color: var(--rust);
+    padding-left: 9px; border-left: 3px solid var(--rust); line-height: 1.15;
+  }
+
+  /* Not yet live: recessed, never disabled. Full colour returns on hover. */
+  .card-pending { background: var(--g2); }
+  .card-pending .card-tag, .card-pending .card-title, .card-pending .card-desc,
+  .card-pending .card-time, .card-pending .card-arrow { opacity: .55; }
+  .card-pending .card-tag { border-left-color: #9A9A9A; color: #7A7A7A; }
+  .card-pending:hover { background: #fff; }
+  .card-pending:hover .card-tag, .card-pending:hover .card-title, .card-pending:hover .card-desc,
+  .card-pending:hover .card-time, .card-pending:hover .card-arrow { opacity: 1; }
+  .card-pending:hover .card-tag { border-left-color: var(--rust); color: var(--rust); }
+  .badge-pending { background: #EAEAEA; color: #6E6E6E; }
   .card-title { font-family: var(--serif); font-size: 19px; font-weight: 600; color: var(--black); line-height: 1.25; }
   .card-desc { font-size: 13px; color: var(--g1); line-height: 1.6; flex: 1; }
   .card-footer {
@@ -206,7 +221,7 @@
   </div>
 
   <div class="section-label">Data Entry</div>
-  <div class="cards-grid single">
+  <div class="cards-grid">
     <a class="card accent-data" href="15.2_Ishwa_Combined_Data_Entry_Form.html" target="_blank" rel="noopener">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div class="card-tag">Mandate Data Entry</div>
@@ -219,7 +234,18 @@
         <span class="card-arrow">→</span>
       </div>
     </a>
-    
+    <a class="card card-pending accent-data" href="23_Ishwa_User_Manual.html" target="_blank" rel="noopener">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <div class="card-tag">User Manual for Mandate Records</div>
+        <span class="badge badge-pending">Not yet live</span>
+      </div>
+      <div class="card-title">Mandate Record — How to Use It</div>
+      <div class="card-desc">Step by step through the Mandate Record: finding the mandate, screening the longlist one CV at a time with reasons attached, and closing the file. The form itself is not in use yet — this is here to read ahead of it.</div>
+      <div class="card-footer">
+        <span class="card-time">2 min read</span>
+        <span class="card-arrow">→</span>
+      </div>
+    </a>
   </div>
 
   <div class="section-label">AI Tools</div>
@@ -234,18 +260,6 @@
       <div class="card-footer">
         <span class="card-time">~2 min to fill · 20 sec to generate</span>
         <span class="card-arrow">→</span>
-      </div>
-    </a>
-    <a class="card accent-data" href="23_Ishwa_User_Manual.html" target="_blank" rel="noopener">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <div class="card-tag">Consultant Guide</div>
-        <span class="badge badge-tool">Manual</span>
-      </div>
-      <div class="card-title">Mandate Record — How to Use It</div>
-      <div class="card-desc">Running a search through the record end to end: finding the mandate, screening the longlist one CV at a time with reasons attached, and closing the file. Includes what to do when a button won't move, and why the word list starts out flat.</div>
-      <div class="card-footer">
-        <span class="card-time">8 min read</span>
-        <span class="card-arrow">&rarr;</span>
       </div>
     </a>
 
