@@ -1,16 +1,16 @@
 {
-  "last_updated": "29 July 2026 (evening)",
+  "last_updated": "30 July 2026 (evening)",
   "current_phase": 7,
-  "you_are_here": "29 Jul evening build session: all four agreed builds delivered. 20.3 DEPLOYED — sheet migrated in place, 17 columns, 30 rows and UIDs preserved. 16.3 (v4, three-step recall flow) and 16.2.2 (single-stage fallback) built and verified; upload held until night because consultants are live on 16.2 during the day. Column reads now resolve by header name, not position — the recurring migration cost is gone. 7-day history dropped in favour of date filters. Usage is no longer near-zero: 7 searches on 29 Jul across four consultants. Friday 31 Jul remains a discovery + re-demo.",
+  "you_are_here": "30 Jul evening: backend for the Mandate Record is LIVE. Sheet 24 created; script 22 deployed as a BOUND Apps Script on hand-declared narrow scopes (spreadsheets.currentonly + drive.file + script.scriptapp) after a first consent screen asking for all-of-Drive was cancelled and the cause fixed. Five tabs built, 93 pills seeded, 07:00/13:00 weight triggers installed, web app deployed. 15.3 uploaded and live-tested by Amit — reads confirmed working end to end; WRITES NOT YET TESTED. Hub still points at 15.2, repoint deliberately held. LATE CORRECTION (decision 120): Ishwa never mints a Zoho ID — Zoho IDs arrive in a datasheet that will pre-populate the mandate, and an Ishwa UID is minted alongside whatever is traced. The 17-digit creation gate shipped earlier the same evening is wrong and comes out of 15.3 and 22 next session. Documents 23 (consultant guide) and 25 (31 Jul agenda) written.",
   "summary": {
     "phases_complete": "3 / 8",
-    "deliverables_built": "37",
+    "deliverables_built": "40",
     "client_inputs_pending": "2",
-    "build_time": "16.3 v4 + 16.2.2 fallback + 20.3 deployed. Three-step flow (Recall / Matches / Build), six recall fields incl. date range, mandatory scope, consultant multi-select, optional Label captured before the write, mandatory Client Name, Company Stage split into Revenue + Growth (16.3) with 16.2.2 retaining the single field. Browse mode capped at 100. 44 automated checks across both front ends; migration simulated against the real 30-row sheet before deployment.",
+    "build_time": "Sheet 24 + script 22 deployed bound and contained; 93-pill library seeded; twice-daily weight recompute live; 15.3 live-tested. Post-test fixes: validation made visible from the control that triggers it, P1/P3 width matched to 15.2, pill sizes raised with weights deliberately left flat, P1 search made permissive and split from record creation. 23 consultant guide and 25 agenda written.",
     "new_mandate_id_from": "ISH-202603-0411"
   },
   "naming_note": {
-    "convention": "Two-digit sequential for NEW documents; decimal bumps (15.2, 16.2, 17.4) for MAJOR updates — dotted decimals only. Filename bumps are never Claude's default: propose, Amit decides; same-day iterations stay inside the existing filename. Last new-document number used: 21. Script-internal versions (v3.1, v4) are separate lineage.",
+    "convention": "Two-digit sequential for NEW documents; decimal bumps (15.2, 16.2, 17.4) for MAJOR updates — dotted decimals only. Filename bumps are never Claude's default: propose, Amit decides; same-day iterations stay inside the existing filename. Last new-document number used: 25. Script-internal versions (v3.1, v4) are separate lineage.",
     "15.2_Ishwa_Combined_Data_Entry_Form.html": "LIVE pipeline form — supersedes 15/15.1. Closed/Updated-by attribution. Live-tested 18 Jul.",
     "17.4_Ishwa_Apps_Script_v4_Contained.js": "Deployed on Sheet 19 — contained scope (drive.file + bound sheet only).",
     "index.html": "Hub — cards open in new tab (target=_blank, noopener); points to 15.2 + 16.3. Updated but NOT yet uploaded.",
@@ -21,7 +21,12 @@
     "16.3_Ishwa_Sourcing_Assistant.html": "v4 LIVE TARGET — three-step flow (Recall / Matches / Build); stepper is the navigation; page order title -> stepper -> consultant bar; recall by Client Name / Position / Label / Search ID / Searched from / to, ANDed, partial case-insensitive; mandatory scope (Database or By consultant multi-select); Reset page x3; label prompt before the write; mandatory Client Name; Revenue + Growth stage. Supersedes 16.2.",
     "16.2.2_Ishwa_Sourcing_Assistant.html": "FALLBACK, UNLINKED — regenerated from finished 16.3 with only the stage swap re-applied. Single optional Company Stage, original prompt line, AI logic untouched. Footer marked 'single stage field'. Hub does not point at it.",
     "20.3_Ishwa_Search_Log_Apps_Script_Contained.js": "v4 DEPLOYED 29 Jul — columns resolved BY HEADER NAME, never by position (overrides decision 35). Self-migrating and idempotent. 17 columns incl. Label / Client_Name / Revenue_Stage / Growth_Stage. search_log endpoint: AND across uid/client/position/label/from/to, partial matching, consultant scope, newest first; no criteria = browse capped at BROWSE_LIMIT 100 with {truncated,total}. Same deployment URL. Supersedes 20.2.",
-    "16.2 / 20.2": "RETIRED 29 Jul — superseded by 16.3 / 20.3 (same deployment URL, redeployed as new version). Delete 16.2 from the repo once 16.3 is live so stale bookmarks fail loudly."
+    "16.2 / 20.2": "RETIRED 29 Jul — superseded by 16.3 / 20.3 (same deployment URL, redeployed as new version). Delete 16.2 from the repo once 16.3 is live so stale bookmarks fail loudly.",
+    "15.3_Ishwa_Mandate_Record.html": "LIVE-TESTED, UPLOADED, NOT YET ON THE HUB. Three pages: Find / Stage 1 filtration (the 80-to-10 screen) / The record. Writes per tag. Points at the script-22 /exec endpoint, READ_ENABLED true. P1 search is permissive (any one field, ANDed, partial); record creation is a separate act. The 17-digit Zoho gate on creation is WRONG per decision 120 and must be removed.",
+    "22_Ishwa_Apps_Script_Mandate_Record.gs": "DEPLOYED — bound to sheet 24, scopes hand-declared in appsscript.json, creates and remembers its own Drive folder. doGet (findMandate/getPills/ping) + doPost (openMandate/saveMandate/tagCandidate/addPill). heldBackDigest() stubbed, unwired.",
+    "24_Ishwa_Mandate_Record_Sheet": "Backend store for 15.3. Five tabs. Separate from Sheet 19 — setupSheets() clears tabs, so reuse was never safe.",
+    "23_Ishwa_User_Manual.html": "Consultant guide for 15.3. Written for the person doing the work. To go on the hub.",
+    "25_Ishwa_Agenda_31Jul.html": "Agenda for the 31 Jul discovery + re-demo. Leads with adoption, not features. NOT for the hub."
   },
   "phases": [
     {
@@ -332,8 +337,28 @@
   ],
   "open_actions": [
     {
-      "action": "Upload 16.3, 16.2.2 and index.html",
-      "note": "Held until night — consultants live on 16.2 during the day. 20.3 already deployed, so the live endpoint is ahead of the uploaded front end until this lands."
+      "action": "Rebuild P1 to the Zoho-datasheet model (decision 120)",
+      "note": "FIRST ITEM NEXT SESSION. Remove the 17-digit creation gate and the client/role creation requirement from 15.3 and 22. Blocked on Amit clarifying the datasheet structure."
+    },
+    {
+      "action": "Get the Zoho datasheet structure and field list",
+      "note": "Client dependency, critical path. Largest available reduction in consultant typing."
+    },
+    {
+      "action": "Smoke-test the WRITE path on 15.3",
+      "note": "Reads proven, writes not. Tag a CV through to Drive and the Candidates tab."
+    },
+    {
+      "action": "Decide the hub repoint 15.2 to 15.3",
+      "note": "Held pending demo positioning. Consultants still land on 15.2."
+    },
+    {
+      "action": "Delete test row ISH-202607-3158 and the empty Sheet1 tab",
+      "note": "Created with Zoho '23' during testing."
+    },
+    {
+      "action": "Upload 23 user manual and add it to index.html",
+      "note": "Manual only. 15.3 card NOT to be added this pass."
     },
     {
       "action": "Hand-fill Client Name, SRCH-0016 to 0030",
@@ -341,19 +366,11 @@
     },
     {
       "action": "Delete 16.2 from the repo",
-      "note": "Still functional against 20.3 but writes blank Label/Client_Name. Deleting makes stale bookmarks fail loudly."
+      "note": "Writes blank Label/Client_Name. Deleting makes stale bookmarks fail loudly."
     },
     {
-      "action": "Smoke-test 16.3 end to end",
-      "note": "Browse with blank fields, date range, consultant picker, open a result, save with a label. Test rows land in the live sheet — note UIDs to delete."
-    },
-    {
-      "action": "Chase Somanshu — clean revenue/stage list + active mandate list",
-      "note": "Picklist values in 16.3 are Claude drafts until this lands. Growth Stage deliberately carries no ownership options."
-    },
-    {
-      "action": "Verify 15.2 resume-by-mandate behaviour against source",
-      "note": "Told to Shalini as \"built in\" 24 Jul — still unconfirmed. Check before the 31 Jul re-demo."
+      "action": "Chase Somanshu — revenue/stage list + active mandate list",
+      "note": "Picklist values in 16.3 are drafts until this lands."
     },
     {
       "action": "Resolve sheet access model",
@@ -361,11 +378,11 @@
     },
     {
       "action": "Share Sourcing_Search_Log view-only with Shalini",
-      "note": "Open since 18 Jul, still not done."
+      "note": "Open since 18 Jul."
     },
     {
       "action": "Deliver decision-45 correction sentence",
-      "note": "Not delivered at 24 or 29 Jul. \"Notifies when others search the same thing\" still uncorrected."
+      "note": "Undelivered at 24 and 29 Jul. Written into agenda 25 as a spoken item."
     },
     {
       "action": "One-pager — secondary product line",
@@ -373,10 +390,22 @@
     },
     {
       "action": "Cost/pricing model",
-      "note": "Shalini has asked to be charged. Ceiling ~400-500 searches/month; she anchored ₹50,000/year."
+      "note": "Shalini has asked to be charged. She anchored Rs 50,000/year."
     }
   ],
   "key_decisions": [
+    {
+      "decision": "Ishwa never mints a Zoho ID (30 Jul, decision 120)",
+      "rationale": "Zoho IDs arrive in a datasheet that pre-populates the mandate. When one is traced, an Ishwa UID is minted alongside it; both columns already exist. No Zoho ID means an Ishwa record is created and work proceeds. Supersedes the 17-digit creation gate shipped hours earlier."
+    },
+    {
+      "decision": "Pill weights left flat for the demo (30 Jul, decision 118)",
+      "rationale": "Prominence is derived from tagging, so it cannot exist before tagging. Seeding opening weights would put a guess into the column the engine later calibrates on."
+    },
+    {
+      "decision": "Scopes declared by hand, never inferred (30 Jul, decision 114)",
+      "rationale": "Apps Script infers coarsely — touching DriveApp at all infers all-of-Drive. Bound script plus a hand-written oauthScopes array is the project standard for every new backend."
+    },
     {
       "decision": "Fresh-build pivot — live capture over ~6 months, no retrospective back-fill",
       "rationale": "Confirmed with Shalini/Somanshu 17 Jul. Six-month horizon accepted. Queue form retired."
