@@ -81,6 +81,12 @@
   .foot{margin-top:auto;padding-top:11px;border-top:1px solid var(--rust);
         display:flex;justify-content:space-between;font-size:8.5px;color:var(--g1);letter-spacing:.03em;}
 
+  /* Cover bleeds black edge-to-edge on screen; A4 sheet unchanged in print */
+  @media screen{
+    html,body{overflow-x:hidden;}
+    .sheet.cover{box-shadow:0 0 0 100vmax var(--black);clip-path:inset(0 -100vmax);}
+  }
+
   @media print{
     body{background:#fff;}
     .sheet{margin:0;width:auto;min-height:auto;page-break-after:always;}
