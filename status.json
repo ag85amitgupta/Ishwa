@@ -1,17 +1,17 @@
 {
-  "last_updated": "31 July 2026 — ENGAGEMENT CLOSED",
+  "last_updated": "6 August 2026 — post-close session",
   "current_phase": "Closed",
-  "you_are_here": "ENGAGEMENT CLOSED 31 July 2026. The Sourcing Assistant is the final product — validated unprompted by Shalini on the closing call (80-CV screen down to ~30, plus lateral targets a consultant would not reach alone). The Mandate Record stack was built, deployed and live-tested, then suspended by mutual agreement: the blocker is CV ingestion, not data volume, and no path into the tool exists while consultants source and download inside their own database. Data hygiene passes to Ishwa — mandatory Zoho fields from 1 Aug, weekly audit, owned by Somanshu. The Rubric Build was never taken up and has been removed from the deliverable set. Cadence is email only. The engagement is unbilled.",
+  "you_are_here": "ENGAGEMENT CLOSED 31 July 2026; this is a post-close session. The last owed build is DONE — 16.3 recall simplified to four optional ANDed fields (Client Name, Position, Label, Search ID); scope selector, consultant picker and date range removed; same filename, no backend change, 20.3 untouched. Two client-agreed items were deliberately overridden: Label stays in recall, and Shalini's client+position pairing requirement is gone (98 rows 147-148). 16.2.2 stays preserved on Amit's call and now diverges from 16.3 on recall. New: doc 27, a Usage & Utilisation review over the search log (24-31 Jul, 20 rows, 6 consultants) — adoption of everything shipped 29-30 Jul is COMPLETE, but cross-consultant reuse has never happened once. 27 is committed to the Ishwa repo unlinked and goes to Shalini by private link; no password gate is possible on static hosting. A monthly reporting product is scoped but not built. Pricing remains unbilled.",
   "summary": {
     "phases_complete": "4 / 7",
-    "deliverables_built": 40,
+    "deliverables_built": 41,
     "client_inputs_pending": 0,
-    "build_time": "Engagement closed. Final product: AI Sourcing Assistant (16.3) + Search Log script (20.3).",
+    "build_time": "Engagement closed. Final product: AI Sourcing Assistant (16.3, recall simplified 6 Aug) + Search Log script (20.3).",
     "new_mandate_id_from": "ISH-202603-0411",
     "phase_numbering_note": "Phase 4 (Rubric Build) removed 31 Jul — never taken up. Remaining phases keep their original numbers so historical references in 98 and 00 stay valid. There is no Phase 4."
   },
   "naming_note": {
-    "convention": "Two-digit sequential for NEW documents; decimal bumps (15.2, 16.2, 17.4) for MAJOR updates — dotted decimals only. Filename bumps are never Claude's default: propose, Amit decides; same-day iterations stay inside the existing filename. Last new-document number used: 25. Script-internal versions (v3.1, v4) are separate lineage.",
+    "convention": "Two-digit sequential for NEW documents; decimal bumps (15.2, 16.2, 17.4) for MAJOR updates — dotted decimals only. Filename bumps are never Claude's default: propose, Amit decides; same-day iterations stay inside the existing filename. Last new-document number used: 27. Script-internal versions (v3.1, v4) are separate lineage.",
     "15.2_Ishwa_Combined_Data_Entry_Form.html": "LIVE pipeline form — supersedes 15/15.1. Closed/Updated-by attribution. Live-tested 18 Jul.",
     "17.4_Ishwa_Apps_Script_v4_Contained.js": "Deployed on Sheet 19 — contained scope (drive.file + bound sheet only).",
     "index.html": "Hub — cards open in new tab (target=_blank, noopener); points to 15.2 + 16.3. Updated but NOT yet uploaded.",
@@ -19,15 +19,16 @@
     "07_Ishwa_ChatGPT_Persona_Prompt.html": "RETIRED 17 Jul.",
     "16.1 / 20.1": "RETIRED 18 Jul — superseded by 16.2 / 20.2 (same deployment URL, redeployed as new version).",
     "21_Ishwa_Sourcing_Assistant_Learning_Roadmap.html": "Client-facing one-pager — how the Sourcing Assistant improves (Slice-2 learning loop, layman terms, route & cost). On hub under AI Tools; ACTIVE PITCH DEFERRED until a few weeks of real usage post-demo (decision 45). Page is passively public; circulation only when Amit points to it.",
-    "16.3_Ishwa_Sourcing_Assistant.html": "v4 LIVE TARGET — three-step flow (Recall / Matches / Build); stepper is the navigation; page order title -> stepper -> consultant bar; recall by Client Name / Position / Label / Search ID / Searched from / to, ANDed, partial case-insensitive; mandatory scope (Database or By consultant multi-select); Reset page x3; label prompt before the write; mandatory Client Name; Revenue + Growth stage. Supersedes 16.2.",
-    "16.2.2_Ishwa_Sourcing_Assistant.html": "FALLBACK, UNLINKED — regenerated from finished 16.3 with only the stage swap re-applied. Single optional Company Stage, original prompt line, AI logic untouched. Footer marked 'single stage field'. Hub does not point at it.",
+    "16.3_Ishwa_Sourcing_Assistant.html": "v4 LIVE — SIMPLIFIED 6 Aug. Recall is four optional fields (Client Name / Position / Label / Search ID), ANDed, partial and case-insensitive; grey dashed divider between the two rows, no OR markers. Scope selector, consultant picker and date range REMOVED. Blank form browses the 100 most recent. Same filename, no version bump. 20.3 untouched.",
+    "16.2.2_Ishwa_Sourcing_Assistant.html": "FALLBACK, UNLINKED — PRESERVED on Amit's call 6 Aug (company stage was near-pivotal to result quality). NOT regenerated alongside the 6 Aug recall change, so it now diverges from 16.3 on recall. Accepted.",
     "20.3_Ishwa_Search_Log_Apps_Script_Contained.js": "v4 DEPLOYED 29 Jul — columns resolved BY HEADER NAME, never by position (overrides decision 35). Self-migrating and idempotent. 17 columns incl. Label / Client_Name / Revenue_Stage / Growth_Stage. search_log endpoint: AND across uid/client/position/label/from/to, partial matching, consultant scope, newest first; no criteria = browse capped at BROWSE_LIMIT 100 with {truncated,total}. Same deployment URL. Supersedes 20.2.",
     "16.2 / 20.2": "RETIRED 29 Jul — superseded by 16.3 / 20.3 (same deployment URL, redeployed as new version). Delete 16.2 from the repo once 16.3 is live so stale bookmarks fail loudly.",
     "15.3_Ishwa_Mandate_Record.html": "LIVE-TESTED, UPLOADED, NOT YET ON THE HUB. Three pages: Find / Stage 1 filtration (the 80-to-10 screen) / The record. Writes per tag. Points at the script-22 /exec endpoint, READ_ENABLED true. P1 search is permissive (any one field, ANDed, partial); record creation is a separate act. The 17-digit Zoho gate on creation is WRONG per decision 120 and must be removed.",
     "22_Ishwa_Apps_Script_Mandate_Record.gs": "DEPLOYED — bound to sheet 24, scopes hand-declared in appsscript.json, creates and remembers its own Drive folder. doGet (findMandate/getPills/ping) + doPost (openMandate/saveMandate/tagCandidate/addPill). heldBackDigest() stubbed, unwired.",
     "24_Ishwa_Mandate_Record_Sheet": "Backend store for 15.3. Five tabs. Separate from Sheet 19 — setupSheets() clears tabs, so reuse was never safe.",
     "23_Ishwa_User_Manual.html": "Consultant guide for 15.3. Written for the person doing the work. To go on the hub.",
-    "25_Ishwa_Agenda_31Jul.html": "Agenda for the 31 Jul discovery + re-demo. Leads with adoption, not features. NOT for the hub."
+    "25_Ishwa_Agenda_31Jul.html": "Agenda for the 31 Jul discovery + re-demo. Leads with adoption, not features. NOT for the hub.",
+    "27_Ishwa_Usage_Analysis.html": "ADMIN — cover + one page, six SVG charts, no libraries. Usage review of the search log 24-31 Jul. Consultants de-named; Jakson named in the exhibit. Committed to the Ishwa repo but NOT carded on the hub. Private link to Shalini only."
   },
   "phases": [
     {
@@ -157,12 +158,16 @@
           "status": "done"
         },
         {
-          "label": "Recall simplification — last agreed change",
-          "status": "pending"
+          "label": "Recall simplification — SHIPPED 6 Aug",
+          "status": "done"
         },
         {
           "label": "Repo cleanup — delete 16.2; hand-fill Client Name SRCH-0016 to 0030",
           "status": "pending"
+        },
+        {
+          "label": "27 — Usage & Utilisation review (admin, unlinked)",
+          "status": "done"
         }
       ],
       "milestone": {
@@ -305,8 +310,12 @@
   ],
   "open_actions": [
     {
-      "action": "Simplify 16.3 recall",
-      "note": "The only build owed. Remove Label, database/scope selector, consultant multi-select, date range. Leave client name + position, OR search ID. Promised on the closing call."
+      "action": "Commit 16.3 + index.html line 215 + 27 to the Ishwa repo",
+      "note": "All three built and verified 6 Aug, not yet pushed. 27 stays unlinked from the hub — private link to Shalini only."
+    },
+    {
+      "action": "Reporting product — scoped, not built",
+      "note": "Monthly read, combine-months and YTD. Fingerprint convergence is the part worth building. Fixed constraint: may name clients, therefore cannot be publicly hosted. See 98 rows 161-162."
     },
     {
       "action": "PRICING — never raised across five calls",
@@ -326,6 +335,10 @@
     }
   ],
   "key_decisions": [
+    {
+      "decision": "Shalini's client+position AND-requirement overridden (6 Aug)",
+      "rationale": "Recall exists so a different consultant can find prior work; that person rarely has both the account and the exact title. The pairing requirement locked out the user the feature was built for."
+    },
     {
       "decision": "Engagement closed on the Sourcing Assistant (31 Jul)",
       "rationale": "16.3 is the delivered product. Validated unprompted by the client on the closing call."
