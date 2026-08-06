@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sourcing Assistant — Usage &amp; Utilisation</title>
+<style>
+  :root{
+    --rust:#B5451B; --rust-dk:#8E3714; --rust-2:#D08A6B; --rust-3:#E5C4B4; --rust-4:#F7EDE8;
+    --black:#1A1A1A; --g1:#4A4A4A; --g2:#F5F3F1; --g3:#EDEAE7; --g4:#DDDDDD; --white:#fff;
+    --serif:Georgia,'Times New Roman',serif; --sans:Arial,Helvetica,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--g2);font-family:var(--sans);color:var(--black);-webkit-font-smoothing:antialiased;}
+
+  .sheet{width:210mm;min-height:297mm;margin:0 auto 10mm;background:var(--white);position:relative;
+         display:flex;flex-direction:column;}
+
+  /* ══ COVER ══ */
+  .cover{background:var(--black);color:var(--white);padding:0;overflow:hidden;}
+  .cover-inner{flex:1;display:flex;flex-direction:column;justify-content:space-between;padding:26mm 22mm 18mm;}
+  .cover-rule{height:5px;background:var(--rust);width:100%;}
+  .cv-brand{font-family:var(--sans);font-size:10px;letter-spacing:.26em;text-transform:uppercase;color:var(--rust-2);}
+  .cv-brand span{color:#8A8A8A;margin:0 9px;}
+  .cv-mid{margin-top:auto;margin-bottom:auto;padding:14mm 0;}
+  .cv-eyebrow{font-family:var(--sans);font-size:10px;letter-spacing:.24em;text-transform:uppercase;
+              color:var(--rust-2);margin-bottom:16px;}
+  .cv-title{font-family:var(--serif);font-size:50px;line-height:1.08;font-weight:700;letter-spacing:-.015em;}
+  .cv-title em{font-style:normal;color:var(--rust-2);}
+  .cv-sub{font-family:var(--serif);font-size:17px;line-height:1.6;color:#C9C9C9;max-width:118mm;margin-top:22px;font-style:italic;}
+  .cv-hair{width:64px;height:2px;background:var(--rust);margin:26px 0 0;}
+  .cv-foot{display:flex;justify-content:space-between;align-items:flex-end;
+           border-top:1px solid #333;padding-top:14px;font-size:10.5px;color:#9A9A9A;letter-spacing:.04em;}
+  .cv-foot strong{color:var(--white);font-weight:400;}
+  .cv-figs{display:flex;gap:0;border-top:1px solid #333;border-bottom:1px solid #333;margin-top:28px;}
+  .cv-fig{flex:1;padding:16px 0 15px;border-right:1px solid #333;}
+  .cv-fig:last-child{border-right:none;}
+  .cv-fig b{display:block;font-family:var(--serif);font-size:29px;font-weight:700;color:var(--white);line-height:1;}
+  .cv-fig span{display:block;font-size:8.5px;letter-spacing:.14em;text-transform:uppercase;color:#8A8A8A;margin-top:7px;}
+
+  /* ══ PAGE ══ */
+  .page{padding:14mm 15mm 12mm;}
+  .ph{display:flex;justify-content:space-between;align-items:baseline;
+      border-bottom:2px solid var(--rust);padding-bottom:8px;margin-bottom:4px;}
+  .ph h1{font-family:var(--serif);font-size:20px;font-weight:700;letter-spacing:-.01em;}
+  .ph .win{font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--rust);font-weight:700;}
+  .ph-note{font-size:9.5px;color:var(--g1);margin-bottom:11px;line-height:1.5;}
+
+  .lab{font-size:8.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--rust);
+       font-weight:700;margin-bottom:7px;}
+
+  /* KPI strip */
+  .kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:0;border:1px solid var(--g4);margin-bottom:11px;}
+  .kpi{padding:9px 11px;border-right:1px solid var(--g4);background:var(--g2);}
+  .kpi:last-child{border-right:none;}
+  .kpi b{display:block;font-family:var(--serif);font-size:23px;font-weight:700;line-height:1;color:var(--black);}
+  .kpi b i{font-style:normal;font-size:12px;color:var(--g1);font-family:var(--sans);font-weight:400;}
+  .kpi span{display:block;font-size:8px;letter-spacing:.1em;text-transform:uppercase;color:var(--g1);margin-top:6px;line-height:1.35;}
+
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:9px 13px;}
+  .box{border:1px solid var(--g4);padding:9px 11px 10px;background:var(--white);}
+  .box.span{grid-column:1/-1;}
+  .cap{font-size:8.5px;color:var(--g1);line-height:1.45;margin-top:6px;}
+  .cap b{color:var(--rust-dk);font-weight:700;}
+
+  svg{display:block;width:100%;}
+  .ax{font-family:Arial,sans-serif;font-size:7.6px;fill:var(--g1);}
+  .vl{font-family:Arial,sans-serif;font-size:7.6px;fill:var(--black);font-weight:700;}
+  .dn{font-family:Georgia,serif;font-weight:700;}
+
+  /* Findings */
+  .find{margin-top:11px;border-top:1px solid var(--g4);padding-top:10px;}
+  .frow{display:flex;gap:11px;padding:7px 0;border-bottom:1px solid var(--g3);}
+  .frow:last-child{border-bottom:none;}
+  .fmark{flex:0 0 62px;font-size:8px;letter-spacing:.11em;text-transform:uppercase;
+         font-weight:700;padding-top:2px;}
+  .fmark.g{color:#5F7A52;} .fmark.a{color:var(--rust);} .fmark.n{color:var(--g1);}
+  .ftxt{font-size:9.7px;line-height:1.52;color:var(--black);}
+  .ftxt b{color:var(--rust-dk);}
+
+  .foot{margin-top:auto;padding-top:11px;border-top:1px solid var(--rust);
+        display:flex;justify-content:space-between;font-size:8.5px;color:var(--g1);letter-spacing:.03em;}
+
+  @media print{
+    body{background:#fff;}
+    .sheet{margin:0;width:auto;min-height:auto;page-break-after:always;}
+    .sheet:last-child{page-break-after:auto;}
+    @page{size:A4;margin:0;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ════════ COVER ════════ -->
+<div class="sheet cover">
+  <div class="cover-rule"></div>
+  <div class="cover-inner">
+    <div class="cv-brand">PiP_AGI<span>&mdash;</span>Ishwa Consulting</div>
+
+    <div class="cv-mid">
+      <div class="cv-eyebrow">AI Sourcing Assistant &middot; Adoption Review</div>
+      <div class="cv-title">Usage &amp;<br><em>Utilisation</em></div>
+      <div class="cv-hair"></div>
+      <div class="cv-sub">What the search log shows about how the tool is actually being used &mdash; where adoption is complete, and where it has not started.</div>
+
+      <div class="cv-figs">
+        <div class="cv-fig"><b>20</b><span>Searches</span></div>
+        <div class="cv-fig"><b>6</b><span>Consultants</span></div>
+        <div class="cv-fig"><b>11</b><span>Clients</span></div>
+        <div class="cv-fig"><b>8</b><span>Days</span></div>
+      </div>
+    </div>
+
+    <div class="cv-foot">
+      <div><strong>Reporting window</strong> &nbsp;24 &ndash; 31 July 2026</div>
+      <div>Prepared by <strong>Amit Gupta</strong></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════ PAGE 1 ════════ -->
+<div class="sheet">
+<div class="page">
+
+  <div class="ph">
+    <h1>How the Sourcing Assistant is being used</h1>
+    <div class="win">24 &ndash; 31 Jul 2026</div>
+  </div>
+  <div class="ph-note">Drawn from the Sourcing_Search_Log. Covers every search saved by the delivery team in the window; internal test rows excluded. The log records searches <em>saved</em> — it does not record searches looked up, so recall behaviour is read from what was rebuilt rather than reused.</div>
+
+  <div class="kpis">
+    <div class="kpi"><b>20</b><span>Searches saved</span></div>
+    <div class="kpi"><b>13</b><span>Distinct client &amp; role searches</span></div>
+    <div class="kpi"><b>6<i> / 10</i></b><span>Consultants active</span></div>
+    <div class="kpi"><b>0</b><span>Searches reused across the team</span></div>
+  </div>
+
+  <div class="grid">
+
+    <!-- 1. Consultant volume -->
+    <div class="box">
+      <div class="lab">Who is running searches</div>
+      <svg viewBox="0 0 300 128" role="img" aria-label="Searches saved per consultant">
+        <line x1="76" y1="4" x2="76" y2="112" stroke="#DDDDDD" stroke-width="1"/>
+        <g>
+          <text class="ax" x="72" y="15" text-anchor="end">Shalini Gupta</text>
+          <rect x="77" y="7" width="185" height="11" fill="#B5451B"/>
+          <text class="vl" x="267" y="16">5</text>
+        </g>
+        <g>
+          <text class="ax" x="72" y="35" text-anchor="end">Chhaya Arora</text>
+          <rect x="77" y="27" width="185" height="11" fill="#B5451B"/>
+          <text class="vl" x="267" y="36">5</text>
+        </g>
+        <g>
+          <text class="ax" x="72" y="55" text-anchor="end">Mohit Sethi</text>
+          <rect x="77" y="47" width="148" height="11" fill="#C56A42"/>
+          <text class="vl" x="230" y="56">4</text>
+        </g>
+        <g>
+          <text class="ax" x="72" y="75" text-anchor="end">Sapna Khatri</text>
+          <rect x="77" y="67" width="111" height="11" fill="#D08A6B"/>
+          <text class="vl" x="193" y="76">3</text>
+        </g>
+        <g>
+          <text class="ax" x="72" y="95" text-anchor="end">Rashmi Lamba</text>
+          <rect x="77" y="87" width="74" height="11" fill="#DFA88E"/>
+          <text class="vl" x="156" y="96">2</text>
+        </g>
+        <g>
+          <text class="ax" x="72" y="115" text-anchor="end">Varsha Karthik</text>
+          <rect x="77" y="107" width="37" height="11" fill="#E5C4B4"/>
+          <text class="vl" x="119" y="116">1</text>
+        </g>
+      </svg>
+      <div class="cap">Four of the ten consultants on the roster have not saved a search. <b>Usage is concentrated in six people</b>, two of whom account for half the volume.</div>
+    </div>
+
+    <!-- 2. Roster coverage donut -->
+    <div class="box">
+      <div class="lab">Roster coverage</div>
+      <svg viewBox="0 0 300 128" role="img" aria-label="Six of ten consultants active">
+        <g transform="translate(74,64)">
+          <circle r="45" fill="none" stroke="#EDEAE7" stroke-width="22"/>
+          <circle r="45" fill="none" stroke="#B5451B" stroke-width="22"
+                  stroke-dasharray="169.6 113.1" transform="rotate(-90)"/>
+          <text class="dn" y="2" text-anchor="middle" font-size="26" fill="#1A1A1A">60%</text>
+          <text y="17" text-anchor="middle" font-size="7.6" fill="#4A4A4A" font-family="Arial">of roster</text>
+        </g>
+        <g font-family="Arial">
+          <rect x="150" y="40" width="9" height="9" fill="#B5451B"/>
+          <text class="ax" x="165" y="48">Active — 6 consultants</text>
+          <rect x="150" y="60" width="9" height="9" fill="#EDEAE7"/>
+          <text class="ax" x="165" y="68">Not yet used — 4</text>
+          <line x1="150" y1="82" x2="285" y2="82" stroke="#DDDDDD"/>
+          <text class="ax" x="150" y="97">Avg 3.3 searches per active user</text>
+          <text class="ax" x="150" y="110">over an 8-day window</text>
+        </g>
+      </svg>
+      <div class="cap">Adoption is real but partial. The gap is people, not features &mdash; <b>every consultant who opened the tool used it more than once</b>.</div>
+    </div>
+
+    <!-- 3. Field completeness -->
+    <div class="box">
+      <div class="lab">Which fields get filled</div>
+      <svg viewBox="0 0 300 128" role="img" aria-label="Completion rate by input field">
+        <line x1="92" y1="4" x2="92" y2="112" stroke="#DDDDDD" stroke-width="1"/>
+        <g>
+          <text class="ax" x="88" y="14" text-anchor="end">Mandate basics</text>
+          <rect x="93" y="6" width="180" height="10" fill="#B5451B"/><text class="vl" x="277" y="14">100%</text>
+        </g>
+        <g>
+          <text class="ax" x="88" y="32" text-anchor="end">Target profile</text>
+          <rect x="93" y="24" width="180" height="10" fill="#B5451B"/><text class="vl" x="277" y="32">100%</text>
+        </g>
+        <g>
+          <text class="ax" x="88" y="50" text-anchor="end">Context</text>
+          <rect x="93" y="42" width="144" height="10" fill="#C56A42"/><text class="vl" x="241" y="50">80%</text>
+        </g>
+        <g>
+          <text class="ax" x="88" y="68" text-anchor="end">Education</text>
+          <rect x="93" y="60" width="135" height="10" fill="#C56A42"/><text class="vl" x="232" y="68">75%</text>
+        </g>
+        <g>
+          <text class="ax" x="88" y="86" text-anchor="end">Key skills</text>
+          <rect x="93" y="78" width="90" height="10" fill="#E5C4B4"/><text class="vl" x="187" y="86">50%</text>
+        </g>
+        <g>
+          <text class="ax" x="88" y="104" text-anchor="end">Must-have</text>
+          <rect x="93" y="96" width="72" height="10" fill="#E5C4B4"/><text class="vl" x="169" y="104">40%</text>
+        </g>
+        <g>
+          <text class="ax" x="88" y="122" text-anchor="end">Avoid</text>
+          <rect x="93" y="114" width="72" height="10" fill="#E5C4B4"/><text class="vl" x="169" y="122">40%</text>
+        </g>
+      </svg>
+      <div class="cap">The required fields are complete on every search. <b>The three fields that most sharply constrain the result &mdash; key skills, must-have, avoid &mdash; are used least.</b></div>
+    </div>
+
+    <!-- 4. Depth per consultant -->
+    <div class="box">
+      <div class="lab">Search depth by user</div>
+      <svg viewBox="0 0 300 128" role="img" aria-label="Average optional fields used, out of six">
+        <line x1="20" y1="104" x2="292" y2="104" stroke="#DDDDDD"/>
+        <line x1="20" y1="47" x2="292" y2="47" stroke="#EDEAE7" stroke-dasharray="3 3"/>
+        <text class="ax" x="292" y="43" text-anchor="end" fill="#B5451B">team avg 3.6</text>
+        <g>
+          <rect x="30"  y="17" width="30" height="87" fill="#B5451B"/><text class="vl" x="45"  y="13" text-anchor="middle">5.2</text><text class="ax" x="45"  y="115" text-anchor="middle">Shalini</text>
+          <rect x="72"  y="37" width="30" height="67" fill="#C56A42"/><text class="vl" x="87"  y="33" text-anchor="middle">4.0</text><text class="ax" x="87"  y="115" text-anchor="middle">Rashmi</text>
+          <rect x="114" y="41" width="30" height="63" fill="#C56A42"/><text class="vl" x="129" y="37" text-anchor="middle">3.8</text><text class="ax" x="129" y="115" text-anchor="middle">Mohit</text>
+          <rect x="156" y="48" width="30" height="56" fill="#D08A6B"/><text class="vl" x="171" y="44" text-anchor="middle">3.3</text><text class="ax" x="171" y="115" text-anchor="middle">Sapna</text>
+          <rect x="198" y="50" width="30" height="54" fill="#D08A6B"/><text class="vl" x="213" y="46" text-anchor="middle">3.2</text><text class="ax" x="213" y="115" text-anchor="middle">Chhaya</text>
+          <rect x="240" y="71" width="30" height="33" fill="#E5C4B4"/><text class="vl" x="255" y="67" text-anchor="middle">2.0</text><text class="ax" x="255" y="115" text-anchor="middle">Varsha</text>
+        </g>
+        <text class="ax" x="20" y="126">Average optional fields completed, out of 6</text>
+      </svg>
+      <div class="cap">A <b>2.6&times; spread</b> between the deepest and lightest user. The same tool is producing very different quality of brief depending on who is driving it.</div>
+    </div>
+
+    <!-- 5. Adoption of the new fields -->
+    <div class="box span">
+      <div class="lab">Adoption of the 29 July release &mdash; search label and revenue / growth stage</div>
+      <svg viewBox="0 0 620 74" role="img" aria-label="Adoption of new fields before and after the 29 July release">
+        <text class="ax" x="0" y="12" font-weight="bold" fill="#4A4A4A">BEFORE RELEASE &mdash; 15 searches</text>
+        <rect x="0" y="18" width="270" height="15" fill="#EDEAE7"/>
+        <text class="vl" x="278" y="30" fill="#4A4A4A">0% used the new fields</text>
+
+        <text class="ax" x="0" y="52" font-weight="bold" fill="#B5451B">AFTER RELEASE &mdash; 5 searches</text>
+        <rect x="0" y="58" width="270" height="15" fill="#B5451B"/>
+        <text class="vl" x="278" y="70" fill="#B5451B">100% used the new fields</text>
+
+        <line x1="440" y1="6" x2="440" y2="74" stroke="#DDDDDD"/>
+        <text class="ax" x="456" y="22">Every search saved after the release</text>
+        <text class="ax" x="456" y="35">carried a label and both stage fields —</text>
+        <text class="ax" x="456" y="48">across three different consultants,</text>
+        <text class="ax" x="456" y="61">with no prompting and no misses.</text>
+      </svg>
+      <div class="cap">Read as a raw fill rate, label and stage look like 25% adoption. They are not: those five rows are <b>every search saved since the fields went live</b>. Adoption of what was shipped is complete.</div>
+    </div>
+
+  </div>
+
+  <!-- Findings -->
+  <div class="find">
+    <div class="frow">
+      <div class="fmark g">Working</div>
+      <div class="ftxt"><b>They iterate rather than one-shot.</b> 20 saved searches cover 13 distinct client-and-role briefs — consultants re-run and refine. In three consecutive searches on one mandate, the only field changed each time was <em>avoid</em>: someone tuning exclusions against results they were actually reading.</div>
+    </div>
+    <div class="frow">
+      <div class="fmark a">Not started</div>
+      <div class="ftxt"><b>No one has reused a colleague's search.</b> All 20 searches are unique — not one has ever matched another. On the single account two consultants both worked, the second rebuilt the search from scratch two days later, using a different sector and a different job title for the same role. The team is running six separate silos.</div>
+    </div>
+    <div class="frow">
+      <div class="fmark n">To improve</div>
+      <div class="ftxt"><b>Check the log before building, and fill the three sharp fields.</b> The consultants who discovered that <em>avoid</em> and <em>must-have</em> transform the output found it by accident; that is currently held by two people rather than the team.</div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div>Amit Gupta — AI Strategy Consultant | PiP_AGI</div>
+    <div>Sourcing Assistant · Usage &amp; Utilisation · 24–31 July 2026</div>
+  </div>
+
+</div>
+</div>
+
+</body>
+</html>
